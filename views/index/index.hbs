@@ -1,0 +1,12 @@
+<p>Welcome to the event registration system</p>
+
+{{#if session.currentUser}}
+Welcome, {{name}}<br />
+{{#if config.paper_submission_enabled}}
+<a href="/papers/submit">Submit a talk</a><br />
+{{/if}}
+<a href="/papers/list">View your submitted talks</a><br />
+Registering is not yet functional
+{{else}}
+Hello, please login, as the anonymous parts are not yet operational
+{{/if}}

@@ -1,0 +1,24 @@
+{
+  "development": {
+    "persona_audience": "http://localhost:3000",
+    "paper_submission_enabled": true,
+    "secret": "development",
+    "database": {
+      "database": "database.sqlite",
+      "dialect": "sqlite",
+      "storage": "database.sqlite"
+    }
+  },
+  "production": {
+    "persona_audience": "fixme",
+    "paper_submission_enabled": true,
+    "secret": "development",
+    "database": {
+      "username": "root",
+      "password": null,
+      "database": "database_production",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    }
+  }
+}

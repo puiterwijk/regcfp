@@ -1,0 +1,12 @@
+Your submitted papers:<br /><br />
+
+{{#each papers}}
+    <b>{{ this.title }}</b>
+    - 
+    {{ breaklines this.summary }}
+
+    {{#if config.paper_submission_enabled}}
+    Some config
+    {{/if}}
+    <br />
+{{/each}}

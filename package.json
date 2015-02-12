@@ -1,0 +1,25 @@
+{
+  "name": "event-registration",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "cookie-parser": "*",
+    "debug": "*",
+    "express": "*",
+    "express-handlebars": "*",
+    "express-session": "*",
+    "connect-session-sequelize": "*",
+    "morgan": "*",
+    "serve-favicon": "*",
+    "sequelize": "*",
+    "sqlite3": "*",
+    "pg": "*",
+    "pg-hstore": "*",
+    "browserid-local-verify": "*",
+    "browserid-verify": "*"
+  }
+}

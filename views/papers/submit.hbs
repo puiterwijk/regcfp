@@ -1,0 +1,16 @@
+{{#if submission_error}}
+<font color="red"><b>Something went wrong submitting. Please check you filled in all fields!</b></font>
+{{/if}}
+
+<form action="/papers/submit" method="post">
+Submitter: <input type="text" value="{{session.currentUser}}" disabled /><br />
+{{#if submitter_name_found}}
+Your name: <input type="text" name="submitter_name" value="{{submitter_name}}" disabled /><br />
+{{else}}
+Your name: <input type="text" name="submitter_name" value="{{submitter_name}}" /><br />
+{{/if}}
+Paper title: <input type="text" name="paper_title" value="{{paper_title}}" maxlength=50 /><br />
+Paper summary:<br />
+<textarea name="paper_summary">{{paper_summary}}</textarea><br />
+<input type="submit" value="Submit" />
+</form>

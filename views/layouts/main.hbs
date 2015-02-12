@@ -1,0 +1,32 @@
+<!doctype HTML>
+<html>
+    <head>
+        <title>Event registration</title>
+
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+        <script type="text/javascript" src="https://login.persona.org/include.js"></script>
+
+        <script type="text/javascript">
+            // Inserted variables
+            {{#if session.currentUser}}
+                var currentUser = '{{session.currentUser}}';
+            {{else}}
+                var currentUser = null;
+            {{/if}}
+
+        </script>
+        <script type="text/javascript" src="/javascripts/login.js"></script>
+    </head>
+    <body>
+        {{#if session.currentUser}}
+            <button id="logoutBtn" onclick="javascript: navigator.id.logout();">Log out</button>
+        {{else}}
+            <button id="loginBtn" onclick="javascript: navigator.id.request();">Log in with Persona</button>
+        {{/if}}
+        
+        <a href="/">Home</a><br />
+
+        {{{ body }}}
+    </body>
+</html>
