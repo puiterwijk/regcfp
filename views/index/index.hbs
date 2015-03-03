@@ -3,9 +3,11 @@
 {{#if session.currentUser}}
 Welcome, {{name}}<br />
 {{#if config.paper_submission_enabled}}
-<a href="/papers/submit">Submit a talk</a><br />
+<div class="buttons">
+<div class="button"><a href="/papers/submit">Submit a talk</a></div>
 {{/if}}
-<a href="/papers/list">View your submitted talks</a><br />
+<div class="button"><a href="/papers/list">View your submitted talks</a></div>
+</div>
 Registering is not yet functional
 {{else}}
 Hello, please login, as the anonymous parts are not yet operational

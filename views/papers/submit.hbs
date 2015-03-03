@@ -3,14 +3,22 @@
 {{/if}}
 
 <form action="/papers/submit" method="post">
-Submitter: <input type="text" value="{{session.currentUser}}" disabled /><br />
+<table class="submission-form">
+<tr><td>Submitter:</td><td><input type="text" value="{{session.currentUser}}" disabled /></td></tr>
 {{#if submitter_name_found}}
-Your name: <input type="text" name="submitter_name" value="{{submitter_name}}" disabled /><br />
+<tr><td>Your name:</td><td><input type="text" name="submitter_name" value="{{submitter_name}}" disabled /></td></tr>
 {{else}}
-Your name: <input type="text" name="submitter_name" value="{{submitter_name}}" /><br />
+<tr><td>Your name</td><td><input type="text" name="submitter_name" value="{{submitter_name}}" /></td></tr>
 {{/if}}
-Paper title: <input type="text" name="paper_title" value="{{paper_title}}" maxlength=50 /><br />
-Paper summary:<br />
-<textarea name="paper_summary">{{paper_summary}}</textarea><br />
-<input type="submit" value="Submit" />
+<tr><td>Paper title:</td><td><input type="text" name="paper_title" value="{{paper_title}}" maxlength=50 /></td></tr>
+
+<tr><td>Paper summary:</td>
+<td><textarea name="paper_summary">{{paper_summary}}</textarea></td>
+</tr>
+
+<tr><td>&nbsp;</td>
+<td><input class="submit-talk" type="submit" value="Submit" /></td>
+</tr>
+
+</table>
 </form>
