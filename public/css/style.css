@@ -1,0 +1,87 @@
+body {
+  font-family: sans-serif;
+  padding: 0;
+  margin: 0;
+  color: #555;
+}
+
+.site-branding {
+  background: #6B8E9F;
+  min-height: 70px;
+}
+
+.custom-logo {
+  background-image: url("https://www.guadec.org/wp-content/uploads/2014/10/guadec-logo-white.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 176px;
+  height: 53px;
+  margin: auto;
+  padding: 20px;
+}
+
+.navigation {
+  text-align: center;
+  padding-bottom: 30px;
+}
+
+.navigation a {
+  color: #F4F4F4;
+  text-decoration: none;
+  padding: 0px 10px;
+}
+
+.content {
+  max-width: 1024px;
+  margin: auto;
+  padding-top: 20px;
+}
+
+#logoutBtn,
+.submit-talk {
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 5px 15px;
+}
+
+#logoutBtn {
+  background: #F4F4F4;
+  color: #6B8E9F;
+}
+
+.submit-talk {
+  background: #6B8E9F;
+  color: #F4F4F4;
+}
+
+.button {
+  display: inline-block;
+  background: #6B8E9F;
+  border-radius: 5px;
+  padding: 10px 15px;
+}
+
+.button a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.submission-form tr td:first-child {
+  text-align: right;
+  vertical-align: top;
+  padding-top: 5px;
+}
+
+.submission-form tr td input[type=text],
+.submission-form tr td textarea {
+  width: 300px;
+}
+
+.submission-form tr td textarea {
+  height: 100px;
+}
+
+.submission-form tr td .submit-talk {
+  float: right;
+}
