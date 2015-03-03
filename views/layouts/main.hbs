@@ -20,6 +20,12 @@
         <link rel="stylesheet" href="/css/style.css" type="text/css" media="all">
     </head>
     <body>
+        {{#if development}}
+            <span style="border: 1px solid blue; color:red;" align="center">
+            <h1>DEVELOPMENT INSTANCE</h1>
+            <h2>Data in this instance may be deleted at any time!</h1>
+            </span>
+        {{/if}}
         <div class="site-branding">
 		        <div class="custom-logo">
 		        <a href="https://www.guadec.org/"></a>

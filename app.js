@@ -53,6 +53,7 @@ app.use(session({
 app.use(function(req, res, next) {
   res.locals.session = req.session;
   res.locals.config = config;
+  res.locals.development = env == 'development';
   next();
 });
 
