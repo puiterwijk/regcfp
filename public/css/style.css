@@ -17,7 +17,7 @@ body {
   width: 176px;
   height: 53px;
   margin: auto;
-  padding: 20px;
+  padding: 40px;
 }
 
 .navigation {
@@ -67,6 +67,10 @@ body {
   text-decoration: none;
 }
 
+.buttons {
+  margin: 10px 0;
+}
+
 .submission-form tr td:first-child {
   text-align: right;
   vertical-align: top;
@@ -76,10 +80,12 @@ body {
 .submission-form tr td input[type=text],
 .submission-form tr td textarea {
   width: 300px;
+  border: 1px solid #555;
+  padding: 3px;
 }
 
 .submission-form tr td textarea {
-  height: 100px;
+  height: 200px;
 }
 
 .submission-form tr td .submit-talk {
