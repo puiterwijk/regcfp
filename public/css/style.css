@@ -37,6 +37,7 @@ body {
   padding-top: 20px;
 }
 
+#loginBtn,
 #logoutBtn,
 .submit-talk {
   border: none;
@@ -45,6 +46,7 @@ body {
   padding: 5px 15px;
 }
 
+#loginBtn,
 #logoutBtn {
   background: #F4F4F4;
   color: #6B8E9F;
