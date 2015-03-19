@@ -18,5 +18,10 @@
       <foaf:mbox rdf:resource="mailto:puiterwijk@gnome.org" />
       <gnome:userid>puiterwijk</gnome:userid>
     </foaf:Person>
+    <foaf:Person>
+      <foaf:name>Andreas Nilsson</foaf:name>
+      <foaf:mbox rdf:resource="mailto:andreasn@gnome.org" />
+      <gnome:userid>andreasn</gnome:userid>
+    </foaf:Person>
   </maintainer>
 </Project>
