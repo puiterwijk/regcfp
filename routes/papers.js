@@ -7,7 +7,7 @@ var models = require('../models');
 var User = models.User;
 var Paper = models.Paper;
 
-router.all('/submit', utils.require_login);
+router.all('/submit', utils.require_permission('papers/submit'));
 router.get('/submit', function(req, res, next) {
   User
     .find({
@@ -52,7 +52,8 @@ function add_paper(user, paper, res) {
 router.post('/submit', function(req, res, next) {
   var paper = {
     title: req.body.paper_title.trim(),
-    summary: req.body.paper_summary.trim()
+    summary: req.body.paper_summary.trim(),
+    accepted: false
   };
 
   User
@@ -95,8 +96,8 @@ router.post('/submit', function(req, res, next) {
     });
 });
 
-router.all('/list', utils.require_login);
-router.get('/list', function(req, res, next) {
+router.all('/list/own', utils.require_permission('papers/list/own'));
+router.get('/list/own', function(req, res, next) {
   User
     .find({
       where: {
@@ -114,6 +115,27 @@ router.get('/list', function(req, res, next) {
           res.render('papers/list', { papers: papers });
         });
       }
+    });
+});
+
+router.all('/list/accepted', utils.require_permission('papers/list/accepted'));
+router.get('/list/accepted', function(req, res, next) {
+  Paper
+    .find({
+      where: {
+        accepted: true
+      }
+    })
+    .complete(function(err, papers) {
+      res.render('papers/list', { papers: papers });
+    });
+});
+
+router.all('/admin/list', utils.require_permission('papers/list/all'));
+router.get('/admin/list', function(req, res, next) {
+  Paper.find()
+    .complete(function(err, papers) {
+      res.render('papers/list', { papers: papers });
     });
 });
 

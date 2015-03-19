@@ -3,7 +3,8 @@
 module.exports = function(sequelize, DataTypes) {
   var Paper = sequelize.define("Paper", {
     title: DataTypes.STRING,
-    summary: DataTypes.STRING
+    summary: DataTypes.STRING,
+    accepted: DataTypes.BOOLEAN
   }, {
     classMethods: {
       associate: function(models) {
