@@ -10,11 +10,11 @@ if(!!process.env.OPENSHIFT_APP_NAME)
 {
   var sequelize = new Sequelize(
     process.env.PGDATABASE,
-    process.env.OPENSHIFT_POSTGRESQL_DB_USERNAME,
-    process.env.OPENSHIFT_POSTGRESQL_DB_PASSWORD,
+    process.env.OPENSHIFT_MYSQL_DB_USERNAME,
+    process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
     {
-      host: process.env.OPENSHIFT_POSTGRESQL_DB_HOST,
-      dialect: 'postgres'
+      host: process.env.OPENSHIFT_MYSQL_DB_HOST,
+      dialect: 'mysql'
     });
 } else {
   var sequelize = new Sequelize(config.database, config.username, config.password, config);
