@@ -36,7 +36,11 @@
 		            {{#if session.currentUser}}
                     <button id="logoutBtn" onclick="javascript: navigator.id.logout();">Log out</button>
                 {{else}}
-                    <button id="loginBtn" onclick="javascript: navigator.id.request();">Log in with Persona</button>
+                    {{#if development}}
+                        <button id="loginBtn" onclick="javascript: navigator.id.request(login_args_development);">Log in with Persona</button>
+                    {{else}}
+                        <button id="loginBtn" onclick="javascript: navigator.id.request(login_args);">Log in with Persona</button>
+                    {{/if}}
                 {{/if}}
 		        </div>
 		    </div>

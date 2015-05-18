@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var browserid = require('browserid-local-verify');
+var browserid = require('browserid-verify')();
 
 var env       = process.env.NODE_ENV || "development";
 var persona_audience    = require(__dirname + '/../config/config.json')[env]['persona_audience'];
@@ -29,21 +29,26 @@ router.post('/login', function(req, res, next) {
   var assertion = req.body.assertion;
   console.log('Assertion: ' + assertion);
 
-  browserid.verify({
-    assertion: assertion,
-    audience: persona_audience,
-  }, function(err, details) {
-    if(err == null)
-    {
-      req.session.currentUser = details['email'];
+  browserid(assertion, persona_audience,
+    function(err, email, response) {
+      console.log('Testing');
+      if(err) {
+        console.log('Invalid BrowserID assertion: ' + err);
+        res.status(500).send('Invalid assertion!');
+        return;
+      }
+      if(email == null) {
+        console.log('BrowserID without email: ' + response);
+        res.status(500).send('Assertion did not check out!');
+        return;
+      }
+
+      console.log('Welcoming ' + email + ': ' + response);
+      req.session.currentUser = email;
       req.session.currentUserAssertion = assertion;
-      req.session.currentUserDetails = details;
+      req.session.currentUserDetails = response;
       res.send('Logged in!');
-    } else {
-      console.log('Invalid BrowserID assertion: ' + err);
-      res.status(500).send('Invalid assertion!');
-    }
-  });
+    });
 });
 
 router.post('/logout', function(req, res, next) {
