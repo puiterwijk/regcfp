@@ -33,11 +33,7 @@ function get_permission_checker(permission) {
 };
 
 utils.has_permission = function(permission, options) {
-  console.log("Current:");
-  console.log(options);
-  console.log("Param:");
-  console.log(permission);
-  if(get_permission_checker(permission, options.data.root.session.currentUser))
+  if(get_permission_checker(permission)(options.data.root.session.currentUser))
   {
     return options.fn(this);
   }
