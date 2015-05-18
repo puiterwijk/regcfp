@@ -9,28 +9,21 @@
     "persona_audience": "http://localhost:3000",
 
     "permissions": {
+      "admin": ["puiterwijk@fedoraproject.org"],
       "papers": {
-        "submit": ["*"],
+        "submit": ["*authenticated*"],
         "list": {
-          "accepted": ["*"],
+          "accepted": ["*anonymous*"],
           "own": ["*authenticated*"],
-          "all": ["puiterwijk@gnome.org"]
+          "all": ["puiterwijk@fedoraproject.org"]
         },
-        "vote": ["puiterwijk@gnome.org"],
-        "admin": ["puiterwijk@gnome.org"]
+        "vote": ["puiterwijk@fedoraproject.org"],
+        "admin": ["puiterwijk@fedoraproject.org"]
       }
     },
 
     "papers": {
       "enabled": true,
-      "submission_enabled": true,
-      "voting_enabled": false,
-      "accepted_public": false,
-      "required_permissions": {
-        "submit": "authenticated",
-        "vote": "paper_committee",
-        "admin": "paper_admin"
-      }
     },
 
     "registration": {

@@ -2,13 +2,49 @@
 
 {{#if session.currentUser}}
 Welcome, {{name}}<br />
-{{#if config.paper_submission_enabled}}
-<div class="buttons">
-<div class="button"><a href="/papers/submit">Submit a talk</a></div>
-{{/if}}
-<div class="button"><a href="/papers/list">View your submitted talks</a></div>
-</div>
-Registering is not yet functional
 {{else}}
-Hello, please login, as the anonymous parts are not yet operational
+Hello, please login, or choose an option below.
 {{/if}}
+
+{{#if config.papers.enabled}}
+
+<h2>Papers management</h2>
+<div class="buttons">
+{{#has_permission "papers/submit" }}
+<div class="button"><a href="/papers/submit">Submit a talk</a></div>
+{{/has_permission}}
+{{#has_permission "papers/list/own" }}
+<div class="button"><a href="/papers/list/own">View your submitted talks</a></div>
+{{/has_permission}}
+{{#has_permission "papers/list/accepted" }}
+<div class="button"><a href="/papers/list">View accepted talks</a></div>
+{{/has_permission}}
+</div>
+
+{{/if}}
+
+
+
+{{#if config.registration.enabled}}
+
+<h2>Registration</h2>
+.....
+
+{{/if}}
+
+
+{{#has_permission "admin" }}
+<h2>Admin</h2>
+
+<h3>Papers management</h3>
+<div class="buttons">
+{{#has_permission "papers/list/all"}}
+<div class="button"><a href="/papers/admin/list">View all talks</a></div>
+{{/has_permission}}
+</div>
+
+<h3>Registration</h3>
+<div class="buttons">
+</div>
+
+{{/has_permission}}

@@ -18,6 +18,7 @@ var app = express();
 
 var env = process.env.NODE_ENV || "development";
 var config = require(__dirname + '/config/config.json')[env];
+var utils = require('./utils')
 
 // view engine setup
 var hbs = handlebars.create({
@@ -29,7 +30,8 @@ var hbs = handlebars.create({
       text = handlebars.handlebars.Utils.escapeExpression(text);
       text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
       return new handlebars.handlebars.SafeString(text);
-    }
+    },
+    has_permission: utils.has_permission
   }
 });
 app.set('views', path.join(__dirname, 'views'));

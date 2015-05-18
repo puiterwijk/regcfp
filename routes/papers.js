@@ -112,14 +112,15 @@ router.get('/list/own', function(req, res, next) {
         res.render('papers/list', { papers: [] });
       } else {
         user.getPapers().complete(function(err, papers) {
-          res.render('papers/list', { papers: papers });
+          res.render('papers/list', { description: 'Your',
+                                      papers: papers });
         });
       }
     });
 });
 
-router.all('/list/accepted', utils.require_permission('papers/list/accepted'));
-router.get('/list/accepted', function(req, res, next) {
+router.all('/list', utils.require_permission('papers/list/accepted'));
+router.get('/list', function(req, res, next) {
   Paper
     .find({
       where: {
@@ -127,7 +128,8 @@ router.get('/list/accepted', function(req, res, next) {
       }
     })
     .complete(function(err, papers) {
-      res.render('papers/list', { papers: papers });
+      res.render('papers/list', { description: 'Accepted',
+                                  papers: papers });
     });
 });
 
@@ -135,7 +137,8 @@ router.all('/admin/list', utils.require_permission('papers/list/all'));
 router.get('/admin/list', function(req, res, next) {
   Paper.find()
     .complete(function(err, papers) {
-      res.render('papers/list', { papers: papers });
+      res.render('papers/list', { description: 'All',
+                                  papers: papers });
     });
 });
 
