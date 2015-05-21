@@ -61,6 +61,7 @@ router.post('/logout', function(req, res, next) {
   res.send('Logged out');
 });
 
+router.all('/register', utils.require_login);
 router.get('/register', function(req, res, next) {
   res.render('auth/register', { origin: req.query.origin });
 });

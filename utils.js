@@ -61,7 +61,18 @@ utils.require_permission = function(permission) {
   };
 };
 
+utils.require_login = function(req, res, next) {
+  if(req.session.currentUser == null) {
+    res.render('auth/no_permission', { required_permission: 'Login' });
+  }
+};
+
 utils.require_user = function(req, res, next) {
+  if(!req.session.currentUser) {
+    res.render('auth/no_permission', { required_permission: 'Login' });
+    return;
+  }
+
   User.find({
     where: {
       email: req.session.currentUser
