@@ -122,7 +122,7 @@ router.get('/list/own', function(req, res, next) {
 router.all('/list', utils.require_permission('papers/list/accepted'));
 router.get('/list', function(req, res, next) {
   Paper
-    .find({
+    .findAll({
       where: {
         accepted: true
       }
@@ -135,7 +135,7 @@ router.get('/list', function(req, res, next) {
 
 router.all('/admin/list', utils.require_permission('papers/list/all'));
 router.get('/admin/list', function(req, res, next) {
-  Paper.find()
+  Paper.findAll()
     .complete(function(err, papers) {
       res.render('papers/list', { description: 'All',
                                   papers: papers });
