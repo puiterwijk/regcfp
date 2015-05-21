@@ -135,9 +135,10 @@ router.get('/list', function(req, res, next) {
 
 router.all('/admin/list', utils.require_permission('papers/list/all'));
 router.get('/admin/list', function(req, res, next) {
-  Paper.findAll()
+  Paper.findAll({include: [User]})
     .complete(function(err, papers) {
       res.render('papers/list', { description: 'All',
+                                  showAuthors: true,
                                   papers: papers });
     });
 });

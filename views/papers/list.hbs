@@ -2,6 +2,9 @@
 
 {{#each papers}}
     <b>{{ this.title }}</b>
+    {{#if ../showAuthors}}
+      ({{ this.User.name }})
+    {{/if}}
     - 
     {{ breaklines this.summary }}
 
