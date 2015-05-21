@@ -3,7 +3,7 @@
 {{#each papers}}
     <b>{{ this.title }}</b>
     {{#if ../showAuthors}}
-      ({{ this.User.name }})
+      ({{ this.User.name }} &lt;{{ this.User.email }}&gt;)
     {{/if}}
     - 
     {{ breaklines this.summary }}
