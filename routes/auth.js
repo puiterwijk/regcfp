@@ -31,7 +31,6 @@ router.post('/login', function(req, res, next) {
 
   browserid(assertion, persona_audience,
     function(err, email, response) {
-      console.log('Testing');
       if(err) {
         console.log('Invalid BrowserID assertion: ' + err);
         res.status(500).send('Invalid assertion!');
