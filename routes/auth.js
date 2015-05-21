@@ -3,6 +3,8 @@ var router = express.Router();
 
 var browserid = require('browserid-verify')();
 
+var utils = require('../utils');
+
 var models = require('../models');
 var User = models.User;
 
