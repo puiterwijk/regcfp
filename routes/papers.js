@@ -11,23 +11,7 @@ var PaperVote = models.PaperVote;
 router.all('/submit', utils.require_user);
 router.all('/submit', utils.require_permission('papers/submit'));
 router.get('/submit', function(req, res, next) {
-  User
-    .find({
-      where: {
-        email: req.session.currentUser
-      }
-    })
-    .complete(function(err, user) {
-      console.log('User: ' + user);
-      if(!!err) {
-        console.log('Error searching for user: ' + err);
-        res.status(500).send('Error retrieving user object');
-      } else if(!user) {
-        res.render('papers/submit', { });
-      } else {
-        res.render('papers/submit', { submitter_name: user.name, submitter_name_found: true });
-      }
-    });
+  res.render('papers/submit');
 });
 
 function add_paper(user, paper, res) {
@@ -58,68 +42,27 @@ router.post('/submit', function(req, res, next) {
     accepted: false
   };
 
-  User
-    .find({
-      where: {
-        email: req.session.currentUser
-      }
-    })
-    .complete(function(err, user) {
-      if((user == null && req.body.submitter_name.trim() == '') ||
-         paper.title.length > 50 ||
-         paper.title == '' ||
-         paper.summary == '')
-      {
-        res.render('papers/submit', {
-          submitter_name: (user != null && user.name) || req.body.submitter_name,
-          submitter_name_found: user != null,
-          paper_title: paper.title,
-          paper_summary: paper.summary,
-          submission_error: true
-        });
-      } else {
-        if(!!err) {
-          console.log('Error searching for user: ' + err);
-          res.status(500).send('Error retrieving user object');
-        } else if(!user) {
-            // Create new user
-            var submitter_name = req.body.submitter_name.trim();
-            
-            var user = User.create({
-              email: req.session.currentUser,
-              name: submitter_name
-            }).complete(function(err, user) {
-              add_paper(user, paper, res);
-            });
-        } else {
-          add_paper(user, paper, res);
-        }
-      }
+  if(paper.title.length > 50 ||
+     paper.title == '' ||
+     paper.summary == '')
+  {
+    res.render('papers/submit', {
+      paper_title: paper.title,
+      paper_summary: paper.summary,
+      submission_error: true
     });
+  } else {
+    add_paper(req.user, paper, res);
+  }
 });
 
 router.all('/list/own', utils.require_user);
 router.all('/list/own', utils.require_permission('papers/list/own'));
 router.get('/list/own', function(req, res, next) {
-  User
-    .find({
-      where: {
-        email: req.session.currentUser
-      }
-    })
-    .complete(function(err, user) {
-      if(!!err) {
-        console.log('Error searching for user: ' + err);
-        res.status(500).send('Error retrieving user object');
-      } else if(!user) {
-        res.render('papers/list', { papers: [] });
-      } else {
-        user.getPapers().complete(function(err, papers) {
-          res.render('papers/list', { description: 'Your',
-                                      papers: papers });
-        });
-      }
-    });
+  req.user.getPapers().complete(function(err, papers) {
+    res.render('papers/list', { description: 'Your',
+                                papers: papers });
+  });
 });
 
 router.all('/list', utils.require_permission('papers/list/accepted'));
