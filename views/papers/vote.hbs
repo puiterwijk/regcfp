@@ -1,0 +1,15 @@
+{{description}} submitted papers:<br /><br />
+
+You: "{{user}}"
+
+{{#each papers}}
+    <b>{{ this.title }}</b>
+    {{#if ../showAuthors}}
+      ({{ this.User.name }} &lt;{{ this.User.email }}&gt;)
+    {{/if}}
+    - 
+    {{ breaklines this.summary }}
+
+    <br />
+    <br />
+{{/each}}

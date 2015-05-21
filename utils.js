@@ -3,6 +3,9 @@ var utils = {}
 var env = process.env.NODE_ENV || "development";
 var config = require(__dirname + '/config/config.json')[env];
 
+var models = require('./models');
+var User = models.User;
+
 function get_permission_checker(permission) {
   var required = permission.split('/');
   var allowed = config.permissions;
@@ -56,6 +59,26 @@ utils.require_permission = function(permission) {
       res.render('auth/no_permission', { required_permission: JSON.stringify(permission) });
     }
   };
+};
+
+utils.require_user = function(req, res, next) {
+  User.find({
+    where: {
+      email: req.session.currentUser
+    }
+  })
+  .complete(function(err, user) {
+    if(!!err) {
+      res.status(500).send('Error retrieving user object');
+    } else if(!user) {
+      // Redirect to register
+      res.redirect(302, '/auth/register?origin=' + req.originalUrl);
+    } else {
+      req.user = user;
+      res.locals.user = user;
+      next();
+    }
+  });
 };
 
 module.exports = utils;

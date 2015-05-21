@@ -5,11 +5,7 @@
 <form action="/papers/submit" method="post">
 <table class="submission-form">
 <tr><td>Submitter:</td><td><input type="text" value="{{session.currentUser}}" disabled /></td></tr>
-{{#if submitter_name_found}}
 <tr><td>Your name:</td><td><input type="text" name="submitter_name" value="{{submitter_name}}" disabled /></td></tr>
-{{else}}
-<tr><td>Your name</td><td><input type="text" name="submitter_name" value="{{submitter_name}}" /></td></tr>
-{{/if}}
 <tr><td>Paper title:</td><td><input type="text" name="paper_title" value="{{paper_title}}" maxlength=50 /></td></tr>
 
 <tr><td>Paper summary:</td>

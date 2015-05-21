@@ -3,6 +3,9 @@ var router = express.Router();
 
 var browserid = require('browserid-verify')();
 
+var models = require('../models');
+var User = models.User;
+
 var env       = process.env.NODE_ENV || "development";
 var persona_audience    = require(__dirname + '/../config/config.json')[env]['persona_audience'];
 if(!!process.env.OPENSHIFT_APP_NAME)
@@ -56,6 +59,40 @@ router.post('/logout', function(req, res, next) {
   req.session.currentUserDetails = null;
   req.session.destroy(function(err) {});
   res.send('Logged out');
+});
+
+router.get('/register', function(req, res, next) {
+  res.render('auth/register', { origin: req.query.origin });
+});
+router.post('/register', function(req, res, next) {
+  var fullname = req.body.fullname.trim();
+  var origin = req.body.origin;
+  if(origin == null || origin[0] != '/') {
+    origin = '/';
+  };
+
+  User.find({
+    where: {
+      email: req.session.currentUser
+    }
+  })
+  .complete(function(err, user) {
+    if(!!err) {
+      res.status(500).send('Error retrieving user object');
+    } else if(!user) {
+      // Create the user
+      var user = User.create({
+        email: req.session.currentUser,
+        name: fullname
+      }).complete(function(err, user) {
+        res.redirect(origin);
+      });
+    } else {
+      // The user already existed...
+      res.redirect(302, '/');
+    }
+  });
+
 });
 
 module.exports = router;

@@ -6,7 +6,9 @@ var utils = require('../utils');
 var models = require('../models');
 var User = models.User;
 var Paper = models.Paper;
+var PaperVote = models.PaperVote;
 
+router.all('/submit', utils.require_user);
 router.all('/submit', utils.require_permission('papers/submit'));
 router.get('/submit', function(req, res, next) {
   User
@@ -81,7 +83,7 @@ router.post('/submit', function(req, res, next) {
           res.status(500).send('Error retrieving user object');
         } else if(!user) {
             // Create new user
-            var submitter_name = req.body.submitter_name;
+            var submitter_name = req.body.submitter_name.trim();
             
             var user = User.create({
               email: req.session.currentUser,
@@ -96,6 +98,7 @@ router.post('/submit', function(req, res, next) {
     });
 });
 
+router.all('/list/own', utils.require_user);
 router.all('/list/own', utils.require_permission('papers/list/own'));
 router.get('/list/own', function(req, res, next) {
   User
@@ -133,14 +136,28 @@ router.get('/list', function(req, res, next) {
     });
 });
 
+router.all('/admin/list', utils.require_user);
 router.all('/admin/list', utils.require_permission('papers/list/all'));
 router.get('/admin/list', function(req, res, next) {
-  Paper.findAll({include: [User]})
+  Paper.findAll({include: [User, PaperVote]})
     .complete(function(err, papers) {
       res.render('papers/list', { description: 'All',
                                   showAuthors: true,
+                                  showVotes: true,
                                   papers: papers });
     });
+});
+
+router.all('/admin/vote', utils.require_user);
+router.all('/admin/vote', utils.require_permission('papers/vote'));
+router.get('/admin/vote', function(req, res, next) {
+  Paper.findAll({include: [User, PaperVote]})
+    .complete(function(err, papers) {
+      res.render('papers/vote', { papers: papers});
+    });
+});
+
+router.post('/admin/vote', function(req, res, next) {
 });
 
 module.exports = router;
