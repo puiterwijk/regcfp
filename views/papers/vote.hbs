@@ -1,15 +1,36 @@
-{{description}} submitted papers:<br /><br />
+Vote on papers:
 
-You: "{{user}}"
+<form action="/papers/admin/vote" method="POST">
+<table border="1">
+<tr><th>Title</th><th>Author</th><th>Vote</th><th>Comment</th></tr>
+    {{#each papers}}
+        <tr>
+            <th><span title="{{this.summary}}">{{ this.title }}</span></th>
+            <td>{{ this.User.name }}</td>
+            <td>
+                <input type="radio" name="vote_{{this.id}}" id="vote_{{this.id}}_A" value="A"
+                {{#if this.vote.abstained}}
+                checked
+                {{/if}}
+                >
+                <label for="vote_{{this.id}}_A">Abstain</label>
+                | 
+                {{#each ../voteOptions}}
+                    <input type="radio" name="vote_{{../this.id}}" id="vote_{{../this.id}}_{{this}}" value="{{this}}"
+                    {{#ifEqual ../this.vote.vote this}}
+                        checked
+                    {{/ifEqual}}
+                    >
+                    <label for="vote_{{../this.id}}_{{this}}">{{this}}</label>
+                {{/each}}
+            </td>
+            <td>
+                <input type="text" name="comment_vote_{{this.id}}" value="{{this.vote.comment}}">
+            </td>
+        </tr>
+    {{/each}}
+</table>
 
-{{#each papers}}
-    <b>{{ this.title }}</b>
-    {{#if ../showAuthors}}
-      ({{ this.User.name }} &lt;{{ this.User.email }}&gt;)
-    {{/if}}
-    - 
-    {{ breaklines this.summary }}
+<input type="submit" value="Submit">
+</form>
 
-    <br />
-    <br />
-{{/each}}

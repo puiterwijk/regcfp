@@ -96,11 +96,88 @@ router.all('/admin/vote', utils.require_permission('papers/vote'));
 router.get('/admin/vote', function(req, res, next) {
   Paper.findAll({include: [User, PaperVote]})
     .complete(function(err, papers) {
-      res.render('papers/vote', { papers: papers});
+      paper_info = [];
+      for(paper in papers) {
+        paper = papers[paper];
+        ppr = {
+          id: paper.id,
+          title: paper.title,
+          summary: paper.summary,
+          User: paper.User
+        };
+        for(vote in paper.PaperVotes) {
+          vote = paper.PaperVotes[vote];
+          if(vote.UserId == req.user.id)
+          {
+            ppr.vote = {
+              vote: vote.vote,
+              comment: vote.comment,
+              abstained: vote.abstained
+            };
+            if(ppr.vote.abstained) {
+              ppr.vote.vote = null;
+            }
+          }
+        }
+        paper_info.push(ppr);
+      }
+      res.render('papers/vote', { papers: paper_info,
+                                  voteOptions: [-2, -1, 0, 1, 2]});
     });
 });
 
 router.post('/admin/vote', function(req, res, next) {
+  errors = [];
+  saved = [];
+
+  for(key in req.body) {
+    if(key.substring(0, 5) == "vote_")
+    {
+      var id = key.substring(5);
+      var vote_val = req.body[key];
+      var abstained = false;
+      if(vote_val == 'A')
+      {
+        abstained = true;
+        vote_val = null;
+      }
+      var comment = req.body["comment_" + key];
+
+      PaperVote.findOne({ where: {
+        UserId: req.user.id,
+        PaperId: id
+      }}).then(function(vote) {
+        if(vote == null) {
+          console.log('NEW VOTE');
+          PaperVote
+            .create({
+              comment: comment,
+              vote: vote_val,
+              abstained: abstained,
+            })
+            .complete(function(err, vote) {
+              if(!!err) {
+                errors.push({id: id, err: err});
+              } else {
+                Paper.findOne({where: {id: id}}).then(function(paper) {
+                  paper.addPaperVote(vote);
+                });
+                req.user.addPaperVote(vote);
+                saved.push(id);
+              }
+            });
+        } else {
+          console.log('Updating: ' + vote);
+          vote.comment = comment;
+          vote.vote = vote_val;
+          vote.abstained = abstained;
+          vote.save();
+        }
+      });
+    }
+  }
+  res.render('papers/vote_submit', { errors: JSON.stringify(errors),
+                                     saved: JSON.stringify(saved) });
 });
 
 module.exports = router;

@@ -31,7 +31,14 @@ var hbs = handlebars.create({
       text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
       return new handlebars.handlebars.SafeString(text);
     },
-    has_permission: utils.has_permission
+    has_permission: utils.has_permission,
+    ifEqual: function(v1, v2, options) {
+      if(v1 == v2) {
+        return options.fn(this);
+      } else {
+        return options.inverse(this);
+      }
+    }
   }
 });
 app.set('views', path.join(__dirname, 'views'));
