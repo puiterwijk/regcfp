@@ -21,6 +21,17 @@ Vote on papers:
                 >
             </td>
         </tr>
+        {{#each this.votes}}
+            <tr>
+                <td>Comment</td>
+                <td colspan="3">
+                    {{this.comment}}
+                    {{#if this.abstained}}
+                        <b>Abstained</b>
+                    {{/if}}
+                </td>
+            </tr>
+        {{/each}}
     {{/each}}
 </table>
 
