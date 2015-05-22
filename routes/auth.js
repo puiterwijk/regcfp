@@ -74,6 +74,11 @@ router.post('/register', function(req, res, next) {
     origin = '/';
   };
 
+  if(fullname == '') {
+    res.redirect(302, '/auth/register?origin=' + origin);
+    return;
+  }
+
   User.find({
     where: {
       email: req.session.currentUser
