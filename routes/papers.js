@@ -126,14 +126,15 @@ router.get('/admin/vote', function(req, res, next) {
     });
 });
 
-router.post('/admin/vote', function(req, res, next) {
-  errors = [];
-  saved = [];
-
-  for(key in req.body) {
-    if(key.substring(0, 5) == "vote_")
-    {
+function save_votes(keys, errors, req, res, next) {
+  if(keys.length == 0) {
+    res.render('papers/vote_submit', { errors: errors });
+  } else {
+    var key = keys[0];
+    keys = keys.slice(1);
+    if(key.substring(0, 5) == 'vote_') {
       var id = key.substring(5);
+      console.log("Id: " + id);
       var vote_val = req.body[key];
       var abstained = false;
       if(vote_val == 'A')
@@ -148,36 +149,44 @@ router.post('/admin/vote', function(req, res, next) {
         PaperId: id
       }}).then(function(vote) {
         if(vote == null) {
-          console.log('NEW VOTE');
+          console.log('NEW VOTE for ' + id);
           PaperVote
             .create({
               comment: comment,
               vote: vote_val,
               abstained: abstained,
+              PaperId: id,
+              UserId: req.user.id,
             })
             .complete(function(err, vote) {
               if(!!err) {
-                errors.push({id: id, err: err});
-              } else {
-                Paper.findOne({where: {id: id}}).then(function(paper) {
-                  paper.addPaperVote(vote);
-                });
-                req.user.addPaperVote(vote);
-                saved.push(id);
+                console.log("ERRORS: " + err);
+                errors.push({id: id, err: err, phase: "addVote"});
               }
+              save_votes(keys, errors, req, res, next);
             });
         } else {
           console.log('Updating: ' + vote);
           vote.comment = comment;
           vote.vote = vote_val;
           vote.abstained = abstained;
-          vote.save();
+          vote.save().complete(function(err, vote) {
+            if(!!err) {
+              errors.push({id: id, err: err});
+            };
+            save_votes(keys, errors, req, res, next);
+          });
         }
       });
+    } else {
+      // Continue directly with one less entry in the list
+      save_votes(keys, errors, req, res, next);
     }
   }
-  res.render('papers/vote_submit', { errors: JSON.stringify(errors),
-                                     saved: JSON.stringify(saved) });
+}
+
+router.post('/admin/vote', function(req, res, next) {
+  save_votes(Object.keys(req.body), [], req, res, next);
 });
 
 module.exports = router;
