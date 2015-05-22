@@ -13,6 +13,7 @@ var db = require('./models/index');
 var routes_index = require('./routes/index');
 var routes_auth = require('./routes/auth');
 var routes_papers = require('./routes/papers');
+var routes_registration = require('./routes/registration');
 
 var app = express();
 
@@ -78,6 +79,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes_index);
 app.use('/auth', routes_auth);
 app.use('/papers', routes_papers);
+app.use('/registration', routes_registration);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
