@@ -18,7 +18,8 @@
           "all": ["puiterwijk@fedoraproject.org"]
         },
         "vote": ["puiterwijk@fedoraproject.org"],
-        "seevotes": ["puiterwijk@fedoraproject.org"]
+        "showvotes": ["puiterwijk@fedoraproject.org"],
+        "accept": ["puiterwijk@fedoraproject.org"]
       }
     },
 

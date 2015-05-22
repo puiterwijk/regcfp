@@ -44,6 +44,9 @@ Hello, please login, or choose an option below.
 {{#has_permission "papers/vote"}}
 <div class="button"><a href="/papers/admin/vote">Vote on talks</a></div>
 {{/has_permission}}
+{{#has_permission "papers/showvotes" }}
+<div class="button"><a href="/papers/admin/vote/show">Show talk votes</a></div>
+{{/has_permission}}
 </div>
 
 <h3>Registration</h3>

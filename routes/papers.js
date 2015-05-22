@@ -91,6 +91,82 @@ router.get('/admin/list', function(req, res, next) {
     });
 });
 
+router.all('/admin/vote/show', utils.require_user);
+router.all('/admin/vote/show', utils.require_permission('papers/showvotes'));
+router.get('/admin/vote/show', function(req, res, next) {
+  Paper.findAll({include: [User, PaperVote]})
+    .complete(function(err, papers) {
+      paper_info = [];
+      for(paper in papers) {
+        paper = papers[paper];
+        ppr = {
+          id: paper.id,
+          title: paper.title,
+          summary: paper.summary,
+          User: paper.User,
+          accepted: paper.accepted,
+          vote_count: 0,
+          vote_total: 0,
+          votes: []
+        };
+        for(vote in paper.PaperVotes) {
+          vote = paper.PaperVotes[vote];
+          if(!vote.abstained) {
+            ppr.vote_count++;
+            ppr.vote_total += vote.vote;
+          }
+          ppr.votes.push({
+            user: vote.UserId,
+            vote: vote.vote,
+            comment: vote.comment,
+            abstained: vote.abstained
+          });
+        }
+        ppr.vote_average = (ppr.vote_total / ppr.vote_count);
+        paper_info.push(ppr);
+      }
+      paper_info = paper_info.sort(function(a, b) {
+        return b.vote_average - a.vote_average;
+      });
+      res.render('papers/showvotes', { papers: paper_info });
+    });
+});
+
+function save_accepts(keys, errors, req, res, next) {
+  if(keys.length == 0) {
+    res.render('papers/accept_submit', { errors: errors });
+  } else {
+    var key = keys[0];
+    keys = keys.slice(1);
+    if(key.substring(0, 7) == 'accept_') {
+      var id = key.substring(7);
+      console.log('Id: ' + id);
+      var accepted = req.body[key];
+      console.log('Accepted: ' + accepted);
+      Paper.findOne({where: {
+        id: id
+      }}).then(function(paper) {
+        if(accepted == 'no') {
+          paper.accepted = false;
+        } else {
+          paper.accepted = true;
+        }
+        paper.save().complete(function(err, paper) {
+          if(!!err) {
+            errors.push({id: id, err: err});
+          }
+          save_accepts(keys, errors, req, res, next);
+        });
+      });
+    }
+  }
+};
+
+router.post('/admin/vote/show', utils.require_permission('papers/accept'));
+router.post('/admin/vote/show', function(req, res, next) {
+  save_accepts(Object.keys(req.body), [], req, res, next);
+});
+
 router.all('/admin/vote', utils.require_user);
 router.all('/admin/vote', utils.require_permission('papers/vote'));
 router.get('/admin/vote', function(req, res, next) {

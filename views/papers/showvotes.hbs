@@ -1,0 +1,30 @@
+Vote on papers:
+
+<form action="/papers/admin/vote/show" method="POST">
+<table border="1">
+<tr><th>Title</th><th>Author</th><th>Vote average</th><th>Accepted</th></tr>
+    {{#each papers}}
+        <tr>
+            <th><span title="{{this.summary}}">{{ this.title }}</span></th>
+            <td>{{ this.User.name }}</td>
+            <td>{{ this.vote_average }} (num: {{this.vote_count}}, total: {{this.vote_total}})</td>
+            <td>
+                <input type="hidden" name="accept_{{this.id}}" value="no">
+                <input type="checkbox" name="accept_{{this.id}}" value="yes"
+                {{#if this.accepted}}
+                checked
+                {{/if}}
+                {{#has_permission "papers/accept"}}
+                {{else}}
+                disabled
+                {{/has_permission}}
+                >
+            </td>
+        </tr>
+    {{/each}}
+</table>
+
+{{#has_permission "papers/accept"}}
+<input type="submit" value="Submit">
+{{/has_permission}}
+</form>
