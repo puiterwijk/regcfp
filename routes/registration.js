@@ -86,7 +86,8 @@ router.all('/register', utils.require_permission('registration/register'));
 router.get('/register', function(req, res, next) {
   req.user.getRegistration()
   .complete(function(err, reg) {
-    res.render('registration/register', { registration: reg, genders: all_genders });
+    res.render('registration/register', { registration: reg, genders: all_genders,
+                                          ask_regfee: registration == null});
   });
 });
 
@@ -101,8 +102,7 @@ router.post('/register', function(req, res, next) {
       country: req.body.country.trim(),
       badge_printed: false,
       receipt_sent: false,
-      UserId: req.user.Id,
-      is_not_saved: true
+      UserId: req.user.Id
     };
 
     console.log("Reg info: " + JSON.stringify(reg_info));
@@ -115,7 +115,7 @@ router.post('/register', function(req, res, next) {
 
     if((all_genders.indexOf(reg_info.gender) == -1) || (reg == null && regfee == null)) {
       res.render('registration/register', { registration: reg_info, genders: all_genders,
-                                            submission_error: true});
+                                            submission_error: true, ask_regfee: reg == null});
     } else {
       // Form OK
       if(reg == null) {
