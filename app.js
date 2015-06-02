@@ -39,6 +39,13 @@ var hbs = handlebars.create({
       } else {
         return options.inverse(this);
       }
+    },
+    ifGTE: function(v1, v2, options) {
+      if(v1 >= v2) {
+        return options.fn(this);
+      } else {
+        return options.inverse(this);
+      }
     }
   }
 });
@@ -74,6 +81,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Get user if we have any
+app.use(utils.get_user);
 
 // Routing
 app.use('/', routes_index);

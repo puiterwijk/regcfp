@@ -28,8 +28,27 @@ Hello, please login, or choose an option below.
 {{#if config.registration.enabled}}
 
 <h2>Registration</h2>
-.....
-
+{{#has_permission "registration/view_public"}}
+<div class="button"><a href="/registration/list">Current registrations</a></div>
+{{/has_permission}}
+<div class="buttons">
+{{#has_permission "registration/register" }}
+{{#if registration}}
+<h3>Registration ID: {{registration.display_id}}</h3>
+<div class="button"><a href="/registration/register">Update registration</a></div>
+{{#ifGTE registration.paid config.registration.min_amount_for_receipt}}
+<div class="button"><a href="/registration/receipt">Get receipt</a></div>
+{{else}}
+Not enough paid for receipt (Paid {{config.registration.currency_symbol}}{{registration.paid}}, outstanding for onsite payment: {{config.registration.currency_symbol}}{{registration.outstanding}})
+{{/ifGTE}}
+{{#has_permission "registration/pay_extra"}}
+<div class="button"><a href="/registration/pay">Pay more</a></div>
+{{/has_permission}}
+{{else}}
+<div class="button"><a href="/registration/register">Register</a></div>
+{{/if}}
+{{/has_permission}}
+</div>
 {{/if}}
 
 
@@ -51,6 +70,9 @@ Hello, please login, or choose an option below.
 
 <h3>Registration</h3>
 <div class="buttons">
+{{#has_permission "registration/view_all" }}
+<div class="button"><a href="/registration/admin/list">List all registrations</a></div>
+{{/has_permission}}
 </div>
 
 {{/has_permission}}

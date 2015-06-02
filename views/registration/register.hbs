@@ -1,0 +1,53 @@
+{{#if submission_error}}
+<font color="red"><b>Something went wrong submitting. Please check you filled in all fields!</b></font>
+{{/if}}
+
+<form action="/registration/register" method="post">
+<table class="submission-form">
+<tr><td>Your name:</td><td><input type="text" name="submitter_name" value="{{user.name}}" disabled /></td></tr>
+<tr><td>IRC nickname:</td><td><input type="text" name="irc" value="{{registration.irc}}"></td></tr>
+<input type="hidden" name="is_public" value="false">
+<tr><td>Registration public:</td><td><input type="checkbox" value="true" name="is_public" 
+{{#if registration.is_public}}
+checked
+{{/if}}
+></td></tr>
+
+<tr><td>Registration fee:</td><td>
+{{#unless registration.is_not_saved}}
+Registered
+{{else}}
+{{#each config.registration.fee_options}}
+<input type="radio" name="regfee" value="{{this}}" id="regfee_{{this}}">
+<label for="regfee_{{this}}">{{../config.registration.currency_symbol}}{{this}}</label>
+<br />
+{{/each}}
+<input type="radio" name="regfee" value="custom">
+<input type="text" name="regfee_custom">
+</td>
+<td>NOTE: Only registrations with a fee of at least {{config.registration.currency_symbol}}{{config.registration.min_amount_for_receipt}} can get a receipt! (you can always pay more)
+{{/unless}}
+</td></tr>
+
+<tr><td colspan="2">Always private info for stats:</td></tr>
+<tr><td>Gender:</td><td>
+{{#each genders}}
+<input type="radio" name="gender" value="{{this}}" id="gender_{{this}}"
+{{#ifEqual ../registration/gender this}}
+checked
+{{/ifEqual}}
+>
+<label for="gender_{{this}}">{{this}}</label>
+{{/each}}
+</td></tr>
+
+<tr><td>Country:</td><td><input type="text" name="country" value="{{registration.country}}"></td></tr>
+
+
+
+<tr><td>&nbsp;</td>
+<td><input class="submit-talk" type="submit" value="Submit" /></td>
+</tr>
+
+</table>
+</form>

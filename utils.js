@@ -69,12 +69,23 @@ utils.require_login = function(req, res, next) {
   }
 };
 
-utils.require_user = function(req, res, next) {
+utils.require_feature = function(feature) {
+  if(config[feature]['enabled']) {
+    return function(req, res, next) {
+      next();
+    }
+  } else {
+    return function(req, res, next) {
+      res.render('auth/no_permission', { required_permission: 'Feature disabled' });
+    }
+  }
+};
+
+utils.get_user = function(req, res, next) {
   if(!req.session.currentUser) {
-    res.render('auth/no_permission', { required_permission: 'Login' });
+    next();
     return;
   }
-
   User.find({
     where: {
       email: req.session.currentUser
@@ -83,15 +94,28 @@ utils.require_user = function(req, res, next) {
   .complete(function(err, user) {
     if(!!err) {
       res.status(500).send('Error retrieving user object');
-    } else if(!user) {
-      // Redirect to register
-      res.redirect(302, '/auth/register?origin=' + req.originalUrl);
-    } else {
+    } else if(user) {
       req.user = user;
       res.locals.user = user;
       next();
+    } else {
+      next();
     }
   });
+}
+
+utils.require_user = function(req, res, next) {
+  if(!req.session.currentUser) {
+    res.render('auth/no_permission', { required_permission: 'Login' });
+    return;
+  }
+
+  if(!req.user) {
+    // Redirect to register
+    res.redirect(302, '/auth/register?origin=' + req.originalUrl);
+  } else {
+      next();
+  }
 };
 
 module.exports = utils;

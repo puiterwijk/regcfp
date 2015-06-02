@@ -8,6 +8,8 @@ var User = models.User;
 var Paper = models.Paper;
 var PaperVote = models.PaperVote;
 
+router.all('/', utils.require_feature('papers'));
+
 router.all('/submit', utils.require_user);
 router.all('/submit', utils.require_permission('papers/submit'));
 router.get('/submit', function(req, res, next) {

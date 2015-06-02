@@ -1,0 +1,10 @@
+Your selected registration fee: {{config.registration.currency_symbol}}{{regfee}}.
+<br />
+Please select how you wish to pay:<br />
+Paypal: $INSERT_PAYPAL_BUTTON_HERE<br />
+On-site: 
+<form action="/registration/pay/do" method="POST">
+<input type="hidden" name="method" value="onsite">
+<input type="hidden" name="regfee" value="{{regfee}}">
+<input type="submit" value="Pay on-site">
+</form><br />
