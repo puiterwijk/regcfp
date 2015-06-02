@@ -20,6 +20,15 @@
         "vote": ["puiterwijk@fedoraproject.org"],
         "showvotes": ["puiterwijk@fedoraproject.org"],
         "accept": ["puiterwijk@fedoraproject.org"]
+      },
+      "registration": {
+        "register": ["*authenticated*"],
+        "pay_extra": ["*authenticated*"],
+        "request_receipt": ["*authenticated*"],
+        "view_public": ["*authenticated*"],
+        "view_all": ["puiterwijk@fedoraproject.org"],
+        "add_payment": ["puiterwijk@fedoraproject.org"],
+        "print_badge": ["puiterwijk@fedoraproject.org"]
       }
     },
 
@@ -28,7 +37,10 @@
     },
 
     "registration": {
-      "enabled": false
+      "enabled": false,
+      "currency_symbol": "€",
+      "min_amount_for_receipt": 20,
+      "fee_options": [5, 10, 15, 20]
     }
   }
 }
