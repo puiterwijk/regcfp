@@ -87,7 +87,7 @@ router.get('/register', function(req, res, next) {
   req.user.getRegistration()
   .complete(function(err, reg) {
     res.render('registration/register', { registration: reg, genders: all_genders,
-                                          ask_regfee: registration == null});
+                                          ask_regfee: reg == null});
   });
 });
 
