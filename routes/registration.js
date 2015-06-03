@@ -8,8 +8,6 @@ var User = models.User;
 var Registration = models.Registration;
 var RegistrationPayment = models.RegistrationPayment;
 
-var all_genders = ['male', 'female', 'other'];
-
 router.all('/', utils.require_feature("registration"));
 
 router.all('/list', utils.require_permission('registration/view_public'));
@@ -86,7 +84,7 @@ router.all('/register', utils.require_permission('registration/register'));
 router.get('/register', function(req, res, next) {
   req.user.getRegistration()
   .complete(function(err, reg) {
-    res.render('registration/register', { registration: reg, genders: all_genders,
+    res.render('registration/register', { registration: reg,
                                           ask_regfee: reg == null});
   });
 });
@@ -98,7 +96,6 @@ router.post('/register', function(req, res, next) {
     var reg_info = {
       irc: req.body.irc.trim(),
       is_public: req.body.is_public.indexOf('true') != -1,
-      gender: req.body.gender,
       country: req.body.country.trim(),
       badge_printed: false,
       receipt_sent: false,
@@ -113,8 +110,8 @@ router.post('/register', function(req, res, next) {
       regfee = req.body.regfee_custom.trim();
     }
 
-    if((all_genders.indexOf(reg_info.gender) == -1) || (reg == null && regfee == null)) {
-      res.render('registration/register', { registration: reg_info, genders: all_genders,
+    if((reg == null && regfee == null)) {
+      res.render('registration/register', { registration: reg_info,
                                             submission_error: true, ask_regfee: reg == null});
     } else {
       // Form OK
@@ -143,11 +140,10 @@ router.post('/register', function(req, res, next) {
         console.log("UPDATING");
         reg.irc = reg_info.irc;
         reg.is_public = reg_info.is_public;
-        reg.gender = reg_info.gender;
         reg.country = reg_info.country;
         reg.save().complete(function (err, reg){
           if(!!err) {
-            res.render('registration/register', { registration: reg_info, genders: all_genders,
+            res.render('registration/register', { registration: reg_info,
                                                   save_error: true });
           } else {
             res.render('registration/update_success');
