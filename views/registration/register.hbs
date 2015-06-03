@@ -1,50 +1,31 @@
 {{#if submission_error}}
-<font color="red"><b>Something went wrong submitting. Please check you filled in all fields!</b></font>
+<div class="validation">Something went wrong. Please make sure you have filled all required fields.</div>
 {{/if}}
 
 <form action="/registration/register" method="post">
 <table class="submission-form">
-<tr><td>Your name:</td><td><input type="text" name="submitter_name" value="{{user.name}}" disabled /></td></tr>
-<tr><td>IRC nickname:</td><td><input type="text" name="irc" value="{{registration.irc}}"></td></tr>
+<tr><td>Your name</td><td><input type="text" name="submitter_name" value="{{user.name}}" disabled /></td></tr>
+<tr><td>IRC nickname</td><td><input type="text" name="irc" value="{{registration.irc}}" placeholder="(optional)"></td></tr>
 <input type="hidden" name="is_public" value="false">
-<tr><td>Registration public:</td><td><input type="checkbox" value="true" name="is_public" 
-{{#if registration.is_public}}
-checked
-{{/if}}
-></td></tr>
 
-<tr><td>Registration fee:</td><td>
+
+<tr><td>Registration fee</td><td>
 {{#unless ask_regfee}}
 Registered
 {{else}}
-{{#each config.registration.fee_options}}
-<input type="radio" name="regfee" value="{{this}}" id="regfee_{{this}}">
-<label for="regfee_{{this}}">{{../config.registration.currency_symbol}}{{this}}</label>
-<br />
-{{/each}}
-<input type="radio" name="regfee" value="custom">
-<input type="text" name="regfee_custom">
-</td>
-<td>NOTE: Only registrations with a fee of at least {{config.registration.currency_symbol}}{{config.registration.min_amount_for_receipt}} can get a receipt! (you can always pay more)
-{{/unless}}
-</td></tr>
+<input type="text" name="regfee_custom" class="reg-fee" value="{{config.registration.currency_symbol}}40">
+<p class="note">We can only provide receipts for payments over {{config.registration.currency_symbol}}{{config.registration.min_amount_for_receipt}}.
+{{/unless}}</p>
+</tr>
 
-<tr><td colspan="2">Always private info for stats:</td></tr>
-<tr><td>Gender:</td><td>
-{{#each genders}}
-<input type="radio" name="gender" value="{{this}}" id="gender_{{this}}"
-{{#ifEqual ../registration/gender this}}
+<tr><td>Country</td><td><input type="text" name="country" value="{{registration.country}}" placeholder="(optional)"><br/><p class="note">We will not publish country data.<br/> It will only be used for attendee statistics.</p></td></tr>
+
+
+<tr><td>&nbsp;</td><td><input type="checkbox" value="true" name="is_public" 
+{{#if registration.is_public}}
 checked
-{{/ifEqual}}
->
-<label for="gender_{{this}}">{{this}}</label>
-{{/each}}
-</td></tr>
-
-<tr><td>Country:</td><td><input type="text" name="country" value="{{registration.country}}"></td></tr>
-
-
-
+{{/if}}
+> Hide my name in the public list of attendees</td></tr>
 <tr><td>&nbsp;</td>
 <td><input class="submit-talk" type="submit" value="Submit" /></td>
 </tr>

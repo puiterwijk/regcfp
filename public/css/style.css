@@ -1,5 +1,5 @@
 body {
-  font-family: sans-serif;
+  font-family: "Open Sans",Helvetica,Arial,sans-serif;
   padding: 0;
   margin: 0;
   color: #555;
@@ -73,15 +73,25 @@ body {
   margin: 10px 0;
 }
 
+.submission-form {
+  margin: auto;
+}
+
+.submission-form tr td {
+  padding-bottom: 7px;
+  padding-top: 5px;
+}
+
 .submission-form tr td:first-child {
   text-align: right;
   vertical-align: top;
-  padding-top: 5px;
+  padding-right: 10px;
+  font-weight: bold;
 }
 
 .submission-form tr td input[type=text],
 .submission-form tr td textarea {
-  width: 300px;
+  width: 400px;
   border: 1px solid #555;
   padding: 3px;
 }
@@ -92,4 +102,27 @@ body {
 
 .submission-form tr td .submit-talk {
   float: right;
+  margin-top: 10px;
+}
+
+.submission-form p.note {
+  font-size: 11px;
+  font-style: italic;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.submission-form tr td input[type="text"].reg-fee {
+  width: 100px;
+}
+
+.validation {
+  margin: 0 auto;
+  background-color: #f25050;
+  color: #fff;
+  width: 540px;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  text-align: center;
 }
