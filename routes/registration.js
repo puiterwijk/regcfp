@@ -105,10 +105,6 @@ router.post('/register', function(req, res, next) {
     console.log("Reg info: " + JSON.stringify(reg_info));
 
     var regfee = req.body.regfee;
-    if(regfee == 'custom')
-    {
-      regfee = req.body.regfee_custom.trim();
-    }
 
     if((reg == null && regfee == null)) {
       res.render('registration/register', { registration: reg_info,
