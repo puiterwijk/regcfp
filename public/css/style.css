@@ -32,7 +32,7 @@ body {
 }
 
 .content {
-  max-width: 1024px;
+  max-width: 554px;
   margin: auto;
   padding-top: 20px;
 }
@@ -120,7 +120,6 @@ body {
   margin: 0 auto;
   background-color: #f25050;
   color: #fff;
-  width: 540px;
   padding: 10px;
   margin-bottom: 20px;
   font-size: 12px;
