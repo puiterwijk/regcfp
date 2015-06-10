@@ -79,32 +79,58 @@ router.post('/pay/do', function(req, res, next) {
   }
 });
 
-router.all('/register', utils.require_user);
 router.all('/register', utils.require_permission('registration/register'));
 router.get('/register', function(req, res, next) {
-  req.user.getRegistration()
-  .complete(function(err, reg) {
-    res.render('registration/register', { registration: reg,
-                                          ask_regfee: reg == null});
-  });
+  if(req.user){
+    req.user.getRegistration()
+    .complete(function(err, reg) {
+      res.render('registration/register', { registration: reg,
+                                            ask_regfee: reg == null});
+    });
+  } else {
+    res.render('registration/register', { registration: null, ask_regfee: true });
+  };
 });
 
 router.post('/register', function(req, res, next) {
+  if(!req.user) {
+    // Create user object and set as req.user
+    if(req.body.name.trim() == '') {
+      res.render('registration/register', { registration: null, submission_error: true, ask_regfee: true} );
+    } else {
+      var user_info = {
+        email: req.session.currentUser,
+        name: req.body.name.trim()
+      };
+      User.create(user_info)
+        .complete(function(err, user) {
+          if(!!err) {
+            console.log("Error saving user object: " + err);
+            res.status(500).send('Error saving user');
+          } else {
+            req.user = user;
+            handle_registration();
+          };
+        });
+    }
+  } else {
+    return handle_registration();
+  }
+}
+
+function handle_registration() {
   req.user.getRegistration({include: [RegistrationPayment]})
   .complete(function(err, reg) {
-    console.log('Body: ' + JSON.stringify(req.body));
     var reg_info = {
       irc: req.body.irc.trim(),
-      is_public: req.body.is_public.indexOf('true') != -1,
       country: req.body.country.trim(),
+      is_public: req.body.is_public.indexOf('true') != -1,
       badge_printed: false,
       receipt_sent: false,
       UserId: req.user.Id
     };
-
-    console.log("Reg info: " + JSON.stringify(reg_info));
-
     var regfee = req.body.regfee;
+    reg_info.UserId = req.User.Id;
 
     if((reg == null && regfee == null)) {
       res.render('registration/register', { registration: reg_info,
@@ -112,7 +138,6 @@ router.post('/register', function(req, res, next) {
     } else {
       // Form OK
       if(reg == null) {
-        console.log("CREATING");
         // Create new registration
         Registration.create(reg_info)
           .complete(function(err, reg) {
@@ -133,10 +158,8 @@ router.post('/register', function(req, res, next) {
         });
       } else {
         // Update
-        console.log("UPDATING");
         reg.irc = reg_info.irc;
         reg.is_public = reg_info.is_public;
-        reg.country = reg_info.country;
         reg.save().complete(function (err, reg){
           if(!!err) {
             res.render('registration/register', { registration: reg_info,

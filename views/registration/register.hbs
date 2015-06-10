@@ -4,7 +4,7 @@
 
 <form action="/registration/register" method="post">
 <table class="submission-form">
-<tr><td>Your name</td><td><input type="text" name="submitter_name" value="{{user.name}}" disabled /></td></tr>
+<tr><td>Your name</td><td><input type="text" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td></tr>
 <tr><td>IRC nickname</td><td><input type="text" name="irc" value="{{registration.irc}}" placeholder="(optional)"></td></tr>
 <input type="hidden" name="is_public" value="false">
 
@@ -18,7 +18,7 @@ Registered
 {{/unless}}</p>
 </tr>
 
-<tr><td>Country</td><td><input type="text" name="country" value="{{registration.country}}" placeholder="(optional)"><br/><p class="note">We will not publish country data.<br/> It will only be used for attendee statistics.</p></td></tr>
+-<tr><td>Country</td><td><input type="text" name="country" value="{{registration.country}}" placeholder="(optional)"><br/><p class="note">We will not publish country data.<br/> It will only be used for attendee statistics.</p></td></tr>
 
 
 <tr><td>&nbsp;</td><td><input type="checkbox" value="true" name="is_public" 
