@@ -40,7 +40,7 @@
       "enabled": false,
       "currency_symbol": "€",
       "min_amount_for_receipt": 20,
-      "fee_options": [5, 10, 15, 20]
+      "default_amount": 40
     }
   }
 }

@@ -2,15 +2,8 @@
 <table class="submission-form">
 <tr><td>Your name:</td><td><input type="text" name="submitter_name" value="{{user.name}}" disabled /></td></tr>
 <tr><td>Amount:</td><td>
-{{#each config.registration.fee_options}}
-<input type="radio" name="regfee" value="{{this}}" id="regfee_{{this}}">
-<label for="regfee_{{this}}">{{../config.registration.currency_symbol}}{{this}}</label>
-<br />
-{{/each}}
-<input type="radio" name="regfee" value="custom">
-<input type="text" name="regfee_custom">
-</td>
-<td>NOTE: Only registrations with a fee of at least {{config.registration.currency_symbol}}{{config.registration.min_amount_for_receipt}} can get a receipt! (you can always pay more)
+{{config.registration.currency_symbol}} <input type="text" name="regfee" class="reg-fee" value="{{config.registration.default_amount}}">
+<p class="note">We can only provide receipts for payments over {{config.registration.currency_symbol}}{{config.registration.min_amount_for_receipt}}.
 </td></tr>
 
 <tr><td>&nbsp;</td>

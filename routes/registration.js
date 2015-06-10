@@ -30,11 +30,7 @@ router.get('/pay', function(req, res, next) {
 });
 
 router.post('/pay', function(req, res, next) {
-  var regfee = req.body.regfee;
-  if(regfee == 'custom')
-  {
-    regfee = req.body.regfee_custom.trim();
-  }
+  var regfee = req.body.regfee.trim();
   
   if(regfee == null) {
     res.render('registration/pay');
