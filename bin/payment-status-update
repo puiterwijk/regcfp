@@ -1,0 +1,47 @@
+#!/usr/bin/env node
+
+var db = require('../models/index');
+
+var env = process.env.NODE_ENV || "development";
+var config = require('../config/config.json')[env];
+var paypal = require('paypal-rest-sdk');
+paypal.configure(config['paypal']);
+
+var models = require('../models');
+var RegistrationPayment = models.RegistrationPayment;
+
+
+RegistrationPayment.findAll({
+    where: {
+        type: 'paypal'
+    }
+}).complete(function(err, payments) {
+    if(!!err) {
+        console.log("Error getting payments: " + err);
+    } else {
+        payments.forEach(function(val, index, array) {
+            console.log("Looking up payment " + val['id'] + " (" + val['details'] + ")");
+            paypal.payment.get(val['details'], function(error, payment) {
+                if(!!error) {
+                    console.log("Payment " + val['id'] + " Error");
+                    console.log(error);
+                } else {
+                    console.log("Payment " + val['id'] + " Response: ");
+                    console.log("\tPaid: " + val['paid']);
+                    console.log("\tPayPal state: " + payment.state);
+
+                    if(val['paid'] && payment.state != 'approved') {
+                        console.log('\tNOT APPROVED, but paid');
+                        val.paid = false;
+                        val.save();
+                    }
+                    else if(!val['paid'] && payment.state == 'approved') {
+                        console.log('\tApproved, but not paid');
+                        val.paid = true;
+                        val.save();
+                    }
+                };
+            });
+        });
+    }
+});
