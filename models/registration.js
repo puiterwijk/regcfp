@@ -32,7 +32,7 @@ module.exports = function(sequelize, DataTypes) {
         var amount = 0;
         for(var payment in this.RegistrationPayments) {
           payment = this.RegistrationPayments[payment];
-          if(!payment.paid && payment.method == 'onsite') {
+          if(!payment.paid && payment.type == 'onsite') {
             amount += payment.amount;
           }
         }
@@ -42,7 +42,7 @@ module.exports = function(sequelize, DataTypes) {
         var amount = 0;
         for(var payment in this.RegistrationPayments) {
           payment = this.RegistrationPayments[payment];
-          if(!payment.paid && payment.method == 'paypal') {
+          if(!payment.paid && payment.type == 'paypal') {
             amount += payment.amount;
           }
         }
