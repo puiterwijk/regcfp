@@ -31,6 +31,12 @@
         "print_badge": ["puiterwijk@fedoraproject.org"]
       }
     },
+    
+    "paypal": {
+        "mode": "live",
+        "client_id": "",
+        "client_secret": ""
+    },
 
     "papers": {
       "enabled": true
@@ -39,6 +45,7 @@
     "registration": {
       "enabled": false,
       "currency_symbol": "€",
+      "currency_value": "EUR",
       "min_amount_for_receipt": 20,
       "default_amount": 40
     }
