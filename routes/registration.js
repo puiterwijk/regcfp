@@ -124,8 +124,8 @@ function create_payment(req, res, next, amount) {
     'transactions': [{
       'item_list': {
         'items': [{
-          'name': 'GUADEC Registration',
-          'sku': 'regfee',
+          'name': 'GUADEC Registration fee',
+          'sku': 'regfee:' + req.user.email,
           'price': amount.toString(),
           'currency': config['registration']['currency_value'],
           'quantity': 1
@@ -135,7 +135,7 @@ function create_payment(req, res, next, amount) {
         'currency': config['registration']['currency_value'],
         'total': amount.toString()
       },
-      'description': 'GUADEC Registration fee'
+      'description': 'GUADEC Registration fee for ' + req.user.email
     }]
   };
 
