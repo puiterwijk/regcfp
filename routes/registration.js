@@ -218,16 +218,16 @@ router.post('/register', function(req, res, next) {
             res.status(500).send('Error saving user');
           } else {
             req.user = user;
-            handle_registration();
+            handle_registration(req, res, next);
           };
         });
     }
   } else {
-    return handle_registration();
+    return handle_registration(req, res, next);
   }
 });
 
-function handle_registration() {
+function handle_registration(req, res, next) {
   req.user.getRegistration({include: [RegistrationPayment]})
   .complete(function(err, reg) {
     var reg_info = {
@@ -239,7 +239,7 @@ function handle_registration() {
       UserId: req.user.Id
     };
     var regfee = req.body.regfee;
-    reg_info.UserId = req.User.Id;
+    reg_info.UserId = req.user.Id;
 
     if((reg == null && regfee == null)) {
       res.render('registration/register', { registration: reg_info,

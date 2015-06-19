@@ -28,11 +28,21 @@ module.exports = function(sequelize, DataTypes) {
         }
         return amount;
       },
-      outstanding: function() {
+      outstanding_onsite: function() {
         var amount = 0;
         for(var payment in this.RegistrationPayments) {
           payment = this.RegistrationPayments[payment];
-          if(!payment.paid) {
+          if(!payment.paid && payment.method == 'onsite') {
+            amount += payment.amount;
+          }
+        }
+        return amount;
+      },
+      outstanding_paypal: function() {
+        var amount = 0;
+        for(var payment in this.RegistrationPayments) {
+          payment = this.RegistrationPayments[payment];
+          if(!payment.paid && payment.method == 'paypal') {
             amount += payment.amount;
           }
         }
