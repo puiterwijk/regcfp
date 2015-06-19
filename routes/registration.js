@@ -74,7 +74,7 @@ router.post('/pay/paypal/execute', function(req, res, next) {
       console.log('Response: ');
       console.log(JSON.stringify(payment));
       var info = {
-        amount: req.session.regfee,
+        amount: payment.transactions[0]['amount']['total'],
         paid: payment.state == 'approved',
         type: 'paypal',
         details: payment.id

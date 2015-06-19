@@ -27,10 +27,20 @@ RegistrationPayment.findAll({
                     console.log(error);
                 } else {
                     console.log("Payment " + val['id'] + " Response: ");
-                    console.log("\tPaid: " + val['paid']);
-                    console.log("\tPayPal state: " + payment.state);
+                    console.log("\tPaid: " + val['paid'] + ' (' + val['amount'] + ')');
+                    console.log("\tPayPal state: " + payment.state + ' (' + payment['transactions'][0]['amount']['currency'] + payment['transactions'][0]['amount']['total'] + ')');
 
-                    if(val['paid'] && payment.state != 'approved') {
+                    if(payment['transactions'][0]['amount']['currency'] != config['registration']['currency_value']) {
+                        console.log('\tINVALID CURRENCY');
+                        val.paid = false;
+                        val.save();
+                    }
+                    else if(payment['transactions'][0]['amount']['total'] != val['amount']) {
+                        console.log('\tInvalid amount');
+                        val.amount = payment['transactions'][0]['amount']['total'];
+                        val.save();
+                    }
+                    else if(val['paid'] && payment.state != 'approved') {
                         console.log('\tNOT APPROVED, but paid');
                         val.paid = false;
                         val.save();
