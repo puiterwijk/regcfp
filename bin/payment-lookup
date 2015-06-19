@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+var env = process.env.NODE_ENV || "development";
+var config = require('../config/config.json')[env];
+var paypal = require('paypal-rest-sdk');
+paypal.configure(config['paypal']);
+
+process.argv.forEach(function(val, index, array) {
+    if(index >1) {
+        console.log("Payment " + val + ":");
+        paypal.payment.get(val, function(error, payment) {
+            if(!!error) {
+                console.log("Error: ");
+                console.log(error);
+            } else {
+                console.log(payment);
+            }
+        });
+    };
+});
