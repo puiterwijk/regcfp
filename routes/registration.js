@@ -22,9 +22,12 @@ router.get('/list', function(req, res, next) {
     .findAll({
       where: {
         is_public: true
-      }
+      },
+      include: [User]
     })
     .complete(function(err, registrations) {
+      console.log("Error: " + err);
+      console.log("Registrations: " + registrations);
       res.render('registration/list', { registrations: registrations });
     });
 });
