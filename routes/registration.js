@@ -268,6 +268,7 @@ function handle_registration(req, res, next) {
       } else {
         // Update
         reg.irc = reg_info.irc;
+        reg.country = reg_info.country;
         reg.is_public = reg_info.is_public;
         reg.save().complete(function (err, reg){
           if(!!err) {
