@@ -48,21 +48,28 @@ router.post('/pay', function(req, res, next) {
 router.all('/pay/paypal/return', utils.require_user);
 router.all('/pay/paypal/return', utils.require_permission('registration/pay_extra'));
 router.get('/pay/paypal/return', function(req, res, next) {
+  res.render('registration/pay_paypal', {regfee: req.session.regfee, payerId: req.query.PayerID, paymentId: req.query.paymentId});
+});
+
+router.all('/pay/paypal/execute', utils.require_user);
+router.all('/pay/paypal/execute', utils.require_permission('registration/pay_extra'));
+router.post('/pay/paypal/execute', function(req, res, next) {
   console.log("VERIFYING PAYMENT");
+  console.log('Payer: ' + req.body.payerId + ', paymentId: ' + req.body.paymentId);
   var execute_payment = {
-    'payer_id': req.query.PayerID,
+    'payer_id': req.body.payerId,
     'transactions': [{
       'amount': req.session.payment['request']['transactions'][0]['amount']
     }]
   };
   console.log('Request');
   console.log(JSON.stringify(execute_payment));
-  var paymentID = req.session.payment['response']['id'];
+  var paymentID = req.body.paymentId;
   paypal.payment.execute(paymentID, execute_payment, function(error, payment) {
     if(!!error) {
       console.log('ERROR');
       console.log(JSON.stringify(error));
-      res.status(500).send('Error authorizing payment');
+      res.status(500).send('authorization-failure');
     } else {
       console.log('Response: ');
       console.log(JSON.stringify(payment));
@@ -87,9 +94,13 @@ router.get('/pay/paypal/return', function(req, res, next) {
                   .complete(function(err) {
                     if(!!err) {
                       console.log('Error attaching payment to reg: ' + err);
-                      res.status(500).send('Error attaching payment');
+                      res.status(500).send('error');
                     } else {
-                      res.render('registration/payment_paypal_registered', {amount: info.amount, approved: info.paid});
+                      if(info.paid) {
+                        res.status(200).send('approved');
+                      } else {
+                        res.status(200).send('executed');
+                      }
                     }
                   });
               });
@@ -99,7 +110,7 @@ router.get('/pay/paypal/return', function(req, res, next) {
   });
 });
 
-function execute_paypal(req, res, next, amount) {
+function create_payment(req, res, next, amount) {
   var create_payment = {
     'intent': 'sale',
     'payer': {
@@ -182,7 +193,7 @@ router.post('/pay/do', function(req, res, next) {
       });
   } else if(method == 'paypal') {
     req.session.regfee = req.body.regfee;
-    execute_paypal(req, res, next, req.body.regfee);
+    create_payment(req, res, next, req.body.regfee);
   } else {
     res.status(402).send('Invalid payment method selected');
   }
