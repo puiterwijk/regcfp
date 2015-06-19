@@ -89,7 +89,7 @@ router.get('/pay/paypal/return', function(req, res, next) {
                       console.log('Error attaching payment to reg: ' + err);
                       res.status(500).send('Error attaching payment');
                     } else {
-                      res.render('registration/payment_paypal_registered', {amount: info.amount});
+                      res.render('registration/payment_paypal_registered', {amount: info.amount, approved: info.paid});
                     }
                   });
               });
