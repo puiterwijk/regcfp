@@ -39,7 +39,7 @@ Hello, please login, or choose an option below.
 {{#ifGTE registration.paid config.registration.min_amount_for_receipt}}
 <div class="button"><a href="/registration/receipt">Get receipt</a></div>
 {{else}}
-Not enough paid for receipt (Paid {{config.registration.currency_symbol}}{{registration.paid}}, outstanding for onsite payment: {{config.registration.currency_symbol}}{{registration.outstanding}})<br/>
+Not enough paid for receipt (Paid {{config.registration.currency_symbol}}{{registration.paid}}, outstanding for onsite payment: {{config.registration.currency_symbol}}{{registration.outstanding}}, PayPal outstanding: {{config.registration.currency_symbol}}{{registration.paypal_outstanding}})<br/>
 {{/ifGTE}}
 {{#has_permission "registration/pay_extra"}}
 <div class="button"><a href="/registration/pay">Pay more</a></div>

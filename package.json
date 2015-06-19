@@ -20,6 +20,7 @@
     "pg": "*",
     "pg-hstore": "*",
     "browserid-local-verify": "*",
-    "browserid-verify": "*"
+    "browserid-verify": "*",
+    "paypal-rest-sdk": "*"
   }
 }

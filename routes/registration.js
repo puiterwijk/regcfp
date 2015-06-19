@@ -8,6 +8,12 @@ var User = models.User;
 var Registration = models.Registration;
 var RegistrationPayment = models.RegistrationPayment;
 
+var env       = process.env.NODE_ENV || "development";
+var config = require('../config/config.json')[env];
+
+var paypal = require('paypal-rest-sdk');
+paypal.configure(config['paypal']);
+
 router.all('/', utils.require_feature("registration"));
 
 router.all('/list', utils.require_permission('registration/view_public'));
@@ -38,6 +44,110 @@ router.post('/pay', function(req, res, next) {
     res.render('registration/pay_do', {regfee: regfee});
   }
 });
+
+router.all('/pay/paypal/return', utils.require_user);
+router.all('/pay/paypal/return', utils.require_permission('registration/pay_extra'));
+router.get('/pay/paypal/return', function(req, res, next) {
+  console.log("VERIFYING PAYMENT");
+  var execute_payment = {
+    'payer_id': req.query.PayerID,
+    'transactions': [{
+      'amount': req.session.payment['request']['transactions'][0]['amount']
+    }]
+  };
+  console.log('Request');
+  console.log(JSON.stringify(execute_payment));
+  var paymentID = req.session.payment['response']['id'];
+  paypal.payment.execute(paymentID, execute_payment, function(error, payment) {
+    if(!!error) {
+      console.log('ERROR');
+      console.log(JSON.stringify(error));
+      res.status(500).send('Error authorizing payment');
+    } else {
+      console.log('Response: ');
+      console.log(JSON.stringify(payment));
+      var info = {
+        amount: req.session.regfee,
+        paid: payment.state == 'approved',
+        type: 'paypal',
+        details: payment.id
+      };
+      console.log('Storing');
+      console.log(info);
+      RegistrationPayment
+        .create(info)
+        .complete(function(err, payment) {
+          if(!!err) {
+            console.log('Error saving payment: ' + err);
+            res.status(500).send('ERROR saving payment');
+          } else {
+            req.user.getRegistration()
+              .complete(function(err, reg) {
+                reg.addRegistrationPayment(payment)
+                  .complete(function(err) {
+                    if(!!err) {
+                      console.log('Error attaching payment to reg: ' + err);
+                      res.status(500).send('Error attaching payment');
+                    } else {
+                      res.render('registration/payment_paypal_registered', {amount: info.amount});
+                    }
+                  });
+              });
+          }
+        });
+    }
+  });
+});
+
+function execute_paypal(req, res, next, amount) {
+  var create_payment = {
+    'intent': 'sale',
+    'payer': {
+      'payment_method': 'paypal'
+    },
+    'redirect_urls': {
+      'return_url': config['persona_audience'] + '/registration/pay/paypal/return',
+      'cancel_url': config['persona_audience'] + '/registration/pay'
+    },
+    'transactions': [{
+      'item_list': {
+        'items': [{
+          'name': 'GUADEC Registration',
+          'sku': 'regfee',
+          'price': amount.toString(),
+          'currency': config['registration']['currency_value'],
+          'quantity': 1
+        }]
+      },
+      'amount': {
+        'currency': config['registration']['currency_value'],
+        'total': amount.toString()
+      },
+      'description': 'GUADEC Registration fee'
+    }]
+  };
+
+  console.log('*************STARTING PAYMENT***********');
+  console.log('************REQUEST***********');
+  console.log(create_payment);
+  paypal.payment.create(create_payment, function(error, payment) {
+    console.log('***********RESPONSE********');
+    if(!!error) {
+      console.log('ERROR: ');
+      console.log(error);
+      console.log(error['response']['details']);
+      res.error(500).send('Error requesting payment authorization');
+    } else {
+      console.log(payment);
+      req.session.payment = {'request': create_payment, 'response': payment};
+      for(var index = 0; index < payment.links.length; index++) {
+        if(payment.links[index].rel == 'approval_url') {
+          res.redirect(payment.links[index].href);
+        }
+      }
+    }
+  });
+};
 
 router.all('/pay/do', utils.require_user);
 router.all('/pay/do', utils.require_permission('registration/pay_extra'));
@@ -70,6 +180,9 @@ router.post('/pay/do', function(req, res, next) {
             });
         }
       });
+  } else if(method == 'paypal') {
+    req.session.regfee = req.body.regfee;
+    execute_paypal(req, res, next, req.body.regfee);
   } else {
     res.status(402).send('Invalid payment method selected');
   }
@@ -112,7 +225,7 @@ router.post('/register', function(req, res, next) {
   } else {
     return handle_registration();
   }
-}
+});
 
 function handle_registration() {
   req.user.getRegistration({include: [RegistrationPayment]})
@@ -167,7 +280,7 @@ function handle_registration() {
       }
     }
   });
-});
+};
 
 
 router.all('/admin/list', utils.require_user);
