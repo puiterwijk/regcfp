@@ -246,7 +246,7 @@ function handle_registration(req, res, next) {
     var reg_info = {
       irc: req.body.irc.trim(),
       country: req.body.country.trim(),
-      is_public: req.body.is_public.indexOf('true') != -1,
+      is_public: req.body.is_public.indexOf('false') == -1,
       badge_printed: false,
       receipt_sent: false,
       UserId: req.user.Id

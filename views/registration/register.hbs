@@ -6,7 +6,7 @@
 <table class="submission-form">
 <tr><td>Your name</td><td><input type="text" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td></tr>
 <tr><td>IRC nickname</td><td><input type="text" name="irc" value="{{registration.irc}}" placeholder="(optional)"></td></tr>
-<input type="hidden" name="is_public" value="false">
+<input type="hidden" name="is_public" value="true">
 
 
 <tr><td>Registration fee</td><td>
@@ -21,10 +21,10 @@ Registered
 -<tr><td>Country</td><td><input type="text" name="country" value="{{registration.country}}" placeholder="(optional)"><br/><p class="note">We will not publish country data.<br/> It will only be used for attendee statistics.</p></td></tr>
 
 
-<tr><td>&nbsp;</td><td><input type="checkbox" value="true" name="is_public" 
-{{#if registration.is_public}}
+<tr><td>&nbsp;</td><td><input type="checkbox" value="false" name="is_public" 
+{{#unless registration.is_public}}
 checked
-{{/if}}
+{{/unless}}
 > Hide my name in the public list of attendees</td></tr>
 <tr><td>&nbsp;</td>
 <td><input class="submit-talk" type="submit" value="Submit" /></td>
