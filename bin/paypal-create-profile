@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+
+var env = process.env.NODE_ENV || "development";
+var config = require('../config/config.json')[env];
+var paypal = require('paypal-rest-sdk');
+paypal.configure(config['paypal']);
+
+var profile = {
+    'name': 'GUADEC Registration Profile',
+    'presentation': {
+        'brand_name': 'GNOME Foundation',
+        'logo_image': 'https://www.guadec.org/wp-content/uploads/2014/10/guadec-logo-white.png',
+        'locale_code': 'US',
+    },
+    'input_fields': {
+        'allow_note': true,
+        'no_shipping': 1,
+        'address_override': 0
+    },
+    'flow_config': {
+        'landing_page_type': 'billing',
+        'bank_txn_pending_url': 'http://www.guadec.org'
+    }
+};
+
+paypal.webProfile.create(profile, function(error, profile) {
+    if(!!error) {
+        console.log("Error");
+        console.log(error);
+    } else {
+        console.log("Profile");
+        console.log(profile);
+    }
+});

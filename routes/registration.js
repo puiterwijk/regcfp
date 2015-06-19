@@ -113,6 +113,7 @@ router.post('/pay/paypal/execute', function(req, res, next) {
 function create_payment(req, res, next, amount) {
   var create_payment = {
     'intent': 'sale',
+    "experience_profile_id": config['registration']['paypal_experience_profile'],
     'payer': {
       'payment_method': 'paypal'
     },
