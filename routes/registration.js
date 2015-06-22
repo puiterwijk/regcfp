@@ -210,7 +210,7 @@ router.get('/register', function(req, res, next) {
                                             ask_regfee: reg == null});
     });
   } else {
-    res.render('registration/register', { registration: null, ask_regfee: true });
+    res.render('registration/register', { registration: {is_public: true}, ask_regfee: true });
   };
 });
 
