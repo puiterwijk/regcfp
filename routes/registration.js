@@ -204,9 +204,9 @@ router.post('/pay/do', function(req, res, next) {
 router.all('/receipt', utils.require_user);
 router.all('/receipt', utils.require_permission('registration/request_receipt'));
 router.get('/receipt', function(req, res, next) {
-  req.user.getRegistration()
+  req.user.getRegistration({include: [RegistrationPayment]})
   .complete(function(err, reg) {
-    res.render('registration/receipt', { registration: reg });
+    res.render('registration/receipt', { registration: reg , layout:false });
   });
 });
 
