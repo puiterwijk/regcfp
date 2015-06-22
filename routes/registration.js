@@ -206,7 +206,13 @@ router.all('/receipt', utils.require_permission('registration/request_receipt'))
 router.get('/receipt', function(req, res, next) {
   req.user.getRegistration({include: [RegistrationPayment]})
   .complete(function(err, reg) {
-    res.render('registration/receipt', { registration: reg , layout:false });
+    if(!!err) {
+      res.status(500).send('Error retrieving your registration');
+    } else if(reg.paid < config.registration.min_amount_for_receipt) {
+      res.status(401).send('Not enough paid for receipt');
+    } else {
+      res.render('registration/receipt', { registration: reg , layout:false });
+    }
   });
 });
 
