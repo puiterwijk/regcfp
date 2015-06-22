@@ -201,6 +201,15 @@ router.post('/pay/do', function(req, res, next) {
   }
 });
 
+router.all('/receipt', utils.require_user);
+router.all('/receipt', utils.require_permission('registration/request_receipt'));
+router.get('/receipt', function(req, res, next) {
+  req.user.getRegistration()
+  .complete(function(err, reg) {
+    res.render('registration/receipt', { registration: reg });
+  });
+});
+
 router.all('/register', utils.require_permission('registration/register'));
 router.get('/register', function(req, res, next) {
   if(req.user){
