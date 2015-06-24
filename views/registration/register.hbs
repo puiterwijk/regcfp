@@ -19,6 +19,17 @@ Please note that we can only provide receipts for payments over {{config.registr
 {{/unless}}</p>
 </tr>
 
+-<tr><td>Gender</td>
+<td>
+{{#each allGenders}}
+<input type="radio" name="gender" value="{{this}}" id="gender_{{this}}"
+{{#ifEqual ../registration.gender this}}
+checked
+{{/ifEqual}}
+><label for="gender_{{this}}">{{this}}</label>
+{{/each}}
+<br/><p class="note">We will not publish gender data.<br/> It will only be used for attendee statistics.</p></td></tr>
+
 -<tr><td>Country</td><td><input type="text" name="country" value="{{registration.country}}" placeholder="(optional)"><br/><p class="note">We will not publish country data.<br/> It will only be used for attendee statistics.</p></td></tr>
 
 

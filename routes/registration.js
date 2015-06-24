@@ -14,6 +14,8 @@ var config = require('../config/config.json')[env];
 var paypal = require('paypal-rest-sdk');
 paypal.configure(config['paypal']);
 
+var genders = ['male', 'female', 'other'];
+
 router.all('/', utils.require_feature("registration"));
 
 router.all('/list', utils.require_permission('registration/view_public'));
@@ -225,10 +227,11 @@ router.get('/register', function(req, res, next) {
     req.user.getRegistration()
     .complete(function(err, reg) {
       res.render('registration/register', { registration: reg,
-                                            ask_regfee: reg == null});
+                                            ask_regfee: reg == null,
+                                            allGenders: genders });
     });
   } else {
-    res.render('registration/register', { registration: {is_public: true}, ask_regfee: true });
+    res.render('registration/register', { registration: {is_public: true}, ask_regfee: true, allGenders: genders });
   };
 });
 
@@ -263,6 +266,7 @@ function handle_registration(req, res, next) {
   .complete(function(err, reg) {
     var reg_info = {
       irc: req.body.irc.trim(),
+      gender: req.body.gender,
       country: req.body.country.trim(),
       is_public: req.body.is_public.indexOf('false') == -1,
       badge_printed: false,
@@ -299,6 +303,7 @@ function handle_registration(req, res, next) {
       } else {
         // Update
         reg.irc = reg_info.irc;
+        reg.gender = reg_info.gender;
         reg.country = reg_info.country;
         reg.is_public = reg_info.is_public;
         reg.save().complete(function (err, reg){
