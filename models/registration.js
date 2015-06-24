@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
     is_public: DataTypes.BOOLEAN,
     badge_printed: DataTypes.BOOLEAN,
     receipt_sent: DataTypes.BOOLEAN,
-    gender: DataTypes.ENUM('male', 'female', 'other'),
+    gender: DataTypes.STRING,
     country: DataTypes.STRING,
   }, {
     classMethods: {
