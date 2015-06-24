@@ -166,6 +166,9 @@ router.all('/pay/do', utils.require_user);
 router.all('/pay/do', utils.require_permission('registration/pay_extra'));
 router.post('/pay/do', function(req, res, next) {
   var method = req.body.method;
+  if(req.body.regfee == 0 || req.body.regfee == null) {
+    method = 'onsite';
+  }
   if(method == 'onsite') {
     var info = {
       amount: req.body.regfee,
