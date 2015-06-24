@@ -1,11 +1,13 @@
 <p>Welcome to the event registration system</p>
 
-{{#if session.currentUser}}
-Welcome, {{name}}<br />
-{{else}}
-Hello, please login using Persona, or choose an option below.<br/>
+{{#unless session.currentUser}}
+Hello, please login using Persona.<br/>
 You can log in with your Persona Account or with a persona provider, for example, a gnome.org, fedoraproject.org or gmail.com account"
-{{/if}}
+
+<h1>Please log in</h1>
+
+{{else}}
+Welcome, {{name}}<br />
 
 {{#if config.papers.enabled}}
 
@@ -77,3 +79,4 @@ Not enough paid for receipt (Paid {{config.registration.currency_symbol}}{{regis
 </div>
 
 {{/has_permission}}
+{{/if}}
