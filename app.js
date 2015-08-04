@@ -14,6 +14,7 @@ var routes_index = require('./routes/index');
 var routes_auth = require('./routes/auth');
 var routes_papers = require('./routes/papers');
 var routes_registration = require('./routes/registration');
+var routes_desk = require('./routes/desk');
 
 var app = express();
 
@@ -42,6 +43,13 @@ var hbs = handlebars.create({
     },
     ifGTE: function(v1, v2, options) {
       if(v1 >= v2) {
+        return options.fn(this);
+      } else {
+        return options.inverse(this);
+      }
+    },
+    ifGT: function(v1, v2, options) {
+      if(v1 > v2) {
         return options.fn(this);
       } else {
         return options.inverse(this);
@@ -90,6 +98,7 @@ app.use('/', routes_index);
 app.use('/auth', routes_auth);
 app.use('/papers', routes_papers);
 app.use('/registration', routes_registration);
+app.use('/desk', routes_desk);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

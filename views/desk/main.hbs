@@ -1,0 +1,102 @@
+{{#if message}}
+    <h2>{{message}}</h2>
+{{/if}}
+
+
+<h2>Donations:</h2>
+<form action="/desk/donate" method="post">
+    Amount donated:
+    <select name="currency">
+    <option value="EUR">€</option>
+    <option value="SEK">kr</option>
+    </select>
+    <input type="text" name="amount"><br />
+    Items received:<br />
+    {{#each config.registration.donation_items}}
+
+    {{/each}}
+    <input type="submit" value="Register donation">
+</form><br />
+
+
+
+<h2>Registrations:</h2>
+<table border="1">
+<tr><th>Reg Nr.</th><th>Name</th><th>Email</th><th>IRC Nick</th><th>Actions</th></tr>
+<!-- New entry -->
+<tr>
+    <td colspan=5>
+        <a href="/desk/add">New registration</a>
+    </td>
+</tr>
+<!-- End new entry -->
+
+{{#each registrations}}
+<tr>
+    <td>{{this.id}}</td>
+    <td>{{this.User.name}}</td>
+    <td>{{this.User.email}}</td>
+    <td>{{this.irc}}</td>
+    <td>
+        {{#if this.badge_printed}}
+            BADGE PRINTED (<a href="/desk/badge?regid={{this.id}}" target="_blank">reprint</a>)
+        {{else}}
+            {{#ifGT this.outstanding_onsite 0}}
+                Outstanding: {{this.outstanding_onsite}}<br />
+                <form method="post" action="/desk/payment/markpaid" data-message="Really mark '{{this.User.name}}' as having paid {{this.outstanding_onsite}}?">
+                    <input type="hidden" name="regid" value="{{this.id}}">
+                    <input type="submit" value="Mark as paid">
+                </form>
+                <form method="post" action="/desk/payment/clear" data-message="Really clear payments of '{{this.User.name}}'?">
+                    <input type="hidden" name="regid" value="{{this.id}}">
+                    <input type="submit" value="Clear">
+                </form>
+            {{else}}
+                <form class="payment_add_form" method="post" action="/desk/payment/add" data-name="{{this.User.name}}">
+                    <input type="hidden" name="regid" value="{{this.id}}">
+                    <input type="submit" value="Add payment">
+                </form>
+                <form class="finish_reg_form" method="post" action="/desk/finish" data-message="Really finish registration for '{{this.User.name}}' and print badge?" data-amount={{this.paid}}>
+                    <input type="hidden" name="regid" value="{{this.id}}">
+                    <input type="submit" value="Print badge">
+                </form>
+            {{/ifGT}}
+        {{/if}}
+    </td>
+</tr>
+{{/each}}
+</table>
+
+<script type="text/javascript">
+var min_for_receipt = {{config.registration.min_amount_for_receipt}};
+
+$(function() {
+    $('form').submit(function(event) {
+        if($(event.target).data('message') === undefined) {
+            return true;
+        } else {
+            return window.confirm($(event.target).data('message'));
+        }
+    });
+
+    $('.finish_reg_form').submit(function(event) {
+        var amount = $(event.target).data('amount');
+        if(amount < min_for_receipt) {
+            return !window.confirm('CAUTION: User did not pay enough for receipt (paid: ' + amount + ', needed: ' + min_for_receipt + '). Do you want to cancel?');
+        }
+    });
+
+    $('.payment_add_form').submit(function(event) {
+        var name = $(event.target).data('name');
+        var amount = window.prompt("What amount has '" + name + "' paid?", "0.00");
+        if(amount != null && parseFloat(amount) != 0 && !isNaN(parseFloat(amount))) {
+            $(event.target).append('<input type="hidden" name="amount" value="' + amount + '">');
+            $(event.target).off('submit');
+            $(event.target).submit();
+            return false;
+        } else {
+            return false;
+        }
+    });
+});
+</script>

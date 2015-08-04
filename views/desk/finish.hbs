@@ -1,0 +1,16 @@
+You have finished the registration of {{registration.User.name}}!<br />
+
+{{#ifGTE registration.paid config.registration.min_amount_for_receipt}}
+    Receipt: <a href="/desk/receipt?regid={{registration.id}}" target="_blank">Click here to print receipt</a><br />
+    <b>Note: The user can also log in to the applicaton and get his receipt at any time.</b><br />
+{{else}}
+    The user did not pay enough for a receipt.<br />
+{{/ifGTE}}
+<br />
+
+<b>Badge: <a href="/desk/badge?regid={{registration.id}}" target="_blank">Click here to print badge</a></b><br />
+<br />
+<form action="/desk">
+    <input type="hidden" name="printed" value="{{registration.id}}">
+    <input type="submit" value="Return to desk">
+</form>

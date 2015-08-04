@@ -316,11 +316,4 @@ function handle_registration(req, res, next) {
   });
 };
 
-
-router.all('/admin/list', utils.require_user);
-router.all('/admin/list', utils.require_permission('registration/view_all'));
-router.get('/admin/list', function(req, res, next) {
-  next();
-});
-
 module.exports = router;

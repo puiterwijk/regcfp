@@ -1,0 +1,21 @@
+Thanks, you have been assigned registration id {{regid}}.<br />
+Please return the laptop to the desk.<br /><br />
+
+<form action="/desk">
+    <input type="hidden" name="new_id" value="{{regid}}">
+    <input type="submit" value="Desk person: please click to return">
+</form>
+
+
+<script type="text/javascript">
+    $(function() {
+        $('form').submit(function(event) {
+            return window.prompt('Enter secret word') == '{{config.registration.desk_word}}';
+        });
+        $('a').click(function(event) {
+            if(window.prompt('Enter secret word') != '{{config.registration.desk_word}}') {
+                event.preventDefault();
+            };
+        });
+    });
+</script>
