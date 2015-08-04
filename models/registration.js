@@ -11,7 +11,7 @@ function get_amount_string(amounts) {
       amount += ", ";
     }
     amount += config['registration']['currencies'][cur]['symbol'];
-    amount += amounts[cur];
+    amount += Math.ceil(amounts[cur]);
   }
   return amount;
 }
