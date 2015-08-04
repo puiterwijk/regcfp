@@ -146,6 +146,7 @@ router.post('/payment/add', function(req, res, next) {
   Registration.findOne({where: {id:regid}})
     .then(function(registration) {
       var payment_info = {
+        currency: req.body.currency,
         amount: req.body.amount,
         paid: true,
         type: 'onsite',

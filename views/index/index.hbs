@@ -45,11 +45,11 @@ Welcome, {{name}}<br />
 {{#if registration}}
 <h3>Registration ID: {{registration.display_id}}</h3>
 <div class="button"><a href="/registration/register">Update registration</a></div><br/>
-{{#ifGTE registration.paid config.registration.min_amount_for_receipt}}
+{{#if registration.eligible_for_receipt}}
 <div class="button"><a href="/registration/receipt" target="_blank">Get receipt</a></div>
 {{else}}
-Not enough paid for receipt (Paid {{config.registration.currency_symbol}}{{registration.paid}}, outstanding for onsite payment: {{config.registration.currency_symbol}}{{registration.outstanding_onsite}}, PayPal outstanding: {{config.registration.currency_symbol}}{{registration.outstanding_paypal}})<br/>
-{{/ifGTE}}
+Not enough paid for receipt (Paid {{registration.paid}}, outstanding for onsite payment: {{registration.outstanding_onsite}}, PayPal outstanding: {{registration.outstanding_paypal}}. Any of these needed: {{registration.needed_for_receipt}})<br/>
+{{/if}}
 {{#has_permission "registration/pay_extra"}}
 <div class="button"><a href="/registration/pay">Pay more</a></div>
 {{/has_permission}}

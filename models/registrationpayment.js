@@ -2,6 +2,7 @@
 
 module.exports = function(sequelize, DataTypes) {
   var RegistrationPayment = sequelize.define("RegistrationPayment", {
+    currency: DataTypes.STRING(3),
     amount: DataTypes.FLOAT,
     paid: DataTypes.BOOLEAN,
     type: DataTypes.ENUM('paypal', 'onsite'),

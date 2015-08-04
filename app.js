@@ -33,6 +33,9 @@ var hbs = handlebars.create({
       text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
       return new handlebars.handlebars.SafeString(text);
     },
+    currency_symbol: function(currency) {
+      return config['registration']['currencies'][currency]['symbol'];
+    },
     has_permission: utils.has_permission,
     ifEqual: function(v1, v2, options) {
       if(v1 == v2) {
@@ -78,6 +81,8 @@ app.use(session({
 app.use(function(req, res, next) {
   res.locals.session = req.session;
   res.locals.config = config;
+  res.locals.req = { body: req.body,
+                     query: req.query };
   res.locals.development = env == 'development';
   next();
 });

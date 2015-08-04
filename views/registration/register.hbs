@@ -13,15 +13,15 @@
 {{#unless ask_regfee}}
 Registered
 {{else}}
-{{config.registration.currency_symbol}} <input type="text" name="regfee" class="reg-fee" value="{{config.registration.default_amount}}">
+{{>currency_selector}} <input type="text" name="regfee" class="reg-fee" value="{{config.registration.default_amount}}">
 <p class="note">Feel free to support us by donating as much as you're able to.<br />
-Please note that we can only provide receipts for payments over {{config.registration.currency_symbol}}{{config.registration.min_amount_for_receipt}}.
+We can only provide receipts for payments over {{currency_symbol config.registration.main_currency}}{{min_amount_main_currency}} or an equivalent value in another currency.
 {{/unless}}</p>
 </tr>
 
--<tr><td>Gender</td><td><input type="text" name="gender" value="{{registration.gender}}" placeholder="(optional: male, female, genderqueer, etc.)"><br/><p class="note">We will not publish gender data.<br/> It will only be used for attendee statistics and for an invitation to the women's dinner.</p></td></tr>
+<tr><td>Gender</td><td><input type="text" name="gender" value="{{registration.gender}}" placeholder="(optional: male, female, genderqueer, etc.)"><br/><p class="note">We will not publish gender data.<br/> It will only be used for attendee statistics and for an invitation to the women's dinner.</p></td></tr>
 
--<tr><td>Country</td><td><input type="text" name="country" value="{{registration.country}}" placeholder="(optional)"><br/><p class="note">We will not publish country data.<br/> It will only be used for attendee statistics.</p></td></tr>
+<tr><td>Country</td><td><input type="text" name="country" value="{{registration.country}}" placeholder="(optional)"><br/><p class="note">We will not publish country data.<br/> It will only be used for attendee statistics.</p></td></tr>
 
 
 <tr><td>&nbsp;</td><td><input type="checkbox" value="false" name="is_public" 

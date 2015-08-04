@@ -14,6 +14,12 @@ var config = require('../config/config.json')[env];
 var paypal = require('paypal-rest-sdk');
 paypal.configure(config['paypal']);
 
+function get_min_main() {
+  // Get the minimum amount for receipt in local currency
+  var main_currency = config['registration']['main_currency'];
+  return config['registration']['currencies'][main_currency]['min_amount_for_receipt'];
+}
+
 router.all('/', utils.require_feature("registration"));
 
 router.all('/list', utils.require_permission('registration/view_public'));
@@ -37,12 +43,13 @@ router.get('/pay', function(req, res, next) {
 });
 
 router.post('/pay', function(req, res, next) {
+  var currency = req.body.currency;
   var regfee = req.body.regfee.trim();
   
   if(regfee == null) {
     res.render('registration/pay');
   } else {
-    res.render('registration/pay_do', {regfee: regfee});
+    res.render('registration/pay_do', {currency: currency, regfee: regfee});
   }
 });
 
@@ -75,6 +82,7 @@ router.post('/pay/paypal/execute', function(req, res, next) {
       console.log('Response: ');
       console.log(JSON.stringify(payment));
       var info = {
+        currency: payment[transactions[0]['amount']['currency']
         amount: payment.transactions[0]['amount']['total'],
         paid: payment.state == 'approved',
         type: 'paypal',
@@ -111,7 +119,7 @@ router.post('/pay/paypal/execute', function(req, res, next) {
   });
 });
 
-function create_payment(req, res, next, amount) {
+function create_payment(req, res, next, currency, amount) {
   var create_payment = {
     'intent': 'sale',
     "experience_profile_id": config['registration']['paypal_experience_profile'],
@@ -128,12 +136,12 @@ function create_payment(req, res, next, amount) {
           'name': 'GUADEC Registration fee',
           'sku': 'regfee:' + req.user.email,
           'price': amount.toString(),
-          'currency': config['registration']['currency_value'],
+          'currency': currency,
           'quantity': 1
         }]
       },
       'amount': {
-        'currency': config['registration']['currency_value'],
+        'currency': currency,
         'total': amount.toString()
       },
       'description': 'GUADEC Registration fee for ' + req.user.email
@@ -166,11 +174,13 @@ router.all('/pay/do', utils.require_user);
 router.all('/pay/do', utils.require_permission('registration/pay_extra'));
 router.post('/pay/do', function(req, res, next) {
   var method = req.body.method;
+  req.body.regfee = Math.abs(req.body.regfee);
   if(req.body.regfee == 0 || req.body.regfee == null) {
     method = 'onsite';
   }
   if(method == 'onsite') {
     var info = {
+      currency: req.body.currency,
       amount: req.body.regfee,
       paid: false,
       type: 'onsite',
@@ -190,7 +200,7 @@ router.post('/pay/do', function(req, res, next) {
                     console.log('Error attaching payment to reg: ' + err);
                     res.status(500).send('Error attaching payment');
                   } else {
-                    res.render('registration/payment_onsite_registered', {amount: info.amount});
+                    res.render('registration/payment_onsite_registered', {currency: info.currency, amount: info.amount});
                   }
                 });
             });
@@ -198,7 +208,7 @@ router.post('/pay/do', function(req, res, next) {
       });
   } else if(method == 'paypal') {
     req.session.regfee = req.body.regfee;
-    create_payment(req, res, next, req.body.regfee);
+    create_payment(req, res, next, req.body.currency, req.body.regfee);
   } else {
     res.status(402).send('Invalid payment method selected');
   }
@@ -211,7 +221,7 @@ router.get('/receipt', function(req, res, next) {
   .complete(function(err, reg) {
     if(!!err) {
       res.status(500).send('Error retrieving your registration');
-    } else if(reg.paid < config.registration.min_amount_for_receipt) {
+    } else if(!reg.eligible_for_receipt) {
       res.status(401).send('Not enough paid for receipt');
     } else {
       res.render('registration/receipt', { registration: reg , layout:false });
@@ -225,10 +235,12 @@ router.get('/register', function(req, res, next) {
     req.user.getRegistration()
     .complete(function(err, reg) {
       res.render('registration/register', { registration: reg,
-                                            ask_regfee: reg == null });
+                                            ask_regfee: reg == null,
+                                            min_amount_main_currency: get_min_main() });
     });
   } else {
-    res.render('registration/register', { registration: {is_public: true}, ask_regfee: true });
+    res.render('registration/register', { registration: {is_public: true}, ask_regfee: true,
+                                                         min_amount_main_currency: get_min_main()});
   };
 });
 
@@ -236,7 +248,8 @@ router.post('/register', function(req, res, next) {
   if(!req.user) {
     // Create user object and set as req.user
     if(req.body.name.trim() == '') {
-      res.render('registration/register', { registration: null, submission_error: true, ask_regfee: true} );
+      res.render('registration/register', { registration: null, submission_error: true, ask_regfee: true,
+                                            min_amount_main_currency: get_min_main()} );
     } else {
       var user_info = {
         email: req.session.currentUser,
@@ -270,12 +283,14 @@ function handle_registration(req, res, next) {
       receipt_sent: false,
       UserId: req.user.Id
     };
+    var currency = req.body.currency;
     var regfee = req.body.regfee;
     reg_info.UserId = req.user.Id;
 
     if((reg == null && regfee == null)) {
       res.render('registration/register', { registration: reg_info,
-                                            submission_error: true, ask_regfee: reg == null});
+                                            submission_error: true, ask_regfee: reg == null,
+                                            min_amount_main_currency: get_min_main()});
     } else {
       // Form OK
       if(reg == null) {
@@ -292,7 +307,7 @@ function handle_registration(req, res, next) {
                     console.log('Error adding reg to user: ' + err);
                     res.status(500).send('Error attaching registration to your user');
                   } else {
-                    res.render('registration/registration_success', {regfee: regfee});
+                    res.render('registration/registration_success', {currency: currency, regfee: regfee});
                   }
               });
             }
@@ -306,7 +321,8 @@ function handle_registration(req, res, next) {
         reg.save().complete(function (err, reg){
           if(!!err) {
             res.render('registration/register', { registration: reg_info,
-                                                  save_error: true });
+                                                  save_error: true,
+                                                  min_amount_main_currency: get_min_main() });
           } else {
             res.render('registration/update_success');
           }

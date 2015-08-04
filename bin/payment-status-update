@@ -30,7 +30,7 @@ RegistrationPayment.findAll({
                     console.log("\tPaid: " + val['paid'] + ' (' + val['amount'] + ')');
                     console.log("\tPayPal state: " + payment.state + ' (' + payment['transactions'][0]['amount']['currency'] + payment['transactions'][0]['amount']['total'] + ')');
 
-                    if(payment['transactions'][0]['amount']['currency'] != config['registration']['currency_value']) {
+                    if(payment['transactions'][0]['amount']['currency'] != val['currency']) {
                         console.log('\tINVALID CURRENCY');
                         val.paid = false;
                         val.save();

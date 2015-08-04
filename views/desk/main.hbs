@@ -41,7 +41,7 @@
         {{#if this.badge_printed}}
             BADGE PRINTED (<a href="/desk/badge?regid={{this.id}}" target="_blank">reprint</a>)
         {{else}}
-            {{#ifGT this.outstanding_onsite 0}}
+            {{#if this.has_outstanding_onsite}}
                 Outstanding: {{this.outstanding_onsite}}<br />
                 <form method="post" action="/desk/payment/markpaid" data-message="Really mark '{{this.User.name}}' as having paid {{this.outstanding_onsite}}?">
                     <input type="hidden" name="regid" value="{{this.id}}">
@@ -52,25 +52,41 @@
                     <input type="submit" value="Clear">
                 </form>
             {{else}}
-                <form class="payment_add_form" method="post" action="/desk/payment/add" data-name="{{this.User.name}}">
-                    <input type="hidden" name="regid" value="{{this.id}}">
+                <form class="payment_add_form" data-name="{{this.User.name}}" data-regid="{{this.id}}">
                     <input type="submit" value="Add payment">
                 </form>
-                <form class="finish_reg_form" method="post" action="/desk/finish" data-message="Really finish registration for '{{this.User.name}}' and print badge?" data-amount={{this.paid}}>
+                <form class="finish_reg_form" method="post" action="/desk/finish"
+                 data-message="Really finish registration for '{{this.User.name}}' and print badge?"
+                 data-needed="{{this.needed_for_receipt}}"
+                 data-receipt_eligible="{{this.eligible_for_receipt}}">
                     <input type="hidden" name="regid" value="{{this.id}}">
                     <input type="submit" value="Print badge">
                 </form>
-            {{/ifGT}}
+            {{/if}}
         {{/if}}
     </td>
 </tr>
 {{/each}}
 </table>
 
-<script type="text/javascript">
-var min_for_receipt = {{config.registration.min_amount_for_receipt}};
 
+<div id="add_payment_dialog">
+Adding payment for <span id="add_payment_dialog_name"></span>: 
+    <form method="post" action="/desk/payment/add">
+        <input type="hidden" name="regid" id="add_payment_dialog_regid">
+        {{>currency_selector}}
+        <input type="text" name="amount">
+        <input type="submit" value="Add">
+    </form>
+</div>
+
+
+<script type="text/javascript">
 $(function() {
+    $('#add_payment_dialog').dialog({
+        autoOpen: false
+    });
+
     $('form').submit(function(event) {
         if($(event.target).data('message') === undefined) {
             return true;
@@ -80,23 +96,17 @@ $(function() {
     });
 
     $('.finish_reg_form').submit(function(event) {
-        var amount = $(event.target).data('amount');
-        if(amount < min_for_receipt) {
-            return !window.confirm('CAUTION: User did not pay enough for receipt (paid: ' + amount + ', needed: ' + min_for_receipt + '). Do you want to cancel?');
+        var eligible = $(event.target).data('receipt_eligible');
+        if(eligible != 'true') {
+            return !window.confirm('CAUTION: User did not pay enough for receipt (needed: ' + $(event.target).data('needed') + '). Do you want to cancel?');
         }
     });
 
     $('.payment_add_form').submit(function(event) {
-        var name = $(event.target).data('name');
-        var amount = window.prompt("What amount has '" + name + "' paid?", "0.00");
-        if(amount != null && parseFloat(amount) != 0 && !isNaN(parseFloat(amount))) {
-            $(event.target).append('<input type="hidden" name="amount" value="' + amount + '">');
-            $(event.target).off('submit');
-            $(event.target).submit();
-            return false;
-        } else {
-            return false;
-        }
+        $('#add_payment_dialog_name').html($(event.target).data('name'));
+        $('#add_payment_dialog_regid').val($(event.target).data('regid'));
+        $('#add_payment_dialog').dialog('open');
+        return false;
     });
 });
 </script>
