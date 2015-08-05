@@ -60,7 +60,7 @@
                 <form class="finish_reg_form" method="post" action="/desk/finish"
                  data-message="Really finish registration for '{{this.User.name}}' and print badge?"
                  data-needed="{{this.needed_for_receipt}}"
-                 data-receipt_eligible="{{this.eligible_for_receipt}}">
+                 data-receipteligible="{{this.eligible_for_receipt}}">
                     <input type="hidden" name="regid" value="{{this.id}}">
                     <input type="submit" value="Print badge">
                 </form>
@@ -98,8 +98,8 @@ $(function() {
     });
 
     $('.finish_reg_form').submit(function(event) {
-        var eligible = $(event.target).data('receipt_eligible');
-        if(eligible != 'true') {
+        var eligible = $(event.target).data('receipteligible');
+        if(eligible != true) {
             return !window.confirm('CAUTION: User did not pay enough for receipt (needed: ' + $(event.target).data('needed') + '). Do you want to cancel?');
         }
     });
