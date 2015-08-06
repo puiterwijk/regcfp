@@ -50,6 +50,8 @@ router.get('/', function(req, res, next) {
     });
 });
 
+router.all('/add', utils.require_user);
+router.all('/add', utils.require_permission('registration/desk'));
 router.get('/add', function(req, res, next) {
   res.render('desk/add');
 });
@@ -86,6 +88,8 @@ router.post('/add', function(req, res, next) {
     });
 });
 
+router.all('/receipt', utils.require_user);
+router.all('/receipt', utils.require_permission('registration/desk'));
 router.get('/receipt', function(req, res, next) {
   var regid = req.query.regid;
   Registration.findOne({where: {id:regid}, include: [User, RegistrationPayment]})
@@ -98,6 +102,8 @@ router.get('/receipt', function(req, res, next) {
     });
 });
 
+router.all('/finish', utils.require_user);
+router.all('/finish', utils.require_permission('registration/desk'));
 router.post('/finish', function(req, res, next) {
   var regid = req.body.regid;
   Registration.findOne({where: {id:regid}, include: [User, RegistrationPayment]})
@@ -109,6 +115,8 @@ router.post('/finish', function(req, res, next) {
     });
 });
 
+router.all('/badge', utils.require_user);
+router.all('/badge', utils.require_permission('registration/desk'));
 router.get('/badge', function(req, res, next) {
   var regida = req.query.regida;
   var regidb = req.query.regidb;
@@ -163,6 +171,8 @@ router.get('/badge', function(req, res, next) {
     });
 });
 
+router.all('/payment/markpaid', utils.require_user);
+router.all('/payment/markpaid', utils.require_permission('registration/desk'));
 router.post('/payment/markpaid', function(req, res, next) {
   var regid = req.body.regid;
   Registration.findOne({where: {id:regid}, include: [RegistrationPayment]})
@@ -178,6 +188,8 @@ router.post('/payment/markpaid', function(req, res, next) {
     });
 });
 
+router.all('/payment/clear', utils.require_user);
+router.all('/payment/clear', utils.require_permission('registration/desk'));
 router.post('/payment/clear', function(req, res, next) {
   var regid = req.body.regid;
   Registration.findOne({where: {id:regid}, include: [RegistrationPayment]})
@@ -192,6 +204,8 @@ router.post('/payment/clear', function(req, res, next) {
     });
 });
 
+router.all('/payment/add', utils.require_user);
+router.all('/payment/add', utils.require_permission('registration/desk'));
 router.post('/payment/add', function(req, res, next) {
   var regid = req.body.regid;
   Registration.findOne({where: {id:regid}})
