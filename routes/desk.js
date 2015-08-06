@@ -17,6 +17,8 @@ paypal.configure(config['paypal']);
 var spawn = require('child_process').spawn;
 var exec = require('child_process').exec;
 var stream = require('stream');
+var mktemp = require('mktemp');
+var fs = require('fs');
 
 
 router.all('/', utils.require_user);
@@ -130,35 +132,32 @@ router.get('/badge', function(req, res, next) {
             if(!!err) {
               res.status(500).send('Error generating badge: ' + err);
             } else {
-              var child = spawn('cairosvg', ['-']);
-              /*var child = exec('cat | inkscape -f /dev/stdin -A /dev/stdout -z | cat', function(err, stdout, stderr) {
-              //var child = exec('cat', function(err, stdout, stderr) {
+              mktemp.createFile('_temp_XXXXX.svg', function(err, path) {
+                console.log('Temporary filename: ' + path);
                 if(!!err) {
-                  res.status(500).send('Error generating pdf: ' + err);
+                  res.status(500).send('Unable to generate file: ' + err);
                 } else {
-                  console.log('OUTPUT error: ' + stderr);
-                  res.status(200).set('Content-Type', 'application/pdf').send(stdout);
-                  //res.status(200).set('Content-Type', 'image/svg+xml').send(stdout);
+                  fs.writeFile(path, html, function(err) {
+                    if(!!err) {
+                      res.status(500).send('Unable to write temp file: ' + err);
+                    } else {
+                      var child = exec('inkscape -f ' + path + ' -A ' + path + '.pdf -z', function(err, stdout, stderr) {
+                        if(!!err) {
+                          res.status(500).send('Error generating pdf: ' + err);
+                        } else {
+                          console.log('OUTPUT error: ' + stderr);
+                          var filestream = fs.createReadStream(path + '.pdf');
+                          filestream.pipe(res);
+                        }
+                      });
+                    }
+                  });
+
                 }
-              });*/
-              
-              child.stdout.on('data', function(chunk) {
-                res.write(chunk);
               });
-
-              child.stdout.on('finish', function() {
-                res.send();
-              });
-              
-              var inp_str = stream.Readable();
-              inp_str._read = function noop() {};
-              inp_str.push(html);
-              inp_str.push(null);
-              inp_str.pipe(child.stdin);
             }
-          });
-
           //res.status(200).set('Content-Type', 'image/svg+xml').render('desk/badge_svg', { rega: rega, regb: regb, layout: false });
+          });
         });
     });
 });
