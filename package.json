@@ -22,7 +22,6 @@
     "browserid-local-verify": "*",
     "browserid-verify": "*",
     "paypal-rest-sdk": "*",
-    "librsvg": "*",
     "mktemp": "*"
   }
 }
