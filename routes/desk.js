@@ -14,6 +14,10 @@ var config = require('../config/config.json')[env];
 var paypal = require('paypal-rest-sdk');
 paypal.configure(config['paypal']);
 
+var spawn = require('child_process').spawn;
+var exec = require('child_process').exec;
+var stream = require('stream');
+
 
 router.all('/', utils.require_user);
 router.all('/', utils.require_permission('registration/desk'));
@@ -103,12 +107,59 @@ router.post('/finish', function(req, res, next) {
     });
 });
 
-// TODO: BADGE PRINTING
 router.get('/badge', function(req, res, next) {
-  var regid = req.query.regid;
-  Registration.findOne({where: {id:regid}, include: [RegistrationPayment]})
-    .then(function(registration) {
-      res.status(200).send('Registration: ' + registration);
+  var regida = req.query.regida;
+  var regidb = req.query.regidb;
+  Registration.findOne({where: {id:regida}, include: [User]})
+    .then(function(rega) {
+      Registration.findOne({where: {id:regidb}, include: [User]})
+        .then(function(regb) {
+          var rega_name = "";
+          var regb_name = "";
+          if(!!rega) {
+            rega_name = rega.User.name;
+          }
+          if(!!regb) {
+            regb_name = regb.User.name;
+          }
+          req.app.render('desk/badge_svg', {
+              rega_name: rega_name,
+              regb_name: regb_name,
+              layout: false
+          }, function(err, html) {
+            if(!!err) {
+              res.status(500).send('Error generating badge: ' + err);
+            } else {
+              var child = spawn('cairosvg', ['-']);
+              /*var child = exec('cat | inkscape -f /dev/stdin -A /dev/stdout -z | cat', function(err, stdout, stderr) {
+              //var child = exec('cat', function(err, stdout, stderr) {
+                if(!!err) {
+                  res.status(500).send('Error generating pdf: ' + err);
+                } else {
+                  console.log('OUTPUT error: ' + stderr);
+                  res.status(200).set('Content-Type', 'application/pdf').send(stdout);
+                  //res.status(200).set('Content-Type', 'image/svg+xml').send(stdout);
+                }
+              });*/
+              
+              child.stdout.on('data', function(chunk) {
+                res.write(chunk);
+              });
+
+              child.stdout.on('finish', function() {
+                res.send();
+              });
+              
+              var inp_str = stream.Readable();
+              inp_str._read = function noop() {};
+              inp_str.push(html);
+              inp_str.push(null);
+              inp_str.pipe(child.stdin);
+            }
+          });
+
+          //res.status(200).set('Content-Type', 'image/svg+xml').render('desk/badge_svg', { rega: rega, regb: regb, layout: false });
+        });
     });
 });
 

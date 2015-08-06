@@ -70,6 +70,7 @@ app.use(function(req, res, next) {
   res.locals.req = { body: req.body,
                      query: req.query };
   res.locals.development = env == 'development';
+  req.app = app;
   next();
 });
 

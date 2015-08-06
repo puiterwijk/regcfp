@@ -21,6 +21,7 @@
     "pg-hstore": "*",
     "browserid-local-verify": "*",
     "browserid-verify": "*",
-    "paypal-rest-sdk": "*"
+    "paypal-rest-sdk": "*",
+    "librsvg": "*"
   }
 }
