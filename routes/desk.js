@@ -146,6 +146,7 @@ router.get('/badge', function(req, res, next) {
                           res.status(500).send('Error generating pdf: ' + err);
                         } else {
                           console.log('OUTPUT error: ' + stderr);
+                          res.status(200).set('Content-Type', 'application/pdf');
                           var filestream = fs.createReadStream(path + '.pdf');
                           filestream.pipe(res);
                         }
