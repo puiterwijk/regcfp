@@ -135,17 +135,43 @@ router.get('/badge', function(req, res, next) {
     .then(function(rega) {
       Registration.findOne({where: {id:regidb}, include: [User]})
         .then(function(regb) {
-          var rega_name = "";
-          var regb_name = "";
-          if(!!rega) {
-            rega_name = rega.User.name;
-          }
-          if(!!regb) {
-            regb_name = regb.User.name;
+          var regs = {
+            a: rega,
+            b: regb
+          };
+          var names = {
+            a: {
+              name: "",
+              longname: ""
+            },
+            b: {
+              name: "",
+              longname: ""
+            }
+          };
+          for(reg in regs) {
+            if(!!regs[reg]) {
+              var name = regs[reg].User.name;
+              var longname = "";
+              if(name.length > 20) {
+                snames = name.split(' ');
+                name = '';
+                for(var tname in snames) {
+                  tname = snames[tname];
+                  if(name.length > 20) {
+                    longname += tname + ' ';
+                  } else {
+                    name += tname + ' ';
+                  }
+                }
+              }
+              console.log('Setting reg: ' + reg);
+              names[reg]['name'] = name;
+              names[reg]['longname'] = longname;
+            }
           }
           req.app.render('desk/badge_svg', {
-              rega_name: rega_name,
-              regb_name: regb_name,
+              names: names,
               layout: false
           }, function(err, html) {
             if(!!err) {
