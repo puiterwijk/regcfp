@@ -19,6 +19,7 @@ var exec = require('child_process').exec;
 var stream = require('stream');
 var mktemp = require('mktemp');
 var fs = require('fs');
+var os = require('os');
 
 
 router.all('/', utils.require_user);
@@ -150,7 +151,7 @@ router.get('/badge', function(req, res, next) {
             if(!!err) {
               res.status(500).send('Error generating badge: ' + err);
             } else {
-              mktemp.createFile('_temp_XXXXX.svg', function(err, path) {
+              mktemp.createFile(os.tmpdir() + '/_temp_XXXXX.svg', function(err, path) {
                 console.log('Temporary filename: ' + path);
                 if(!!err) {
                   res.status(500).send('Unable to generate file: ' + err);
