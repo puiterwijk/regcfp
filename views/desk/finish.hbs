@@ -8,9 +8,16 @@ You have finished the registration of {{registration.User.name}}!<br />
 {{/if}}
 <br />
 
-<b>Badge: <a href="/desk/badge?regida={{registration.id}}" target="_blank">Click here to print badge</a></b><br />
+{{#if previous}}
+    <b>Badge: <a href="/desk/badge?regida={{registration.id}}&regidb={{previous}}" target="_blank">Click here to print badge</a></b><br />
+{{else}}
+    <b>SINGLE</b> Badge: <a href="/desk/badge?regida={{registration.id}}" target="_blank">Click here to print <b>SINGLE</b> badge</a><br />
+{{/if}}
 <br />
 <form action="/desk">
     <input type="hidden" name="printed" value="{{registration.id}}">
+    {{#if previous}}
+        <input type="hidden" name="previous" value="{{previous}}">
+    {{/if}}
     <input type="submit" value="Return to desk">
 </form>

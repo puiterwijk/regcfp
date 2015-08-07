@@ -24,6 +24,7 @@ var fs = require('fs');
 router.all('/', utils.require_user);
 router.all('/', utils.require_permission('registration/desk'));
 router.get('/', function(req, res, next) {
+  printed = null;
   message = null;
   if(req.query.new_id) {
     message = "Registration " + req.query.new_id + " was added";
@@ -39,6 +40,10 @@ router.get('/', function(req, res, next) {
   }
   else if(req.query.printed) {
     message = "Registration " + req.query.printed + " was finished!";
+    if(!req.query.previous) {
+      message += " Please finish a second one to print badges!";
+      printed = req.query.printed;
+    }
   }
 
   Registration
@@ -46,7 +51,7 @@ router.get('/', function(req, res, next) {
       include: [User, RegistrationPayment]
     })
     .complete(function(err, registrations) {
-      res.render('desk/main', { registrations: registrations, message: message });
+      res.render('desk/main', { registrations: registrations, message: message, printed: printed });
     });
 });
 
@@ -111,7 +116,12 @@ router.post('/finish', function(req, res, next) {
       registration.badge_printed = true;
       registration.save();
 
-      res.render('desk/finish', { registration: registration} );
+      var previous = null;
+      if(req.body.printed) {
+        previous = req.body.printed;
+      }
+
+      res.render('desk/finish', { registration: registration, previous: previous } );
     });
 });
 

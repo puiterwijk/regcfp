@@ -2,6 +2,10 @@
     <h2>{{message}}</h2>
 {{/if}}
 
+{{#if printed}}
+    <h3>Or click <a href="/desk/badge?regida={{printed}}">here</a> to print badge now</h3>
+{{/if}}
+
 
 {{!--
 <h2>Donations:</h2>
@@ -61,6 +65,9 @@
                  data-message="Really finish registration for '{{this.User.name}}' and print badge?"
                  data-needed="{{this.needed_for_receipt}}"
                  data-receipteligible="{{this.eligible_for_receipt}}">
+                    {{#if ../../../printed}}
+                        <input type="hidden" name="printed" value="{{../../../../printed}}">
+                    {{/if}}
                     <input type="hidden" name="regid" value="{{this.id}}">
                     <input type="submit" value="Print badge">
                 </form>
