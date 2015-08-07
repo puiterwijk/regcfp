@@ -33,3 +33,5 @@ node_modules
 
 # Custom
 database.sqlite
+_temp_*.svg
+_temp_*.svg.pdf
