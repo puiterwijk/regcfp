@@ -60,7 +60,7 @@ router.get('/view_name', function(req, res, next) {
           users2.push(user);
         }
       };
-      shuffle(users);
+      shuffle(users2);
       var name = null;
       if(req.query.index) {
         name = users2[req.query.index].name;
