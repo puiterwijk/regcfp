@@ -29,6 +29,25 @@ router.get('/', function(req, res, next) {
   }
 });
 
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex ;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
 router.all('/view_name', utils.require_permission('registration/view_name'));
 router.get('/view_name', function(req, res, next) {
   var everyone = req.query.everyone;
@@ -41,6 +60,7 @@ router.get('/view_name', function(req, res, next) {
           users2.push(user);
         }
       };
+      shuffle(users);
       var name = null;
       if(req.query.index) {
         name = users[req.query.index].name;
