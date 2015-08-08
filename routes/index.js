@@ -63,7 +63,7 @@ router.get('/view_name', function(req, res, next) {
       shuffle(users);
       var name = null;
       if(req.query.index) {
-        name = users[req.query.index].name;
+        name = users2[req.query.index].name;
       }
       res.render('index/view_user', { count: users2.length, name: name, everyone: everyone });
     });
