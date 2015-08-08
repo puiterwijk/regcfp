@@ -37,7 +37,7 @@ router.get('/view_name', function(req, res, next) {
       var users2 = [];
       for(var user in users) {
         user = users[user];
-        if(user.Registration.badge_printed && !user.isInelligbileForRaffle && (everyone || user.isVolunteer)) {
+        if(user.Registration && user.Registration.badge_printed && !user.isInelligbileForRaffle && (everyone || user.isVolunteer)) {
           users2.push(user);
         }
       };
