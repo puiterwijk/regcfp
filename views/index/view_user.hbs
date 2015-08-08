@@ -1,1 +1,10 @@
-<h1>{{user.name}}</h1>
+{{#if name}}
+<h1>{{name}}</h1>
+<br /><br /><br />
+{{/if}}
+
+Available: 0 - {{count}}<br />
+<form action="/view_user" method="GET">
+    <input type="text" name="index">
+    <input type="submit">
+</form>

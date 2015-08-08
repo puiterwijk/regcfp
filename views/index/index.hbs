@@ -11,10 +11,7 @@ Welcome, {{name}}<br />
 
 
 {{#has_permission "registration/view_name"}}
-<form action="/view_name" method="post">
-    <input type="text" name="userid">
-    <input type="submit" name="View name">
-</form>
+<a href="/view_name">view name</a><br />
 {{/has_permission}}
 
 {{#has_permission "registration/desk"}}
