@@ -43,7 +43,7 @@ router.get('/view_name', function(req, res, next) {
       };
       var name = null;
       if(req.query.index) {
-        name = users[name].name;
+        name = users[req.query.index].name;
       }
       res.render('index/view_user', { count: users2.length, name: name });
     });
