@@ -48,25 +48,4 @@ function shuffle(array) {
   return array;
 }
 
-router.all('/view_name', utils.require_permission('registration/view_name'));
-router.get('/view_name', function(req, res, next) {
-  var everyone = req.query.everyone;
-  User.findAll({include: [Registration]})
-    .then(function(users) {
-      var users2 = [];
-      for(var user in users) {
-        user = users[user];
-        if(user.Registration && user.Registration.badge_printed && !user.isInelligbileForRaffle && (everyone || user.isVolunteer)) {
-          users2.push(user);
-        }
-      };
-      shuffle(users2);
-      var name = null;
-      if(req.query.index) {
-        name = users2[req.query.index].name;
-      }
-      res.render('index/view_user', { count: users2.length, name: name, everyone: everyone });
-    });
-});
-
 module.exports = router;
