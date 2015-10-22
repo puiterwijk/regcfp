@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+var db = require('../models/index');
+
+var env = process.env.NODE_ENV || "development";
+var config = require('../config/config.json')[env];
+
+var models = require('../models');
+var User = models.User;
+
+User.findAll({
+}).complete(function(err, users) {
+    if(!!err) {
+        console.log("Error getting users: " + err);
+    } else {
+        console.log("name,email");
+        users.forEach(function(val, index, array) {
+            console.log(val['name'] + "," + val['email']);
+        });
+    }
+});
