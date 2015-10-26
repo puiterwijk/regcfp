@@ -80,8 +80,6 @@ function show_list(req, res, next, show_private) {
         }
         display_regs.push(cur_reg);
       }
-      console.log('Fields: ' + JSON.stringify(field_display_names));
-      console.log('Regs: ' + JSON.stringify(display_regs));
       res.render('registration/list', { fields: field_display_names, registrations: display_regs });
     });
 };
