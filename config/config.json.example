@@ -1,5 +1,10 @@
 {
   "development": {
+    "theming": {
+      "site_name": "My Event registration",
+      "event_name": "My Event",
+      "logo": ""
+    },
     "secret": "development",
     "database": {
       "database": "database.sqlite",
@@ -9,6 +14,7 @@
         "paranoid": true
       }
     },
+
     "persona_audience": "http://localhost:3000",
 
     "permissions": {
@@ -32,22 +38,17 @@
         "view_all": ["puiterwijk@fedoraproject.org"],
         "add_payment": ["puiterwijk@fedoraproject.org"],
         "print_badge": ["puiterwijk@fedoraproject.org"],
-        "desk": ["puiterwijk@fedoraproject.org"],
+        "desk": ["puiterwijk@fedoraproject.org"]
       }
     },
     
-    "paypal": {
-        "mode": "live",
-        "client_id": "",
-        "client_secret": ""
-    },
-
     "papers": {
-      "enabled": true
+      "enabled": false
     },
 
     "registration": {
       "enabled": false,
+      "payment_product_name": "My Event Registration Fee",
       "currencies": {
         "EUR": {
           "symbol": "€",
@@ -64,7 +65,33 @@
       },
       "main_currency": "EUR",
       "paypal_experience_profile": "",
-      "desk_word": "something"
+      "desk_word": "something",
+
+      "paypal": {
+        "api_credentials": {
+          "mode": "live",
+          "client_id": "",
+          "client_secret": ""
+        },
+
+        "profile": {
+          "name": "Event Registration Profile",
+          "presentation": {
+            "brand_name": "Event Foundation",
+            "logo_image": "https://www.guadec.org/wp-content/uploads/2014/10/guadec-logo-white.png",
+            "locale_code": "US"
+          },
+          "input_fields": {
+            "allow_note": true,
+            "no_shipping": 1,
+            "address_override": 0
+          },
+          "flow_config": {
+            "landing_page_type": "billing",
+            "bank_txn_pending_url": "http://www.guadec.org"
+          }
+        }
+      }
     }
   }
 }

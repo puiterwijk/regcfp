@@ -133,7 +133,7 @@ function create_payment(req, res, next, currency, amount) {
     'transactions': [{
       'item_list': {
         'items': [{
-          'name': 'GUADEC Registration fee',
+          'name': config['registration']['payment_product_name'],
           'sku': 'regfee:' + req.user.email,
           'price': amount.toString(),
           'currency': currency,
@@ -144,22 +144,17 @@ function create_payment(req, res, next, currency, amount) {
         'currency': currency,
         'total': amount.toString()
       },
-      'description': 'GUADEC Registration fee for ' + req.user.email
+      'description': config['registration']['payment_product_name'] + ' fee for ' + req.user.email
     }]
   };
 
-  console.log('*************STARTING PAYMENT***********');
-  console.log('************REQUEST***********');
-  console.log(create_payment);
   paypal.payment.create(create_payment, function(error, payment) {
-    console.log('***********RESPONSE********');
     if(!!error) {
       console.log('ERROR: ');
       console.log(error);
       console.log(error['response']['details']);
       res.error(500).send('Error requesting payment authorization');
     } else {
-      console.log(payment);
       req.session.payment = {'request': create_payment, 'response': payment};
       for(var index = 0; index < payment.links.length; index++) {
         if(payment.links[index].rel == 'approval_url') {

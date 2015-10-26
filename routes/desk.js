@@ -177,7 +177,7 @@ router.get('/badge', function(req, res, next) {
             if(!!err) {
               res.status(500).send('Error generating badge: ' + err);
             } else {
-              mktemp.createFile(os.tmpdir() + '/_guadec_regcfgp_badge_XXXXX.svg', function(err, path) {
+              mktemp.createFile(os.tmpdir() + '/_regcfgp_badge_XXXXX.svg', function(err, path) {
                 console.log('Temporary filename: ' + path);
                 if(!!err) {
                   res.status(500).send('Unable to generate file: ' + err);

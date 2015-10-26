@@ -1,7 +1,7 @@
 <!doctype HTML>
 <html>
     <head >
-        <title>Event registration</title>
+        <title>{{ config.theming.siteName }}</title>
 
         <meta http-equiv="X-UA-Compatible" content="IE=Edge">
         <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.min.css" rel="stylesheet">
@@ -17,6 +17,11 @@
                 var currentUser = null;
             {{/if}}
 
+            // Login arguments
+            var login_args = {
+              siteName: "{{ config.theming.sitename }}",
+              siteLogo: "{{ config.theming.logo }}"
+            };
         </script>
         <script type="text/javascript" src="/javascripts/login.js"></script>
         <link rel="stylesheet" href="/css/style.css" type="text/css" media="all">
@@ -39,11 +44,7 @@
                 {{#if session.currentUser}}
                     <button id="logoutBtn" onclick="javascript: navigator.id.logout();">Log out</button>
                 {{else}}
-                    {{#if development}}
-                        <button id="loginBtn" onclick="javascript: navigator.id.request(login_args_development);">Log in with Persona</button>
-                    {{else}}
-                        <button id="loginBtn" onclick="javascript: navigator.id.request(login_args);">Log in with Persona</button>
-                    {{/if}}
+                    <button id="loginBtn" onclick="javascript: navigator.id.request(login_args);">Log in with Persona</button>
                 {{/if}}
 		        </div>
 		    </div>

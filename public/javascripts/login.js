@@ -1,12 +1,3 @@
-var login_args = {
-  siteName: "GUADEC Registration",
-  siteLogo: "/img/guadec-logo-white.png"
-};
-
-var login_args_development = {
-  siteName: "GUADEC Registration DEVELOPMENT"
-};
-
 navigator.id.watch({
     loggedInUser: currentUser,
     onlogin: function(assertion) {
