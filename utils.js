@@ -5,6 +5,7 @@ var config = require(__dirname + '/config/config.json')[env];
 
 var models = require('./models');
 var User = models.User;
+var Email = models.Email;
 
 function get_permission_checker(permission) {
   var required = permission.split('/');
@@ -117,6 +118,44 @@ utils.require_user = function(req, res, next) {
   } else {
       next();
   }
+};
+
+utils.send_email = function(req, res, recipient, template, variables, cb) {
+  if(recipient == null) {
+    recipient = req.user.id;
+  } else {
+    recipient = recipient.id;
+  }
+
+  variables.layout = false;
+  req.app.render('email/' + template, variables, function(err, html) {
+    if(!!err) {
+      console.log('Error rendering email: ' + err);
+      res.status(500).send('Error rendering email');
+      return null;
+    } else {
+      var split = html.split('\n');
+      var subject = split[0];
+      var contents = split.slice(2).join('\n');
+
+      var info = {
+        UserId: recipient,
+        sent: false,
+        subject: subject,
+        body: contents
+      };
+      Email.create(info)
+      .complete(function(err, email) {
+        if(!!err) {
+          console.log('Error saving email: ' + err);
+          res.status(500).send('Error sending email');
+          return null;
+        } else {
+          cb();
+        }
+      });
+    }
+  });
 };
 
 module.exports = utils;

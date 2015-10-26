@@ -6,10 +6,17 @@ var env = process.env.NODE_ENV || "development";
 var config = require('../config/config.json')[env];
 
 var models = require('../models');
+var User = models.User;
 var Email = models.Email;
 
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
+
+
+var transporter = nodemailer.createTransport(config['email']['transport']);
 
 Email.findAll({
+    include: [User],
     where: {
         sent: false
     }
@@ -17,8 +24,26 @@ Email.findAll({
     if(!!err) {
         console.log("Error getting emails: " + err);
     } else {
-        emails.forEach(function(val, index, array) {
-            console.log("Email: " + val);
+        emails.forEach(function(email, index, array) {
+            console.log("Email " + email.id + " to: " + email.User.email);
+            var mailOptions = {
+                from: config['email']['from'],
+                to: email.User.email,
+                subject: email.subject,
+                text: email.body
+            };
+            
+            transporter.sendMail(mailOptions, function(error, info){
+                if(!!error) {
+                    console.log("Email " + email.id + " failed to send: " + error);
+                } else {
+                    console.log("Email " + email.id + " sent");
+                    email.sent = true;
+                    email.save().complete(function(err, email) {
+                        console.log("Email " + email.id + " done");
+                    });
+                }
+            });
         });
     }
 });

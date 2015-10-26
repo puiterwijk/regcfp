@@ -22,6 +22,8 @@
     "browserid-local-verify": "*",
     "browserid-verify": "*",
     "paypal-rest-sdk": "*",
-    "mktemp": "*"
+    "mktemp": "*",
+    "nodemailer": "*",
+    "nodemailer-smtp-transport": "*"
   }
 }

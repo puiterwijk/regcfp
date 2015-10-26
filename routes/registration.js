@@ -360,8 +360,9 @@ function handle_registration(req, res, next) {
                   } else {
                     var field_values = get_reg_fields(req, null);
                     return update_field_values(req, res, next,
-                                               "registration/registration_success",
-                                                reg, field_values, currency, regfee, can_pay);
+                                               false,
+                                               reg, get_reg_fields(req, null),
+                                               currency, regfee, can_pay, get_reg_fields(req, null));
                   }
               });
             }
@@ -376,8 +377,8 @@ function handle_registration(req, res, next) {
                                                   save_error: true,
                                                   min_amount_main_currency: get_min_main() });
           } else {
-            return update_field_values(req, res, next, "registration/update_success", reg,
-                                       get_reg_fields(req, reg), null, null, null);
+            return update_field_values(req, res, next, true, reg,
+                                       get_reg_fields(req, reg), null, null, null, get_reg_fields(req, reg));
           }
         });
       }
@@ -385,10 +386,25 @@ function handle_registration(req, res, next) {
   });
 };
 
-function update_field_values(req, res, next, template, reg, field_values, currency, regfee, canpay) {
+function update_field_values(req, res, next, is_update, reg, field_values, currency, regfee, canpay, allfields) {
+  var template, subject;
+  if(is_update) {
+    template = "registration/update_success";
+    email_template = "registration/updated";
+  } else {
+    template = "registration/registration_success";
+    email_template = "registration/registered";
+  }
   var keys = Object.keys(field_values);
-  if(keys.length == 0)
-    return res.render(template, {currency: currency, regfee: regfee, canpay: canpay});
+  if(keys.length == 0) {
+    utils.send_email(req, res, null, email_template, {
+      registration: reg,
+      reg_fields: allfields
+    }, function() {
+      return res.render(template, {currency: currency, regfee: regfee, canpay: canpay});
+    });
+    return;
+  }
 
   var first = keys[0];
   current = field_values[first];
@@ -407,7 +423,7 @@ function update_field_values(req, res, next, template, reg, field_values, curren
           res.status(500).send('Error saving registration info');
           return null;
         } else {
-          return update_field_values(req, res, next, template, reg, field_values, currency, regfee, canpay);
+          return update_field_values(req, res, next, is_update, reg, field_values, currency, regfee, canpay, allfields);
         }
       });
     }
@@ -426,7 +442,7 @@ function update_field_values(req, res, next, template, reg, field_values, curren
           console.log('Error saving reg: ' + err);
           res.status(500).send('Error saving registration info');
         } else {
-          return update_field_values(req, res, next, template, reg, field_values, currency, regfee, canpay);
+          return update_field_values(req, res, next, is_update, reg, field_values, currency, regfee, canpay, allfields);
         }
       });
   }

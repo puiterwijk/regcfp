@@ -15,6 +15,13 @@
       }
     },
 
+    "email": {
+      "from": "myevent@example.com",
+      "transport": {
+        "host": "localhost"
+      }
+    },
+
     "persona_audience": "http://localhost:3000",
 
     "permissions": {
