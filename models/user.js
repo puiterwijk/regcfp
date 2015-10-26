@@ -10,6 +10,7 @@ module.exports = function(sequelize, DataTypes) {
         User.hasMany(models.Paper);
         User.hasMany(models.PaperVote);
         User.hasOne(models.Registration);
+        User.hasMany(models.Email);
       }
     }
   });

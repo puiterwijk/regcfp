@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+
+var db = require('../models/index');
+
+var env = process.env.NODE_ENV || "development";
+var config = require('../config/config.json')[env];
+
+var models = require('../models');
+var Email = models.Email;
+
+
+Email.findAll({
+    where: {
+        sent: false
+    }
+}).complete(function(err, emails) {
+    if(!!err) {
+        console.log("Error getting emails: " + err);
+    } else {
+        emails.forEach(function(val, index, array) {
+            console.log("Email: " + val);
+        });
+    }
+});
