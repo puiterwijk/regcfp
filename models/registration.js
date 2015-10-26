@@ -18,22 +18,29 @@ function get_amount_string(amounts) {
 
 module.exports = function(sequelize, DataTypes) {
   var Registration = sequelize.define("Registration", {
-    irc: DataTypes.STRING,
     is_public: DataTypes.BOOLEAN,
     badge_printed: DataTypes.BOOLEAN,
     receipt_sent: DataTypes.BOOLEAN,
-    gender: DataTypes.STRING,
-    country: DataTypes.STRING,
   }, {
     classMethods: {
       associate: function(models) {
         Registration.belongsTo(models.User);
         Registration.hasMany(models.RegistrationPayment);
+        Registration.hasMany(models.RegistrationInfo);
       }
     },
     getterMethods: {
       display_id: function() {
         return this.id;
+      },
+
+      info_values: function() {
+        var values = {};
+        for(var info in this.RegistrationInfos) {
+          info = this.RegistrationInfos[info];
+          values[info.field] = info.value;
+        }
+        return values;
       },
 
       left_for_receipt: function() {

@@ -7,6 +7,7 @@ var models = require('../models');
 var User = models.User;
 var Registration = models.Registration;
 var RegistrationPayment = models.RegistrationPayment;
+var RegistrationInfo = models.RegistrationInfo;
 
 var env       = process.env.NODE_ENV || "development";
 var config = require('../config/config.json')[env];
@@ -20,20 +21,74 @@ function get_min_main() {
   return config['registration']['currencies'][main_currency]['min_amount_for_receipt'];
 }
 
+
+function get_reg_fields(request, registration) {
+  var fields = {};
+  for(var field in config['registration']['fields']) {
+    fields[field] = config['registration']['fields'][field];
+  };
+  if(request)
+    console.log(request.body);
+  for(field in fields) {
+    if(request && ('field_' + field) in request.body) {
+      fields[field].value = request.body['field_' + field];
+    } else if(registration != null) {
+      for(var info in registration.RegistrationInfos) {
+        info = registration.RegistrationInfos[info];
+        if(info.field == field) {
+          fields[field].value = info.value;
+        }
+      }
+    } else {
+      fields[field].value = '';
+    }
+  };
+  return fields;
+}
+
 router.all('/', utils.require_feature("registration"));
 
-router.all('/list', utils.require_permission('registration/view_public'));
-router.get('/list', function(req, res, next) {
+function show_list(req, res, next, show_private) {
   Registration
     .findAll({
       where: {
         is_public: true
       },
-      include: [User]
+      include: [User, RegistrationInfo]
     })
     .complete(function(err, registrations) {
-      res.render('registration/list', { registrations: registrations });
+      var field_ids = [null];
+      var field_display_names = ['Name'];
+      var fields = config['registration']['fields'];
+      for(var field in fields) {
+        if(show_private || !fields[field]['private']) {
+          field_ids.push(field);
+          field_display_names.push(fields[field]['display_name']);
+        }
+      }
+      var display_regs = [];
+      for(var registration in registrations) {
+        registration = registrations[registration];
+        var cur_reg = [];
+        cur_reg.push(registration['User'].name);
+        var field_values = get_reg_fields(null, registration);
+        for(var field in field_ids) {
+          field = field_ids[field];
+          if(field != null) {
+            cur_reg.push(field_values[field].value);
+          }
+        }
+        display_regs.push(cur_reg);
+      }
+      console.log('Fields: ' + JSON.stringify(field_display_names));
+      console.log('Regs: ' + JSON.stringify(display_regs));
+      res.render('registration/list', { fields: field_display_names, registrations: display_regs });
     });
+};
+
+router.all('/list', utils.require_permission('registration/view_public'));
+router.get('/list', function(req, res, next) {
+  return show_list(req, res, next, false);
 });
 
 router.all('/pay', utils.require_user);
@@ -97,7 +152,7 @@ router.post('/pay/paypal/execute', function(req, res, next) {
             console.log('Error saving payment: ' + err);
             res.status(500).send('ERROR saving payment');
           } else {
-            req.user.getRegistration()
+            req.user.getRegistration({include: [RegistrationInfo]})
               .complete(function(err, reg) {
                 reg.addRegistrationPayment(payment)
                   .complete(function(err) {
@@ -187,7 +242,7 @@ router.post('/pay/do', function(req, res, next) {
           console.log('Error saving payment: ' + err);
           res.status(500).send('ERROR saving payment');
         } else {
-          req.user.getRegistration()
+          req.user.getRegistration({include: [RegistrationInfo]})
             .complete(function(err, reg) {
               reg.addRegistrationPayment(payment)
                 .complete(function(err) {
@@ -212,7 +267,7 @@ router.post('/pay/do', function(req, res, next) {
 router.all('/receipt', utils.require_user);
 router.all('/receipt', utils.require_permission('registration/request_receipt'));
 router.get('/receipt', function(req, res, next) {
-  req.user.getRegistration({include: [RegistrationPayment]})
+  req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
   .complete(function(err, reg) {
     if(!!err) {
       res.status(500).send('Error retrieving your registration');
@@ -227,15 +282,17 @@ router.get('/receipt', function(req, res, next) {
 router.all('/register', utils.require_permission('registration/register'));
 router.get('/register', function(req, res, next) {
   if(req.user){
-    req.user.getRegistration()
+    req.user.getRegistration({include: [RegistrationInfo]})
     .complete(function(err, reg) {
       res.render('registration/register', { registration: reg,
+                                            registration_fields: get_reg_fields(null, reg),
                                             ask_regfee: reg == null,
                                             min_amount_main_currency: get_min_main() });
     });
   } else {
     res.render('registration/register', { registration: {is_public: true}, ask_regfee: true,
-                                                         min_amount_main_currency: get_min_main()});
+                                          registration_fields: get_reg_fields(null, null),
+                                          min_amount_main_currency: get_min_main()});
   };
 });
 
@@ -244,6 +301,7 @@ router.post('/register', function(req, res, next) {
     // Create user object and set as req.user
     if(req.body.name.trim() == '') {
       res.render('registration/register', { registration: null, submission_error: true, ask_regfee: true,
+                                            registration_fields: get_reg_fields(req, null),
                                             min_amount_main_currency: get_min_main()} );
     } else {
       var user_info = {
@@ -267,12 +325,9 @@ router.post('/register', function(req, res, next) {
 });
 
 function handle_registration(req, res, next) {
-  req.user.getRegistration({include: [RegistrationPayment]})
+  req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
   .complete(function(err, reg) {
     var reg_info = {
-      irc: req.body.irc.trim(),
-      gender: req.body.gender.trim(),
-      country: req.body.country.trim(),
       is_public: req.body.is_public.indexOf('false') == -1,
       badge_printed: false,
       receipt_sent: false,
@@ -286,6 +341,7 @@ function handle_registration(req, res, next) {
 
     if(reg == null && regfee == null && can_pay) {
       res.render('registration/register', { registration: reg_info,
+                                            registration_fields: get_reg_fields(req, reg),
                                             submission_error: true, ask_regfee: reg == null,
                                             min_amount_main_currency: get_min_main()});
     } else {
@@ -304,29 +360,78 @@ function handle_registration(req, res, next) {
                     console.log('Error adding reg to user: ' + err);
                     res.status(500).send('Error attaching registration to your user');
                   } else {
-                    res.render('registration/registration_success', {currency: currency, regfee: regfee, canpay: can_pay});
+                    var field_values = get_reg_fields(req, null);
+                    return update_field_values(req, res, next,
+                                               "registration/registration_success",
+                                                reg, field_values, currency, regfee, can_pay);
                   }
               });
             }
         });
       } else {
         // Update
-        reg.irc = reg_info.irc;
-        reg.gender = reg_info.gender;
-        reg.country = reg_info.country;
         reg.is_public = reg_info.is_public;
         reg.save().complete(function (err, reg){
           if(!!err) {
             res.render('registration/register', { registration: reg_info,
+                                                  registration_fields: get_reg_fields(req, reg),
                                                   save_error: true,
                                                   min_amount_main_currency: get_min_main() });
           } else {
-            res.render('registration/update_success');
+            return update_field_values(req, res, next, "registration/update_success", reg,
+                                       get_reg_fields(req, reg), null, null, null);
           }
         });
       }
     }
   });
+};
+
+function update_field_values(req, res, next, template, reg, field_values, currency, regfee, canpay) {
+  var keys = Object.keys(field_values);
+  if(keys.length == 0)
+    return res.render(template, {currency: currency, regfee: regfee, canpay: canpay});
+
+  var first = keys[0];
+  current = field_values[first];
+  delete field_values[first];
+
+  var updated = false;
+  for(var info in reg.RegistrationInfos) {
+    info = reg.RegistrationInfos[info];
+    if(!updated && info.field == first) {
+      // Update this one
+      updated = true;
+      info.value = current.value;
+      info.save().complete(function(err, info) {
+        if(!!err) {
+          console.log('Error saving reg: ' + err);
+          res.status(500).send('Error saving registration info');
+          return null;
+        } else {
+          return update_field_values(req, res, next, template, reg, field_values, currency, regfee, canpay);
+        }
+      });
+    }
+  }
+  if(!updated) {
+    // We did not store this info before, create new object
+    var info = {
+      RegistrationId: reg.id,
+      field: first,
+      value: current.value
+    };
+
+    RegistrationInfo.create(info)
+      .complete(function(err, reg) {
+        if(!!err) {
+          console.log('Error saving reg: ' + err);
+          res.status(500).send('Error saving registration info');
+        } else {
+          return update_field_values(req, res, next, template, reg, field_values, currency, regfee, canpay);
+        }
+      });
+  }
 };
 
 module.exports = router;

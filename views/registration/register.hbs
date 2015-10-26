@@ -5,7 +5,6 @@
 <form action="/registration/register" method="post">
 <table class="submission-form">
 <tr><td>Your name</td><td><input type="text" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td></tr>
-<tr><td>IRC nickname</td><td><input type="text" name="irc" value="{{registration.irc}}" placeholder="(optional)"></td></tr>
 <input type="hidden" name="is_public" value="true">
 
 
@@ -21,9 +20,38 @@ We can only provide receipts for payments over {{currency_symbol config.registra
 </tr>
 {{/has_permission}}
 
-<tr><td>Gender</td><td><input type="text" name="gender" value="{{registration.gender}}" placeholder="(optional: male, female, genderqueer, etc.)"><br/><p class="note">We will not publish gender data.<br/> It will only be used for attendee statistics and for an invitation to the women's dinner.</p></td></tr>
 
-<tr><td>Country</td><td><input type="text" name="country" value="{{registration.country}}" placeholder="(optional)"><br/><p class="note">We will not publish country data.<br/> It will only be used for attendee statistics.</p></td></tr>
+{{#each registration_fields}}
+<tr><td>{{ this.display_name }}</td>
+<td>
+
+{{#ifEqual this.type "string"}}
+<input type="text" name="field_{{@key}}" value="{{ this.value }}" placeholder="{{ this.placeholder }}">
+{{else}}
+{{#ifEqual this.type "select"}}
+
+<select name="field_{{@key}}">
+{{#each this.options}}
+<option
+{{#ifEqual ../value this}}
+selected="selected"
+{{/ifEqual}}
+>{{this}}</option>
+{{/each}}
+</select>
+
+{{else }}
+Unknown field type
+{{/ifEqual}}
+{{/ifEqual}}
+
+{{#if this.message}}
+<br/>
+<p class="note">{{this.message}}</p>
+{{/if}}
+</td>
+</tr>
+{{/each}}
 
 
 <tr><td>&nbsp;</td><td><input type="checkbox" value="false" name="is_public" 

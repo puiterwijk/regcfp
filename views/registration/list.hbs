@@ -1,6 +1,13 @@
 <table>
-<tr><th>Name</th><th>IRC Nick</th></tr>
+<tr>
+{{#each fields}}
+<th>{{this}}</th>
+{{/each}}
+</tr>
 {{#each registrations}}
-<tr><td>{{this.User.name}}</td><td>{{this.irc}}</td></tr>
+<tr>
+{{#each this}}
+<td>{{this}}</td>
+{{/each}}
 {{/each}}
 </table>

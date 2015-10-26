@@ -48,6 +48,15 @@
 
     "registration": {
       "enabled": false,
+      "fields": {
+        "country": {
+          "display_name": "Country",
+          "type": "string",
+          "required": true,
+          "private": true,
+          "placeholder": "Country of origin"
+        }
+      },
       "payment_product_name": "My Event Registration Fee",
       "currencies": {
         "EUR": {
