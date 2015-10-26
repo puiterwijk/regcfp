@@ -9,7 +9,7 @@
     "body-parser": "*",
     "cookie-parser": "*",
     "debug": "*",
-    "express": "*",
+    "express": "4.*",
     "express-handlebars": "*",
     "express-session": "*",
     "connect-session-sequelize": "*",
