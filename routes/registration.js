@@ -37,7 +37,7 @@ router.get('/list', function(req, res, next) {
 });
 
 router.all('/pay', utils.require_user);
-router.all('/pay', utils.require_permission('registration/pay_extra'));
+router.all('/pay', utils.require_permission('registration/pay'));
 router.get('/pay', function(req, res, next) {
   res.render('registration/pay');
 });
@@ -54,13 +54,13 @@ router.post('/pay', function(req, res, next) {
 });
 
 router.all('/pay/paypal/return', utils.require_user);
-router.all('/pay/paypal/return', utils.require_permission('registration/pay_extra'));
+router.all('/pay/paypal/return', utils.require_permission('registration/pay'));
 router.get('/pay/paypal/return', function(req, res, next) {
   res.render('registration/pay_paypal', {regfee: req.session.regfee, payerId: req.query.PayerID, paymentId: req.query.paymentId});
 });
 
 router.all('/pay/paypal/execute', utils.require_user);
-router.all('/pay/paypal/execute', utils.require_permission('registration/pay_extra'));
+router.all('/pay/paypal/execute', utils.require_permission('registration/pay'));
 router.post('/pay/paypal/execute', function(req, res, next) {
   console.log("VERIFYING PAYMENT");
   console.log('Payer: ' + req.body.payerId + ', paymentId: ' + req.body.paymentId);
@@ -166,7 +166,7 @@ function create_payment(req, res, next, currency, amount) {
 };
 
 router.all('/pay/do', utils.require_user);
-router.all('/pay/do', utils.require_permission('registration/pay_extra'));
+router.all('/pay/do', utils.require_permission('registration/pay'));
 router.post('/pay/do', function(req, res, next) {
   var method = req.body.method;
   req.body.regfee = Math.abs(req.body.regfee);
@@ -282,7 +282,9 @@ function handle_registration(req, res, next) {
     var regfee = req.body.regfee;
     reg_info.UserId = req.user.Id;
 
-    if((reg == null && regfee == null)) {
+    var can_pay = utils.get_permission_checker("registration/pay")(req.session.currentUser);
+
+    if(reg == null && regfee == null && can_pay) {
       res.render('registration/register', { registration: reg_info,
                                             submission_error: true, ask_regfee: reg == null,
                                             min_amount_main_currency: get_min_main()});
@@ -302,7 +304,7 @@ function handle_registration(req, res, next) {
                     console.log('Error adding reg to user: ' + err);
                     res.status(500).send('Error attaching registration to your user');
                   } else {
-                    res.render('registration/registration_success', {currency: currency, regfee: regfee});
+                    res.render('registration/registration_success', {currency: currency, regfee: regfee, canpay: can_pay});
                   }
               });
             }

@@ -45,12 +45,16 @@ Welcome, {{name}}<br />
 {{#if registration}}
 <h3>Registration ID: {{registration.display_id}}</h3>
 <div class="button"><a href="/registration/register">Update registration</a></div><br/>
+
+{{#has_permission "registration/request_receipt"}}
 {{#if registration.eligible_for_receipt}}
 <div class="button"><a href="/registration/receipt" target="_blank">Get receipt</a></div>
 {{else}}
 Not enough paid for receipt (Paid {{registration.paid}}, outstanding for onsite payment: {{registration.outstanding_onsite}}, PayPal outstanding: {{registration.outstanding_paypal}}. Any of these needed: {{registration.needed_for_receipt}})<br/>
 {{/if}}
-{{#has_permission "registration/pay_extra"}}
+{{/has_permission}}
+
+{{#has_permission "registration/pay"}}
 {{#unless registration.badge_printed}}
 <div class="button"><a href="/registration/pay">Pay more</a></div>
 {{/unless}}

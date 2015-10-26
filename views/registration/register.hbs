@@ -9,6 +9,7 @@
 <input type="hidden" name="is_public" value="true">
 
 
+{{#has_permission "registration/pay"}}
 <tr><td>Registration fee</td><td>
 {{#unless ask_regfee}}
 Registered
@@ -18,6 +19,7 @@ Registered
 We can only provide receipts for payments over {{currency_symbol config.registration.main_currency}}{{min_amount_main_currency}} or an equivalent value in another currency.
 {{/unless}}</p>
 </tr>
+{{/has_permission}}
 
 <tr><td>Gender</td><td><input type="text" name="gender" value="{{registration.gender}}" placeholder="(optional: male, female, genderqueer, etc.)"><br/><p class="note">We will not publish gender data.<br/> It will only be used for attendee statistics and for an invitation to the women's dinner.</p></td></tr>
 

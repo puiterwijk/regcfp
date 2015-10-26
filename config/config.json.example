@@ -32,7 +32,7 @@
       },
       "registration": {
         "register": ["*authenticated*"],
-        "pay_extra": ["*authenticated*"],
+        "pay": ["*authenticated*"],
         "request_receipt": ["*authenticated*"],
         "view_public": ["*authenticated*"],
         "view_all": ["puiterwijk@fedoraproject.org"],

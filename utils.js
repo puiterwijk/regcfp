@@ -34,6 +34,7 @@ function get_permission_checker(permission) {
     }
   };
 };
+utils.get_permission_checker = get_permission_checker;
 
 utils.has_permission = function(permission, options) {
   if(get_permission_checker(permission)(options.data.root.session.currentUser))
