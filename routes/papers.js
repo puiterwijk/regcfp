@@ -21,7 +21,7 @@ router.get('/submit', function(req, res, next) {
   res.render('papers/submit', { paper: {}, tracks: config['papers']['tracks'] });
 });
 
-function add_paper(user, paper, res) {
+function add_paper(req, res, paper) {
   Paper
     .create(paper)
     .complete(function(err, paper) {
@@ -29,13 +29,17 @@ function add_paper(user, paper, res) {
         console.log('Error saving paper: ' + err);
         res.status(500).send('Error saving paper submission');
       } else {
-        user.addPaper(paper)
+        req.user.addPaper(paper)
           .complete(function(err) {
             if(!!err) {
               console.log('Error attaching paper to user: ' + err);
               res.status(500).send('Error attaching your paper to your user');
             } else {
-              res.render('papers/submit_success');
+              utils.send_email(req, res, null, "papers/paper_submitted", {
+                paper: paper
+              }, function() {
+                res.render('papers/submit_success');
+              });
             }
           });
       }
@@ -60,7 +64,7 @@ router.post('/submit', function(req, res, next) {
       submission_error: true
     });
   } else {
-    add_paper(req.user, paper, res);
+    add_paper(req, res, paper);
   }
 });
 
@@ -317,7 +321,12 @@ router.post('/tag', function(req, res, next) {
         console.log('Error saving paper ta: ' + err);
         res.status(500).send('Error saving paper tag');
       } else {
-        res.render('papers/tag_success');
+        utils.send_email(req, res, null, "papers/tag_added", {
+          paper: paper,
+          tag: info
+        }, function() {
+          res.render('papers/tag_success');
+        });
       }
     });
 });
@@ -339,8 +348,8 @@ router.post('/copresenter/add', function(req, res, next) {
         .then(function(copresenter) {
           if(!copresenter || !paper) {
             res.render('papers/copresenter_add_failed', { reason: 'Email invalid'});
-          } else if(copresenter.id == paper.User.id) {
-            res.render('papers/copresenter_add_failed', { reason: 'Copresenter is main presenter' });
+          //} else if(copresenter.id == paper.User.id) {
+          //  res.render('papers/copresenter_add_failed', { reason: 'Copresenter is main presenter' });
           } else if(already_copresenter(paper, copresenter)) {
             res.render('papers/copresenter_add_failed', { reason: 'Copresenter is already registered' });
           } else {
@@ -350,12 +359,22 @@ router.post('/copresenter/add', function(req, res, next) {
             };
             PaperCoPresenter
               .create(info)
-              .complete(function(err, copresenter) {
+              .complete(function(err, copres) {
                 if(!!err) {
                   console.log('Error adding copresenter: ' + err);
                   res.status(500).send('Error adding copresenter');
                 } else {
-                  res.render('papers/copresenter_added');
+                  utils.send_email(req, res, null, "papers/copresenter_added", {
+                    copresenter: copresenter,
+                    paper: paper
+                  }, function() {
+                    utils.send_email(req, res, copresenter, "papers/added_as_copresenter", {
+                      copresenter: copresenter,
+                      paper: paper
+                    }, function() {
+                      res.render('papers/copresenter_added');
+                    });
+                  });
                 }
             });
           }
