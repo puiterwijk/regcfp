@@ -33,6 +33,7 @@
           "own": ["*authenticated*"],
           "all": ["puiterwijk@fedoraproject.org"]
         },
+        "tag": ["puiterwijk@fedoraproject.org"],
         "vote": ["puiterwijk@fedoraproject.org"],
         "showvotes": ["puiterwijk@fedoraproject.org"],
         "accept": ["puiterwijk@fedoraproject.org"]

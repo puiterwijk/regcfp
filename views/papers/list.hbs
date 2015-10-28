@@ -9,5 +9,18 @@
     {{ breaklines this.summary }}
 
     <br />
+    (
+    {{#each this.PaperTags}}
+    {{this.tag}}, 
+    {{/each}}
+    )
+
+    <form action="/papers/tag" method="post">
+    <input type="hidden" name="paper" value="{{this.id}}">
+    <input type="text" name="tag">
+    <input type="submit" value="Tag">
+    </form>
+
+    <br />
     <br />
 {{/each}}

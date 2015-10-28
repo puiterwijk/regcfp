@@ -7,6 +7,7 @@ var models = require('../models');
 var User = models.User;
 var Paper = models.Paper;
 var PaperVote = models.PaperVote;
+var PaperTag = models.PaperTag;
 
 var env       = process.env.NODE_ENV || "development";
 var config = require('../config/config.json')[env];
@@ -65,7 +66,7 @@ router.post('/submit', function(req, res, next) {
 router.all('/list/own', utils.require_user);
 router.all('/list/own', utils.require_permission('papers/list/own'));
 router.get('/list/own', function(req, res, next) {
-  req.user.getPapers().complete(function(err, papers) {
+  req.user.getPapers({include: [PaperTag]}).complete(function(err, papers) {
     res.render('papers/list', { description: 'Your',
                                 papers: papers });
   });
@@ -75,6 +76,7 @@ router.all('/list', utils.require_permission('papers/list/accepted'));
 router.get('/list', function(req, res, next) {
   Paper
     .findAll({
+      include: [PaperTag],
       where: {
         accepted: true
       }
@@ -88,7 +90,7 @@ router.get('/list', function(req, res, next) {
 router.all('/admin/list', utils.require_user);
 router.all('/admin/list', utils.require_permission('papers/list/all'));
 router.get('/admin/list', function(req, res, next) {
-  Paper.findAll({include: [User, PaperVote]})
+  Paper.findAll({include: [User, PaperVote, PaperTag]})
     .complete(function(err, papers) {
       res.render('papers/list', { description: 'All',
                                   showAuthors: true,
@@ -100,7 +102,7 @@ router.get('/admin/list', function(req, res, next) {
 router.all('/admin/vote/show', utils.require_user);
 router.all('/admin/vote/show', utils.require_permission('papers/showvotes'));
 router.get('/admin/vote/show', function(req, res, next) {
-  Paper.findAll({include: [User, PaperVote]})
+  Paper.findAll({include: [User, PaperVote, PaperTag]})
     .complete(function(err, papers) {
       paper_info = [];
       for(paper in papers) {
@@ -176,7 +178,7 @@ router.post('/admin/vote/show', function(req, res, next) {
 router.all('/admin/vote', utils.require_user);
 router.all('/admin/vote', utils.require_permission('papers/vote'));
 router.get('/admin/vote', function(req, res, next) {
-  Paper.findAll({include: [User, PaperVote]})
+  Paper.findAll({include: [User, PaperVote, PaperTag]})
     .complete(function(err, papers) {
       paper_info = [];
       for(paper in papers) {
@@ -269,6 +271,24 @@ function save_votes(keys, errors, req, res, next) {
 
 router.post('/admin/vote', function(req, res, next) {
   save_votes(Object.keys(req.body), [], req, res, next);
+});
+
+router.all('/tag', utils.require_permission('papers/tag'));
+router.post('/tag', function(req, res, next) {
+  var info = {
+    PaperId: req.body.paper,
+    tag: req.body.tag.trim()
+  };
+  PaperTag
+    .create(info)
+    .complete(function(err, paper) {
+      if(!!err) {
+        console.log('Error saving paper ta: ' + err);
+        res.status(500).send('Error saving paper tag');
+      } else {
+        res.render('papers/tag_success');
+      }
+    });
 });
 
 module.exports = router;

@@ -11,6 +11,7 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         Paper.belongsTo(models.User);
         Paper.hasMany(models.PaperVote);
+        Paper.hasMany(models.PaperTag);
       }
     }
   });
