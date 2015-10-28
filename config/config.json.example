@@ -50,7 +50,11 @@
     },
     
     "papers": {
-      "enabled": false
+      "enabled": false,
+      "tracks": [
+        "security",
+        "data"
+      ]
     },
 
     "registration": {

@@ -6,11 +6,24 @@
 <table class="submission-form">
 <tr><td>Submitter:</td><td><input type="text" value="{{user.email}}" disabled /></td></tr>
 <tr><td>Your name:</td><td><input type="text" name="submitter_name" value="{{user.name}}" disabled /></td></tr>
-<tr><td>Paper title:</td><td><input type="text" name="paper_title" value="{{paper_title}}" maxlength=50 /></td></tr>
+<tr><td>Paper title:</td><td><input type="text" name="paper_title" value="{{paper.title}}" maxlength=50 /></td></tr>
 
 <tr><td>Paper summary:</td>
-<td><textarea name="paper_summary">{{paper_summary}}</textarea></td>
+<td><textarea name="paper_summary">{{paper.summary}}</textarea></td>
 </tr>
+
+<tr><td>Track:</td>
+<td>
+<select name="track">
+{{#each tracks}}
+<option
+{{#ifEqual ../paper.track this}}
+selected="selected"
+{{/ifEqual}}
+>{{this}}</option>
+{{/each}}
+</select>
+</td></tr>
 
 <tr><td>&nbsp;</td>
 <td><input class="submit-talk" type="submit" value="Submit" /></td>

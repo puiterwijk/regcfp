@@ -2,11 +2,12 @@ Vote on papers:
 
 <form action="/papers/admin/vote" method="POST">
 <table border="1">
-<tr><th>Title</th><th>Author</th><th>Vote</th><th>Comment</th></tr>
+<tr><th>Title</th><th>Track</th><th>Author</th><th>Vote</th><th>Comment</th></tr>
     {{#each papers}}
         <tr>
             <th><span title="{{this.summary}}">{{ this.title }}</span></th>
             <td>{{ this.User.name }}</td>
+            <td>{{ this.track }}</td>
             <td>
                 <input type="radio" name="vote_{{this.id}}" id="vote_{{this.id}}_A" value="A"
                 {{#if this.vote.abstained}}

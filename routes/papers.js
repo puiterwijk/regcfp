@@ -8,12 +8,15 @@ var User = models.User;
 var Paper = models.Paper;
 var PaperVote = models.PaperVote;
 
+var env       = process.env.NODE_ENV || "development";
+var config = require('../config/config.json')[env];
+
 router.all('/', utils.require_feature('papers'));
 
 router.all('/submit', utils.require_user);
 router.all('/submit', utils.require_permission('papers/submit'));
 router.get('/submit', function(req, res, next) {
-  res.render('papers/submit');
+  res.render('papers/submit', { paper: {}, tracks: config['papers']['tracks'] });
 });
 
 function add_paper(user, paper, res) {
@@ -41,6 +44,7 @@ router.post('/submit', function(req, res, next) {
   var paper = {
     title: req.body.paper_title.trim(),
     summary: req.body.paper_summary.trim(),
+    track: req.body.track.trim(),
     accepted: false
   };
 
@@ -49,8 +53,8 @@ router.post('/submit', function(req, res, next) {
      paper.summary == '')
   {
     res.render('papers/submit', {
-      paper_title: paper.title,
-      paper_summary: paper.summary,
+      paper: paper,
+      tracks: config['papers']['tracks'],
       submission_error: true
     });
   } else {
