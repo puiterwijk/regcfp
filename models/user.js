@@ -9,6 +9,7 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         User.hasMany(models.Paper);
         User.hasMany(models.PaperVote);
+        User.hasMany(models.PaperCoPresenter);
         User.hasOne(models.Registration);
         User.hasMany(models.Email);
       }

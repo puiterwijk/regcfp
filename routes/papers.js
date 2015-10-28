@@ -8,6 +8,7 @@ var User = models.User;
 var Paper = models.Paper;
 var PaperVote = models.PaperVote;
 var PaperTag = models.PaperTag;
+var PaperCoPresenter = models.PaperCoPresenter;
 
 var env       = process.env.NODE_ENV || "development";
 var config = require('../config/config.json')[env];
@@ -63,12 +64,37 @@ router.post('/submit', function(req, res, next) {
   }
 });
 
+function get_paper_copresenters(res, papers, cb) {
+  User.findAll()
+  .complete(function(err, users) {
+    if(!!err) {
+      console.log('Error getting users: ' + err);
+      res.status(500).send('Error getting users');
+    } else {
+      for(var paper in papers) {
+        for(var copresenter in papers[paper].PaperCoPresenters) {
+          for(var user in users) {
+            user = users[user];
+            if(papers[paper].PaperCoPresenters[copresenter].UserId == user.id) {
+              papers[paper].PaperCoPresenters[copresenter] = user;
+            }
+          }
+        }
+      }
+      cb(papers);
+    }
+  });
+};
+
 router.all('/list/own', utils.require_user);
 router.all('/list/own', utils.require_permission('papers/list/own'));
 router.get('/list/own', function(req, res, next) {
-  req.user.getPapers({include: [PaperTag]}).complete(function(err, papers) {
-    res.render('papers/list', { description: 'Your',
-                                papers: papers });
+  req.user.getPapers({include: [PaperTag, PaperCoPresenter, User]}).complete(function(err, papers) {
+    get_paper_copresenters(res, papers, function(papers_with_copresenters) {
+      res.render('papers/list', { description: 'Your',
+                                  showAuthors: true,
+                                  papers: papers });
+    });
   });
 });
 
@@ -76,26 +102,31 @@ router.all('/list', utils.require_permission('papers/list/accepted'));
 router.get('/list', function(req, res, next) {
   Paper
     .findAll({
-      include: [PaperTag],
+      include: [PaperTag, PaperCoPresenter, User],
       where: {
         accepted: true
       }
     })
     .complete(function(err, papers) {
-      res.render('papers/list', { description: 'Accepted',
-                                  papers: papers });
+      get_paper_copresenters(res, papers, function(papers_with_copresenters) {
+        res.render('papers/list', { description: 'Accepted',
+                                    showAuthors: true,
+                                    papers: papers });
+      });
     });
 });
 
 router.all('/admin/list', utils.require_user);
 router.all('/admin/list', utils.require_permission('papers/list/all'));
 router.get('/admin/list', function(req, res, next) {
-  Paper.findAll({include: [User, PaperVote, PaperTag]})
+  Paper.findAll({include: [User, PaperVote, PaperTag, PaperCoPresenter]})
     .complete(function(err, papers) {
-      res.render('papers/list', { description: 'All',
-                                  showAuthors: true,
-                                  showVotes: true,
-                                  papers: papers });
+      get_paper_copresenters(res, papers, function(papers_with_copresenters) {
+        res.render('papers/list', { description: 'All',
+                                    showAuthors: true,
+                                    showVotes: true,
+                                    papers: papers });
+      });
     });
 });
 
@@ -289,6 +320,47 @@ router.post('/tag', function(req, res, next) {
         res.render('papers/tag_success');
       }
     });
+});
+
+function already_copresenter(paper, copresenter) {
+  for(var user in paper.PaperCoPresenters) {
+    user = paper.PaperCoPresenters[user];
+    if(copresenter.id == user.id) {
+      return true;
+    }
+  }
+  return false;
+}
+
+router.post('/copresenter/add', function(req, res, next) {
+  Paper.findOne({where: {id: req.body.paper}, include: [PaperCoPresenter, User]})
+    .then(function(paper) {
+      User.findOne({where: {email: req.body.email}})
+        .then(function(copresenter) {
+          if(!copresenter || !paper) {
+            res.render('papers/copresenter_add_failed', { reason: 'Email invalid'});
+          } else if(copresenter.id == paper.User.id) {
+            res.render('papers/copresenter_add_failed', { reason: 'Copresenter is main presenter' });
+          } else if(already_copresenter(paper, copresenter)) {
+            res.render('papers/copresenter_add_failed', { reason: 'Copresenter is already registered' });
+          } else {
+            var info = {
+              PaperId: paper.id,
+              UserId: copresenter.id
+            };
+            PaperCoPresenter
+              .create(info)
+              .complete(function(err, copresenter) {
+                if(!!err) {
+                  console.log('Error adding copresenter: ' + err);
+                  res.status(500).send('Error adding copresenter');
+                } else {
+                  res.render('papers/copresenter_added');
+                }
+            });
+          }
+        });
+  });
 });
 
 module.exports = router;

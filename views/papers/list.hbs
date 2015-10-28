@@ -11,7 +11,7 @@
     <br />
     (
     {{#each this.PaperTags}}
-    {{this.tag}}, 
+        {{this.tag}}, 
     {{/each}}
     )
 
@@ -20,6 +20,20 @@
     <input type="text" name="tag">
     <input type="submit" value="Tag">
     </form>
+
+    Co-presenters:
+    {{#if ../showAuthors}}
+        {{#each this.PaperCoPresenters}}
+            {{this.name}}, 
+        {{/each}}
+    {{/if}}
+    {{#ifEqual ../this.User.id ../../user.id}}
+        <form action="/papers/copresenter/add" method="post">
+        <input type="hidden" name="paper" value="{{this.id}}">
+        <input type="text" name="email">
+        <input type="submit" value="Add copresenter">
+        </form>
+    {{/ifEqual}}
 
     <br />
     <br />

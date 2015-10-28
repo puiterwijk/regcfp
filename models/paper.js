@@ -12,6 +12,7 @@ module.exports = function(sequelize, DataTypes) {
         Paper.belongsTo(models.User);
         Paper.hasMany(models.PaperVote);
         Paper.hasMany(models.PaperTag);
+        Paper.hasMany(models.PaperCoPresenter);
       }
     }
   });
