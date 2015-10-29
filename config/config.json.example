@@ -67,6 +67,21 @@
           "required": true,
           "private": true,
           "placeholder": "Country of origin"
+        },
+        "shirtsize": {
+          "display_name": "T-shirt size",
+          "type": "select",
+          "message": "This will be kept private",
+          "required": false,
+          "private": true,
+          "placeholder": "",
+          "options": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL"
+          ]
         }
       },
       "payment_product_name": "My Event Registration Fee",
