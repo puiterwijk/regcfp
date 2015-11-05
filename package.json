@@ -25,5 +25,8 @@
     "mktemp": "*",
     "nodemailer": "*",
     "nodemailer-smtp-transport": "*"
+  },
+  "scripts": {
+    "start": "node ./bin/www"
   }
 }
