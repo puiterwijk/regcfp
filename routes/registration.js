@@ -89,6 +89,12 @@ router.get('/list', function(req, res, next) {
   return show_list(req, res, next, false);
 });
 
+router.all('/admin/list', utils.require_user);
+router.all('/admin/list', utils.require_permission('registration/view_all'));
+router.get('/admin/list', function(req, res, next) {
+  return show_list(req, res, next, true);
+});
+
 router.all('/pay', utils.require_user);
 router.all('/pay', utils.require_permission('registration/pay'));
 router.get('/pay', function(req, res, next) {
