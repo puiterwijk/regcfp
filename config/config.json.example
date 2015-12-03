@@ -63,10 +63,17 @@
       "fields": {
         "country": {
           "display_name": "Country",
-          "type": "string",
+          "type": "country",
           "required": true,
           "private": true,
           "placeholder": "Country of origin"
+        },
+        "ircnick": {
+          "display_name": "IRC Nickname",
+          "type": "string",
+          "required": true,
+          "private": true,
+          "placeholder": IRC Nickname"
         },
         "shirtsize": {
           "display_name": "T-shirt size",

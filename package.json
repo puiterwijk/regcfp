@@ -24,7 +24,8 @@
     "paypal-rest-sdk": "*",
     "mktemp": "*",
     "nodemailer": "*",
-    "nodemailer-smtp-transport": "*"
+    "nodemailer-smtp-transport": "*",
+    "country-data": "*"
   },
   "scripts": {
     "start": "node ./bin/www"

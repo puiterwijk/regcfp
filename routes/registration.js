@@ -9,6 +9,8 @@ var Registration = models.Registration;
 var RegistrationPayment = models.RegistrationPayment;
 var RegistrationInfo = models.RegistrationInfo;
 
+var countries = require('country-data').countries;
+
 var env       = process.env.NODE_ENV || "development";
 var config = require('../config/config.json')[env];
 
@@ -26,6 +28,14 @@ function get_reg_fields(request, registration) {
   var fields = {};
   for(var field in config['registration']['fields']) {
     fields[field] = config['registration']['fields'][field];
+    if(fields[field]['type'] == 'country') {
+      fields[field]['type'] = 'select';
+      var options = [];
+      for(var country in countries.all) {
+        options.push(countries.all[country].name);
+      };
+      fields[field]['options'] = options;
+    }
   };
   if(request)
     console.log(request.body);
