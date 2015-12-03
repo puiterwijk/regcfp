@@ -7,6 +7,56 @@ var config = require('../config/config.json')[env];
 
 var models = require('../models');
 var User = models.User;
+var Registration = models.Registration;
+var RegistrationInfo = models.RegistrationInfo;
+
+
+var filters = {};
+process.argv.forEach(function(val, index, array) {
+  if(index > 1) {
+    val = val.split("=");
+    if(val.length != 2) {
+      console.log("Usage: print-emails [key=val [...]] (" + val + " does not match)");
+      process.exit(1);
+    }
+    filters[val[0]] = val[1];
+  };
+});
+
+function suitable(user, reg, filters) {
+  var to_check = {};
+  for(filter in filters) {
+    to_check[filter] = filters[filter];
+  }
+
+  var properties = ['email', 'name'];
+  for(var property in properties) {
+    property = properties[property];
+    if(property in to_check) {
+      if(to_check[property] == user[property]) {
+        delete to_check[property];
+      } else {
+        return false;
+      }
+    }
+  }
+
+  if(reg) {
+    for(var field in reg.RegistrationInfos) {
+      field = reg.RegistrationInfos[field];
+      if(field.field in to_check) {
+        if(field.value == to_check[field.field]) {
+          delete to_check[field.field];
+        } else {
+          return false;
+        }
+      }
+    }
+  }
+
+  console.log("User: " + JSON.stringify(user) + " reg: " + JSON.stringify(reg.RegistrationInfos) + ", unmatched:" + JSON.stringify(to_check));
+  return (Object.keys(to_check).length == 0);
+};
 
 User.findAll({
 }).complete(function(err, users) {
@@ -15,7 +65,12 @@ User.findAll({
     } else {
         console.log("name,email");
         users.forEach(function(val, index, array) {
-            console.log(val['name'] + "," + val['email']);
+          val.getRegistration({include: [RegistrationInfo]})
+            .complete(function(err, reg) {
+              if(suitable(val, reg, filters)) {
+                console.log(val['name'] + "," + val['email']);
+              }
+            });
         });
     }
 });
