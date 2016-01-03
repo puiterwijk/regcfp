@@ -15,7 +15,7 @@
     "connect-session-sequelize": "*",
     "morgan": "*",
     "serve-favicon": "*",
-    "sequelize": "2.0.*",
+    "sequelize": "2.*",
     "sqlite3": "*",
     "pg": "*",
     "pg-hstore": "*",
