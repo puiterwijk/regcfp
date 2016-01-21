@@ -73,7 +73,7 @@
           "type": "string",
           "required": true,
           "private": true,
-          "placeholder": IRC Nickname"
+          "placeholder": "IRC Nickname"
         },
         "shirtsize": {
           "display_name": "T-shirt size",
