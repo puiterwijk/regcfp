@@ -6,6 +6,10 @@ if(env == "test") {
 
   config.auth.module = 'test';
   config.database.storage = ':memory:';
+
+  // We can't really test payment...
+  config.permissions.registration.pay = [];
+  config.permissions.registration.add_payment = [];
 } else {
   var config = require(__dirname + '/config/config.json')[env];
 }

@@ -309,6 +309,10 @@ router.get('/register', function(req, res, next) {
 router.post('/register', function(req, res, next) {
   if(!req.user) {
     // Create user object and set as req.user
+    if(req.body.name === undefined) {
+      req.body.name = '';
+    }
+
     if(req.body.name.trim() == '') {
       res.render('registration/register', { registration: null, submission_error: true, ask_regfee: true,
                                             registration_fields: get_reg_fields(req, null),
@@ -336,6 +340,10 @@ router.post('/register', function(req, res, next) {
 function handle_registration(req, res, next) {
   req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
   .then(function(reg) {
+    if(req.body.is_public === undefined) {
+      req.body.is_public = 'false';
+    }
+
     var reg_info = {
       is_public: req.body.is_public.indexOf('false') == -1,
       badge_printed: false,
@@ -396,7 +404,7 @@ function handle_registration(req, res, next) {
 };
 
 function update_field_values(req, res, next, is_update, reg, field_values, currency, regfee, canpay, allfields) {
-  var template, subject;
+  var template, email_template, subject;
   if(is_update) {
     template = "registration/update_success";
     email_template = "registration/updated";
@@ -416,7 +424,7 @@ function update_field_values(req, res, next, is_update, reg, field_values, curre
   }
 
   var first = keys[0];
-  current = field_values[first];
+  var current = field_values[first];
   delete field_values[first];
 
   var updated = false;
@@ -447,10 +455,10 @@ function update_field_values(req, res, next, is_update, reg, field_values, curre
 
     RegistrationInfo.create(info)
       .catch(function(error) {
-        console.log('Error saving reg: ' + err);
+        console.log('Error saving reg: ' + error);
         res.status(500).send('Error saving registration info');
       })
-      .then(function(err, reg) {
+      .then(function() {
         return update_field_values(req, res, next, is_update, reg, field_values, currency, regfee, canpay, allfields);
       });
   }

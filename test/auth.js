@@ -5,7 +5,7 @@ describe('auth', function() {
   var agent = request.agent(app);
 
   before('Make sure all tables exist', function(done) {
-    app.db.sequelize.sync()
+    app.db.sequelize.sync({force: true})
     .then(function() {
       done();
     });
