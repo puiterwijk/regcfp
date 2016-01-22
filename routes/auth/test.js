@@ -16,9 +16,9 @@ router.get('/logout', invalid_type);
 router.post('/login', function(req, res, next) {
   var email = req.body.email;
 
-  console.log('Welcoming ' + email);
   req.session.currentUser = email;
-  res.send('Logged in!');
+  console.log('Welcoming ' + email);
+  res.send('Welcome ' + req.session.currentUser);
 });
 
 router.post('/logout', function(req, res, next) {

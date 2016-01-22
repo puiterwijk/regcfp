@@ -19,7 +19,7 @@ router.post('/register', function(req, res, next) {
   };
 
   if(fullname == '') {
-    res.redirect(302, '/auth/register?origin=' + origin);
+    res.redirect(302, '/authg/register?origin=' + origin);
     return;
   }
 

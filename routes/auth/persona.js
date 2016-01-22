@@ -39,7 +39,7 @@ router.post('/login', function(req, res, next) {
       req.session.currentUser = email;
       req.session.currentUserAssertion = assertion;
       req.session.currentUserDetails = response;
-      res.send('Logged in!');
+      res.send('Welcome ' + email);
     });
 });
 

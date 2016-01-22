@@ -16,6 +16,7 @@ var routes_registration = require('./routes/registration');
 var routes_desk = require('./routes/desk');
 
 var app = express();
+app.db = db;
 
 var config = require('./configuration');
 var utils = require('./utils')
@@ -115,7 +116,7 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (config.env === 'development') {
+if (config.env === 'development' || config.env === 'test') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {

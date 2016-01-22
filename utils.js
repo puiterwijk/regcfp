@@ -57,7 +57,7 @@ utils.require_permission = function(permission) {
     }
     else
     {
-      res.render('auth/no_permission', { required_permission: JSON.stringify(permission) });
+      res.status(401).render('auth/no_permission', { required_permission: JSON.stringify(permission) });
     }
   };
 };
@@ -108,7 +108,7 @@ utils.get_user = function(req, res, next) {
 
 utils.require_user = function(req, res, next) {
   if(!req.session.currentUser) {
-    res.render('auth/no_permission', { required_permission: 'Login' });
+    res.status(401).render('auth/no_permission', { required_permission: 'Login' });
     return;
   }
 
