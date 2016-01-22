@@ -35,6 +35,7 @@
         "listenip": "127.0.0.1",
         "port": 3001,
         "cert": "certificate.crt",
+        "ca": "intermediate.crt",
         "key": "certificate.key"
       }
     },

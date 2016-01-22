@@ -36,6 +36,9 @@ if(config.listen.https.enabled) {
     cert: fs.readFileSync(config.listen.https.cert),
     key: fs.readFileSync(config.listen.https.key)
   };
+  if(config.listen.https.ca) {
+    ssloptions.ca = fs.readFileSync(config.listen.https.ca);
+  }
 
   serverHttps = https.createServer(ssloptions, app);
   serverHttp.on('error', onError);
