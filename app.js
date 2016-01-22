@@ -72,6 +72,10 @@ app.use(function(req, res, next) {
   res.locals.req = { body: req.body,
                      query: req.query };
   res.locals.development = env == 'development';
+
+  res.locals.login_buttons = routes_auth.buttons;
+  res.locals.extra_js = [];
+
   req.app = app;
   next();
 });
@@ -83,6 +87,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Inject auth middleware
+if(routes_auth.middleware) {
+  app.use(routes_auth.middleware);
+}
 
 // Get user if we have any
 app.use(utils.get_user);

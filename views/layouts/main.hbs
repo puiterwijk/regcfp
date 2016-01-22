@@ -7,7 +7,9 @@
         <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.min.css" rel="stylesheet">
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="https://login.persona.org/include.js"></script>
+        {{#each extra_js}}
+            <script type="text/javascript" src="{{this}}"></script>
+        {{/each}}
 
         <script type="text/javascript">
             // Inserted variables
@@ -42,9 +44,9 @@
 		        		<a href="https://www.guadec.org">Back to main GUADEC website</a>
 		            <a href="/">Registration home</a>
                 {{#if session.currentUser}}
-                    <button id="logoutBtn" onclick="javascript: navigator.id.logout();">Log out</button>
+                    <button id="logoutBtn" onclick="{{ login_buttons.logout.onclick }}">Log out</button>
                 {{else}}
-                    <button id="loginBtn" onclick="javascript: navigator.id.request(login_args);">Log in with Persona</button>
+                    <button id="loginBtn" onclick="{{ login_buttons.login.onclick }}">Log in with Persona</button>
                 {{/if}}
 		        </div>
 		    </div>

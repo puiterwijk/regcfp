@@ -91,4 +91,18 @@ router.post('/register', function(req, res, next) {
 
 });
 
+router.buttons = {
+  login: {
+    onclick: 'javascript: navigator.id.request(login_args);',
+  },
+  logout: {
+    onclick: 'javascript: navigator.id.logout();',
+  }
+};
+
+router.middleware = function(req, res, next) {
+  res.locals.extra_js.push('https://login.persona.org/include.js');
+  next();
+};
+
 module.exports = router;
