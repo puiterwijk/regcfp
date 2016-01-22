@@ -1,9 +1,11 @@
 var config = {}
 
 var env = process.env.NODE_ENV || "development";
-var config = require(__dirname + '/config/config.json')[env];
-
-// TODO: Do config another way
+if(env == "test") {
+  var config = require(__dirname + '/config/config.example.json')['development'];
+} else {
+  var config = require(__dirname + '/config/config.json')[env];
+}
 
 config.env = env;
 
