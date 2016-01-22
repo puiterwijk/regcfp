@@ -27,12 +27,12 @@ router.post('/login', function(req, res, next) {
     function(err, email, response) {
       if(err) {
         console.log('Invalid BrowserID assertion: ' + err);
-        res.status(500).send('Invalid assertion!');
+        res.status(401).send('Invalid assertion!');
         return;
       }
       if(email == null) {
         console.log('BrowserID without email: ' + response);
-        res.status(500).send('Assertion did not check out!');
+        res.status(400).send('Assertion did not check out!');
         return;
       }
 
