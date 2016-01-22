@@ -24,6 +24,20 @@ describe('auth', function() {
     .end(done);
   });
 
+  it('should refuse access if require_login', function(done) {
+    agent.get('/authg/register')
+    .expect(401)
+    .expect(/Required: Login/)
+    .end(done);
+  });
+
+  it('should refuse access if require_user', function(done) {
+    agent.get('/registration/receipt')
+    .expect(401)
+    .expect(/Required: Login/)
+    .end(done);
+  });
+
   it('should welcome the user', function(done) {
     agent.post('/auth/login')
     .send({'email': 'usera@regcfp'})
@@ -75,6 +89,13 @@ describe('auth', function() {
     agent.get('/')
     .expect(200)
     .expect(/Welcome, TestUser A/)
+    .end(done);
+  });
+
+  it('should not allow desk access', function(done) {
+    agent.get('/desk')
+    .expect(401)
+    .expect(/No permissions/)
     .end(done);
   });
 
