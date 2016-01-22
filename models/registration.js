@@ -1,7 +1,6 @@
 "use strict";
 
-var env       = process.env.NODE_ENV || "development";
-var config = require('../config/config.json')[env];
+var config = require('../configuration');
 
 function get_amount_string(amounts) {
   var amount = "";

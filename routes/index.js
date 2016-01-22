@@ -6,8 +6,7 @@ var User = models.User;
 var Registration = models.Registration;
 var RegistrationPayment = models.RegistrationPayment;
 
-var env = process.env.NODE_ENV || "development";
-var config = require(__dirname + '/../config/config.json')[env];
+var config = require('../configuration');
 
 var utils = require('../utils');
 

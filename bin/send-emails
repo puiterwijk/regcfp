@@ -2,8 +2,7 @@
 
 var db = require('../models/index');
 
-var env = process.env.NODE_ENV || "development";
-var config = require('../config/config.json')[env];
+var config = require('../configuration');
 
 var models = require('../models');
 var User = models.User;

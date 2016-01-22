@@ -8,8 +8,7 @@ var utils = require('../../utils');
 var models = require('../../models');
 var User = models.User;
 
-var env       = process.env.NODE_ENV || "development";
-var persona_audience    = require(__dirname + '/../../config/config.json')[env]['auth']['persona_audience'];
+var persona_audience    = require('../../configuration')['auth']['persona_audience'];
 console.log('Persona audience: ' + persona_audience);
 
 function invalid_type(req, res, next) {

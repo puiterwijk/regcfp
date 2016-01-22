@@ -8,8 +8,7 @@ var User = models.User;
 var Registration = models.Registration;
 var RegistrationPayment = models.RegistrationPayment;
 
-var env       = process.env.NODE_ENV || "development";
-var config = require('../config/config.json')[env];
+var config = require('../configuration');
 
 var paypal = require('paypal-rest-sdk');
 paypal.configure(config['paypal']);

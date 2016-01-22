@@ -17,8 +17,7 @@ var routes_desk = require('./routes/desk');
 
 var app = express();
 
-var env = process.env.NODE_ENV || "development";
-var config = require(__dirname + '/config/config.json')[env];
+var config = require('./configuration');
 var utils = require('./utils')
 
 
@@ -71,7 +70,7 @@ app.use(function(req, res, next) {
   res.locals.config = config;
   res.locals.req = { body: req.body,
                      query: req.query };
-  res.locals.development = env == 'development';
+  res.locals.development = config.env == 'development';
 
   res.locals.login_buttons = routes_auth.buttons;
   res.locals.extra_js = [];
@@ -114,7 +113,7 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if (config.env === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {

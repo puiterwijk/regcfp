@@ -1,7 +1,6 @@
 var utils = {}
 
-var env = process.env.NODE_ENV || "development";
-var config = require(__dirname + '/config/config.json')[env];
+var config = require('./configuration');
 
 var models = require('./models');
 var User = models.User;
