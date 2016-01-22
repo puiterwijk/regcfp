@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
   {
     if(req.user) {
       req.user.getRegistration({include: [RegistrationPayment]})
-      .complete(function(err, reg) {
+      .then(function(reg) {
         res.render('index/index', { name: req.user.name, registration: reg });
       });
     } else {

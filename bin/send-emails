@@ -20,9 +20,10 @@ Email.findAll({
     where: {
         sent: false
     }
-}).complete(function(err, emails) {
+}).catch(function(error) {
+    console.log("Error getting emails: " + error);
+}).then(function(emails) {
     if(!!err) {
-        console.log("Error getting emails: " + err);
     } else {
         emails.forEach(function(email, index, array) {
             console.log("Email " + email.id + " to: " + email.User.email);
@@ -39,7 +40,7 @@ Email.findAll({
                 } else {
                     console.log("Email " + email.id + " sent");
                     email.sent = true;
-                    email.save().complete(function(err, email) {
+                    email.save().then(function(email) {
                         console.log("Email " + email.id + " done");
                     });
                 }

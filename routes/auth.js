@@ -72,16 +72,15 @@ router.post('/register', function(req, res, next) {
     where: {
       email: req.session.currentUser
     }
-  })
-  .complete(function(err, user) {
-    if(!!err) {
+  }).catch(function(error) {
       res.status(500).send('Error retrieving user object');
-    } else if(!user) {
+  }).then(function(user) {
+    if(!user) {
       // Create the user
       var user = User.create({
         email: req.session.currentUser,
         name: fullname
-      }).complete(function(err, user) {
+      }).then(function(user) {
         res.redirect(origin);
       });
     } else {

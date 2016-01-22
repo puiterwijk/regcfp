@@ -58,18 +58,19 @@ function suitable(user, reg, filters) {
 };
 
 User.findAll({
-}).complete(function(err, users) {
-    if(!!err) {
-        console.log("Error getting users: " + err);
-    } else {
-        console.log("name,email");
-        users.forEach(function(val, index, array) {
-          val.getRegistration({include: [RegistrationInfo]})
-            .complete(function(err, reg) {
-              if(suitable(val, reg, filters)) {
-                console.log(val['name'] + "," + val['email']);
-              }
-            });
+}).catch(function(error) {
+    console.log("Error getting users: " + error);
+}).then(function(users) {
+    console.log("name,email");
+    users.forEach(function(val, index, array) {
+      val.getRegistration({include: [RegistrationInfo]})
+        .catch(function(error) {
+            console.log("Error: " + error);
+        })
+        .then(function(reg) {
+          if(suitable(val, reg, filters)) {
+            console.log(val['name'] + "," + val['email']);
+          }
         });
-    }
+    });
 });

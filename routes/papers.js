@@ -24,25 +24,23 @@ router.get('/submit', function(req, res, next) {
 function add_paper(req, res, paper) {
   Paper
     .create(paper)
-    .complete(function(err, paper) {
-      if(!!err) {
+    .catch(function(error) {
         console.log('Error saving paper: ' + err);
         res.status(500).send('Error saving paper submission');
-      } else {
-        req.user.addPaper(paper)
-          .complete(function(err) {
-            if(!!err) {
-              console.log('Error attaching paper to user: ' + err);
-              res.status(500).send('Error attaching your paper to your user');
-            } else {
-              utils.send_email(req, res, null, "papers/paper_submitted", {
-                paper: paper
-              }, function() {
-                res.render('papers/submit_success');
-              });
-            }
+    })
+    .then(function(paper) {
+      req.user.addPaper(paper)
+        .catch(function(error) {
+          console.log('Error attaching paper to user: ' + err);
+          res.status(500).send('Error attaching your paper to your user');
+        })
+        .then(function() {
+          utils.send_email(req, res, null, "papers/paper_submitted", {
+            paper: paper
+          }, function() {
+            res.render('papers/submit_success');
           });
-      }
+        });
     });
 }
 
@@ -70,30 +68,29 @@ router.post('/submit', function(req, res, next) {
 
 function get_paper_copresenters(res, papers, cb) {
   User.findAll()
-  .complete(function(err, users) {
-    if(!!err) {
-      console.log('Error getting users: ' + err);
-      res.status(500).send('Error getting users');
-    } else {
-      for(var paper in papers) {
-        for(var copresenter in papers[paper].PaperCoPresenters) {
-          for(var user in users) {
-            user = users[user];
-            if(papers[paper].PaperCoPresenters[copresenter].UserId == user.id) {
-              papers[paper].PaperCoPresenters[copresenter] = user;
-            }
+  .catch(function(error) {
+    console.log('Error getting users: ' + error);
+    res.status(500).send('Error getting users');
+  })
+  .then(function(users) {
+    for(var paper in papers) {
+      for(var copresenter in papers[paper].PaperCoPresenters) {
+        for(var user in users) {
+          user = users[user];
+          if(papers[paper].PaperCoPresenters[copresenter].UserId == user.id) {
+            papers[paper].PaperCoPresenters[copresenter] = user;
           }
         }
       }
-      cb(papers);
     }
+    cb(papers);
   });
 };
 
 router.all('/list/own', utils.require_user);
 router.all('/list/own', utils.require_permission('papers/list/own'));
 router.get('/list/own', function(req, res, next) {
-  req.user.getPapers({include: [PaperTag, PaperCoPresenter, User]}).complete(function(err, papers) {
+  req.user.getPapers({include: [PaperTag, PaperCoPresenter, User]}).then(function(papers) {
     get_paper_copresenters(res, papers, function(papers_with_copresenters) {
       res.render('papers/list', { description: 'Your',
                                   showAuthors: true,
@@ -111,7 +108,7 @@ router.get('/list', function(req, res, next) {
         accepted: true
       }
     })
-    .complete(function(err, papers) {
+    .then(function(papers) {
       get_paper_copresenters(res, papers, function(papers_with_copresenters) {
         res.render('papers/list', { description: 'Accepted',
                                     showAuthors: true,
@@ -124,7 +121,7 @@ router.all('/admin/list', utils.require_user);
 router.all('/admin/list', utils.require_permission('papers/list/all'));
 router.get('/admin/list', function(req, res, next) {
   Paper.findAll({include: [User, PaperVote, PaperTag, PaperCoPresenter]})
-    .complete(function(err, papers) {
+    .then(function(papers) {
       get_paper_copresenters(res, papers, function(papers_with_copresenters) {
         res.render('papers/list', { description: 'All',
                                     showAuthors: true,
@@ -138,7 +135,7 @@ router.all('/admin/vote/show', utils.require_user);
 router.all('/admin/vote/show', utils.require_permission('papers/showvotes'));
 router.get('/admin/vote/show', function(req, res, next) {
   Paper.findAll({include: [User, PaperVote, PaperTag]})
-    .complete(function(err, papers) {
+    .then(function(papers) {
       paper_info = [];
       for(paper in papers) {
         paper = papers[paper];
@@ -194,11 +191,13 @@ function save_accepts(keys, errors, req, res, next) {
         } else {
           paper.accepted = true;
         }
-        paper.save().complete(function(err, paper) {
-          if(!!err) {
+        paper.save()
+          .catch(function(error) {
             errors.push({id: id, err: err});
-          }
-          save_accepts(keys, errors, req, res, next);
+            save_accepts(keys, errors, req, res, next);
+          })
+          .then(function(paper) {
+            save_accepts(keys, errors, req, res, next);
         });
       });
     }
@@ -214,7 +213,7 @@ router.all('/admin/vote', utils.require_user);
 router.all('/admin/vote', utils.require_permission('papers/vote'));
 router.get('/admin/vote', function(req, res, next) {
   Paper.findAll({include: [User, PaperVote, PaperTag]})
-    .complete(function(err, papers) {
+    .then(function(papers) {
       paper_info = [];
       for(paper in papers) {
         paper = papers[paper];
@@ -277,11 +276,12 @@ function save_votes(keys, errors, req, res, next) {
               PaperId: id,
               UserId: req.user.id,
             })
-            .complete(function(err, vote) {
-              if(!!err) {
-                console.log("ERRORS: " + err);
-                errors.push({id: id, err: err, phase: "addVote"});
-              }
+            .catch(function(error) {
+              console.log("ERRORS: " + error);
+              errors.push({id: id, err: error, phase: "addVote"});
+              save_votes(keys, errors, req, res, next);
+            })
+            .then(function(vote) {
               save_votes(keys, errors, req, res, next);
             });
         } else {
@@ -289,11 +289,13 @@ function save_votes(keys, errors, req, res, next) {
           vote.comment = comment;
           vote.vote = vote_val;
           vote.abstained = abstained;
-          vote.save().complete(function(err, vote) {
-            if(!!err) {
-              errors.push({id: id, err: err});
-            };
-            save_votes(keys, errors, req, res, next);
+          vote.save()
+            .catch(function(error) {
+              errors.push({id: id, err: error});
+              save_votes(keys, errors, req, res, next);
+            })
+            .then(function(vote) {
+              save_votes(keys, errors, req, res, next);
           });
         }
       });
@@ -316,18 +318,17 @@ router.post('/tag', function(req, res, next) {
   };
   PaperTag
     .create(info)
-    .complete(function(err, paper) {
-      if(!!err) {
-        console.log('Error saving paper ta: ' + err);
+    .catch(function(error) {
+        console.log('Error saving paper ta: ' + error);
         res.status(500).send('Error saving paper tag');
-      } else {
-        utils.send_email(req, res, null, "papers/tag_added", {
-          paper: paper,
-          tag: info
-        }, function() {
-          res.render('papers/tag_success');
-        });
-      }
+    })
+    .then(function(paper) {
+      utils.send_email(req, res, null, "papers/tag_added", {
+        paper: paper,
+        tag: info
+      }, function() {
+        res.render('papers/tag_success');
+      });
     });
 });
 
@@ -359,23 +360,22 @@ router.post('/copresenter/add', function(req, res, next) {
             };
             PaperCoPresenter
               .create(info)
-              .complete(function(err, copres) {
-                if(!!err) {
-                  console.log('Error adding copresenter: ' + err);
-                  res.status(500).send('Error adding copresenter');
-                } else {
-                  utils.send_email(req, res, null, "papers/copresenter_added", {
+              .catch(function(error) {
+                console.log('Error adding copresenter: ' + err);
+                res.status(500).send('Error adding copresenter');
+              })
+              .then(function(copres) {
+                utils.send_email(req, res, null, "papers/copresenter_added", {
+                  copresenter: copresenter,
+                  paper: paper
+                }, function() {
+                  utils.send_email(req, res, copresenter, "papers/added_as_copresenter", {
                     copresenter: copresenter,
                     paper: paper
                   }, function() {
-                    utils.send_email(req, res, copresenter, "papers/added_as_copresenter", {
-                      copresenter: copresenter,
-                      paper: paper
-                    }, function() {
-                      res.render('papers/copresenter_added');
-                    });
+                    res.render('papers/copresenter_added');
                   });
-                }
+                });
             });
           }
         });

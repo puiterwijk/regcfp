@@ -66,7 +66,7 @@ function show_list(req, res, next, show_private) {
       },
       include: [User, RegistrationInfo]
     })
-    .complete(function(err, registrations) {
+    .then(function(registrations) {
       var field_ids = [null];
       var field_display_names = ['Name'];
       var fields = config['registration']['fields'];
@@ -161,28 +161,26 @@ router.post('/pay/paypal/execute', function(req, res, next) {
       console.log(info);
       RegistrationPayment
         .create(info)
-        .complete(function(err, payment) {
-          if(!!err) {
-            console.log('Error saving payment: ' + err);
-            res.status(500).send('ERROR saving payment');
-          } else {
-            req.user.getRegistration({include: [RegistrationInfo]})
-              .complete(function(err, reg) {
-                reg.addRegistrationPayment(payment)
-                  .complete(function(err) {
-                    if(!!err) {
-                      console.log('Error attaching payment to reg: ' + err);
-                      res.status(500).send('error');
-                    } else {
-                      if(info.paid) {
-                        res.status(200).send('approved');
-                      } else {
-                        res.status(200).send('executed');
-                      }
-                    }
-                  });
-              });
-          }
+        .catch(function(error) {
+          console.log('Error saving payment: ' + err);
+          res.status(500).send('ERROR saving payment');
+        })
+        .then(function(payment) {
+          req.user.getRegistration({include: [RegistrationInfo]})
+            .then(function(reg) {
+              reg.addRegistrationPayment(payment)
+                .catch(function(error) {
+                  console.log('Error attaching payment to reg: ' + err);
+                  res.status(500).send('error');
+                })
+                .then(function() {
+                  if(info.paid) {
+                    res.status(200).send('approved');
+                  } else {
+                    res.status(200).send('executed');
+                  }
+                });
+            });
         });
     }
   });
@@ -251,24 +249,22 @@ router.post('/pay/do', function(req, res, next) {
     };
     RegistrationPayment
       .create(info)
-      .complete(function(err, payment) {
-        if(!!err) {
-          console.log('Error saving payment: ' + err);
-          res.status(500).send('ERROR saving payment');
-        } else {
-          req.user.getRegistration({include: [RegistrationInfo]})
-            .complete(function(err, reg) {
-              reg.addRegistrationPayment(payment)
-                .complete(function(err) {
-                  if(!!err) {
-                    console.log('Error attaching payment to reg: ' + err);
-                    res.status(500).send('Error attaching payment');
-                  } else {
-                    res.render('registration/payment_onsite_registered', {currency: info.currency, amount: info.amount});
-                  }
-                });
-            });
-        }
+      .catch(function(error) {
+        console.log('Error saving payment: ' + err);
+        res.status(500).send('ERROR saving payment');
+      })
+      .then(function(err, payment) {
+        req.user.getRegistration({include: [RegistrationInfo]})
+          .then(function(reg) {
+            reg.addRegistrationPayment(payment)
+              .catch(function(error) {
+                console.log('Error attaching payment to reg: ' + error);
+                res.status(500).send('Error attaching payment');
+              })
+              .then(function() {
+                  res.render('registration/payment_onsite_registered', {currency: info.currency, amount: info.amount});
+              });
+          });
       });
   } else if(method == 'paypal') {
     req.session.regfee = req.body.regfee;
@@ -282,10 +278,11 @@ router.all('/receipt', utils.require_user);
 router.all('/receipt', utils.require_permission('registration/request_receipt'));
 router.get('/receipt', function(req, res, next) {
   req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
-  .complete(function(err, reg) {
-    if(!!err) {
-      res.status(500).send('Error retrieving your registration');
-    } else if(!reg.eligible_for_receipt) {
+  .catch(function(error) {
+    res.status(500).send('Error retrieving your registration');
+  })
+  .then(function(reg) {
+    if(!reg.eligible_for_receipt) {
       res.status(401).send('Not enough paid for receipt');
     } else {
       res.render('registration/receipt', { registration: reg , layout:false });
@@ -297,7 +294,7 @@ router.all('/register', utils.require_permission('registration/register'));
 router.get('/register', function(req, res, next) {
   if(req.user){
     req.user.getRegistration({include: [RegistrationInfo]})
-    .complete(function(err, reg) {
+    .then(function(reg) {
       res.render('registration/register', { registration: reg,
                                             registration_fields: get_reg_fields(null, reg),
                                             ask_regfee: reg == null,
@@ -323,14 +320,13 @@ router.post('/register', function(req, res, next) {
         name: req.body.name.trim()
       };
       User.create(user_info)
-        .complete(function(err, user) {
-          if(!!err) {
-            console.log("Error saving user object: " + err);
-            res.status(500).send('Error saving user');
-          } else {
-            req.user = user;
-            handle_registration(req, res, next);
-          };
+        .catch(function(error) {
+          console.log("Error saving user object: " + err);
+          res.status(500).send('Error saving user');
+        })
+        .then(function(user) {
+          req.user = user;
+          handle_registration(req, res, next);
         });
     }
   } else {
@@ -340,7 +336,7 @@ router.post('/register', function(req, res, next) {
 
 function handle_registration(req, res, next) {
   req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
-  .complete(function(err, reg) {
+  .then(function(reg) {
     var reg_info = {
       is_public: req.body.is_public.indexOf('false') == -1,
       badge_printed: false,
@@ -363,39 +359,37 @@ function handle_registration(req, res, next) {
       if(reg == null) {
         // Create new registration
         Registration.create(reg_info)
-          .complete(function(err, reg) {
-            if(!!err) {
-              console.log('Error saving reg: ' + err);
-              res.status(500).send('Error saving registration');
-            } else {
-              req.user.setRegistration(reg)
-                .complete(function(err) {
-                  if(!!err) {
-                    console.log('Error adding reg to user: ' + err);
-                    res.status(500).send('Error attaching registration to your user');
-                  } else {
-                    var field_values = get_reg_fields(req, null);
-                    return update_field_values(req, res, next,
-                                               false,
-                                               reg, get_reg_fields(req, null),
-                                               currency, regfee, can_pay, get_reg_fields(req, null));
-                  }
-              });
-            }
+          .catch(function(error) {
+            console.log('Error saving reg: ' + err);
+            res.status(500).send('Error saving registration');
+          })
+          .then(function(reg) {
+            req.user.setRegistration(reg)
+              .catch(function(error) {
+                console.log('Error adding reg to user: ' + err);
+                res.status(500).send('Error attaching registration to your user');
+              })
+              .then(function() {
+                var field_values = get_reg_fields(req, null);
+                return update_field_values(req, res, next,
+                                           false,
+                                           reg, get_reg_fields(req, null),
+                                           currency, regfee, can_pay, get_reg_fields(req, null));
+            });
         });
       } else {
         // Update
         reg.is_public = reg_info.is_public;
-        reg.save().complete(function (err, reg){
-          if(!!err) {
+        reg.save()
+          .catch(function(error) {
             res.render('registration/register', { registration: reg_info,
                                                   registration_fields: get_reg_fields(req, reg),
                                                   save_error: true,
                                                   min_amount_main_currency: get_min_main() });
-          } else {
+          })
+          .then(function (reg){
             return update_field_values(req, res, next, true, reg,
                                        get_reg_fields(req, reg), null, null, null, get_reg_fields(req, reg));
-          }
         });
       }
     }
@@ -433,14 +427,14 @@ function update_field_values(req, res, next, is_update, reg, field_values, curre
       // Update this one
       updated = true;
       info.value = current.value;
-      info.save().complete(function(err, info) {
-        if(!!err) {
+      info.save()
+        .catch(function(error) {
           console.log('Error saving reg: ' + err);
           res.status(500).send('Error saving registration info');
           return null;
-        } else {
+        })
+        .then(function(err, info) {
           return update_field_values(req, res, next, is_update, reg, field_values, currency, regfee, canpay, allfields);
-        }
       });
     }
   }
@@ -453,13 +447,12 @@ function update_field_values(req, res, next, is_update, reg, field_values, curre
     };
 
     RegistrationInfo.create(info)
-      .complete(function(err, reg) {
-        if(!!err) {
-          console.log('Error saving reg: ' + err);
-          res.status(500).send('Error saving registration info');
-        } else {
-          return update_field_values(req, res, next, is_update, reg, field_values, currency, regfee, canpay, allfields);
-        }
+      .catch(function(error) {
+        console.log('Error saving reg: ' + err);
+        res.status(500).send('Error saving registration info');
+      })
+      .then(function(err, reg) {
+        return update_field_values(req, res, next, is_update, reg, field_values, currency, regfee, canpay, allfields);
       });
   }
 };

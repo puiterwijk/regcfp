@@ -93,10 +93,11 @@ utils.get_user = function(req, res, next) {
       email: req.session.currentUser
     }
   })
-  .complete(function(err, user) {
-    if(!!err) {
-      res.status(500).send('Error retrieving user object');
-    } else if(user) {
+  .catch(function(error) {
+    res.status(500).send('Error retrieving user object');
+  })
+  .then(function(user) {
+    if(user) {
       req.user = user;
       res.locals.user = user;
       next();
@@ -145,14 +146,13 @@ utils.send_email = function(req, res, recipient, template, variables, cb) {
         body: contents
       };
       Email.create(info)
-      .complete(function(err, email) {
-        if(!!err) {
-          console.log('Error saving email: ' + err);
-          res.status(500).send('Error sending email');
-          return null;
-        } else {
-          cb();
-        }
+      .catch(function(error) {
+        console.log('Error saving email: ' + err);
+        res.status(500).send('Error sending email');
+        return null;
+      })
+      .then(function(err, email) {
+        cb();
       });
     }
   });
