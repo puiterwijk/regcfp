@@ -114,7 +114,7 @@ utils.require_user = function(req, res, next) {
 
   if(!req.user) {
     // Redirect to register
-    res.redirect(302, '/auth/register?origin=' + req.originalUrl);
+    res.redirect(302, '/authg/register?origin=' + req.originalUrl);
   } else {
       next();
   }

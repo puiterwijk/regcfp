@@ -21,6 +21,7 @@ var config = require('./configuration');
 var utils = require('./utils')
 
 
+var routes_auth_global = require('./routes/auth_global');
 var routes_auth = require('./routes/auth/' + config.auth.module);
 
 // view engine setup
@@ -97,6 +98,7 @@ app.use(utils.get_user);
 
 // Routing
 app.use('/', routes_index);
+app.use('/authg', routes_auth_global);
 app.use('/auth', routes_auth);
 app.use('/papers', routes_papers);
 app.use('/registration', routes_registration);
