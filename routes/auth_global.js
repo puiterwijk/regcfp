@@ -6,6 +6,11 @@ var utils = require('../../utils');
 var models = require('../../models');
 var User = models.User;
 
+router.all('/register', utils.require_login);
+router.get('/register', function(req, res, next) {
+  res.render('auth/register', { origin: req.query.origin });
+});
+
 router.post('/register', function(req, res, next) {
   var fullname = req.body.fullname.trim();
   var origin = req.body.origin;
