@@ -18,6 +18,12 @@ describe('auth', function() {
     .end(done);
   });
 
+  it('should refuse get on auth', function(done) {
+    agent.get('/auth/login')
+    .expect(401)
+    .end(done);
+  });
+
   it('should welcome the user', function(done) {
     agent.post('/auth/login')
     .send({'email': 'usera@regcfp'})
