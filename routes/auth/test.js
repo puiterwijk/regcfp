@@ -36,4 +36,8 @@ router.buttons = {
   }
 };
 
+router.middleware = function(req, res, next) {
+  next();
+};
+
 module.exports = router;
