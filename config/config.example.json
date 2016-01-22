@@ -72,7 +72,7 @@
     },
     
     "papers": {
-      "enabled": false,
+      "enabled": true,
       "tracks": [
         "security",
         "data"
@@ -80,7 +80,7 @@
     },
 
     "registration": {
-      "enabled": false,
+      "enabled": true,
       "fields": {
         "country": {
           "display_name": "Country",
