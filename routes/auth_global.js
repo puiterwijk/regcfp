@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-var utils = require('../../utils');
+var utils = require('../utils');
 
-var models = require('../../models');
+var models = require('../models');
 var User = models.User;
 
 router.all('/register', utils.require_login);
