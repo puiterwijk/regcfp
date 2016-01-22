@@ -6,19 +6,7 @@ var Sequelize = require("sequelize");
 var basename  = path.basename(module.filename);
 var env       = process.env.NODE_ENV || "development";
 var config    = require(__dirname + '/../config/config.json')[env]["database"];
-if(!!process.env.OPENSHIFT_APP_NAME)
-{
-  var sequelize = new Sequelize(
-    process.env.PGDATABASE,
-    process.env.OPENSHIFT_MYSQL_DB_USERNAME,
-    process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
-    {
-      host: process.env.OPENSHIFT_MYSQL_DB_HOST,
-      dialect: 'mysql'
-    });
-} else {
-  var sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+var sequelize = new Sequelize(config.database, config.username, config.password, config);
 var db        = {};
 
 fs

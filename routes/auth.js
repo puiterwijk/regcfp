@@ -10,17 +10,6 @@ var User = models.User;
 
 var env       = process.env.NODE_ENV || "development";
 var persona_audience    = require(__dirname + '/../config/config.json')[env]['persona_audience'];
-if(!!process.env.OPENSHIFT_APP_NAME)
-{
-  if(!!process.env.PERSONA_AUDIENCE)
-  {
-    persona_audience = process.env.PERSONA_AUDIENCE;
-  }
-  else
-  {
-    persona_audience = 'http://' + process.env.OPENSHIFT_APP_DNS
-  }
-}
 console.log('Persona audience: ' + persona_audience);
 
 function invalid_type(req, res, next) {
