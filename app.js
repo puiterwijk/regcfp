@@ -11,7 +11,6 @@ var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var db = require('./models/index');
 
 var routes_index = require('./routes/index');
-var routes_auth = require('./routes/auth');
 var routes_papers = require('./routes/papers');
 var routes_registration = require('./routes/registration');
 var routes_desk = require('./routes/desk');
@@ -21,6 +20,9 @@ var app = express();
 var env = process.env.NODE_ENV || "development";
 var config = require(__dirname + '/config/config.json')[env];
 var utils = require('./utils')
+
+
+var routes_auth = require('./routes/auth/' + config.auth.module);
 
 // view engine setup
 var hbs = handlebars.create({

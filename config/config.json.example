@@ -40,7 +40,10 @@
       }
     },
 
-    "persona_audience": "http://localhost:3000",
+    "auth": {
+      "module": "persona",
+      "persona_audience": "http://localhost:3000"
+    },
 
     "permissions": {
       "admin": ["puiterwijk@fedoraproject.org"],
