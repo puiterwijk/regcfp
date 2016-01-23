@@ -1,0 +1,37 @@
+.flock-groupimg {
+  background: url('/static/images/index/groupimg.jpg') no-repeat left center fixed;
+  background-size: cover;
+  min-height: 415px;
+}
+
+.flock-groupimg-content {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  color: #f8f8f8;
+  margin-top: 30px;
+  padding: 10px;
+}
+
+.flock-groupimg-content h1, .flock-groupimg-content h2 {
+  padding: 0;
+  margin: 0;
+}
+
+.flock-groupimg-content h2 {
+  font-size: 20px;
+}
+
+.flock-navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #ccc;
+}
+
+.flock-navbar .navbar-brand, .flock-navbar .navbar-nav li a {
+    line-height: 70px;
+    height: 70px;
+    padding-top: 0;
+}
+
+.navbar {
+  margin-bottom: 0 !important;
+}
