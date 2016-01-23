@@ -40,36 +40,39 @@
       }
     },
 
-    "persona_audience": "http://localhost:3000",
+    "auth": {
+      "module": "persona",
+      "persona_audience": "http://localhost:3000"
+    },
 
     "permissions": {
-      "admin": ["puiterwijk@fedoraproject.org"],
+      "admin": ["admin@regcfp"],
       "papers": {
         "submit": ["*authenticated*"],
         "list": {
           "accepted": ["*anonymous*"],
           "own": ["*authenticated*"],
-          "all": ["puiterwijk@fedoraproject.org"]
+          "all": ["admin@regcfp", "voter@regcfp"]
         },
-        "tag": ["puiterwijk@fedoraproject.org"],
-        "vote": ["puiterwijk@fedoraproject.org"],
-        "showvotes": ["puiterwijk@fedoraproject.org"],
-        "accept": ["puiterwijk@fedoraproject.org"]
+        "tag": ["*authenticated*"],
+        "vote": ["admin@regcfp", "voter@regcfp"],
+        "showvotes": ["admin@regcfp"],
+        "accept": ["admin@regcfp"]
       },
       "registration": {
         "register": ["*authenticated*"],
         "pay": ["*authenticated*"],
         "request_receipt": ["*authenticated*"],
         "view_public": ["*authenticated*"],
-        "view_all": ["puiterwijk@fedoraproject.org"],
-        "add_payment": ["puiterwijk@fedoraproject.org"],
-        "print_badge": ["puiterwijk@fedoraproject.org"],
-        "desk": ["puiterwijk@fedoraproject.org"]
+        "view_all": ["admin@regcfp"],
+        "add_payment": ["admin@regcfp", "desk@regcfp"],
+        "print_badge": ["admin@regcfp", "desk@regcfp"],
+        "desk": ["admin@regcfp", "desk@regcfp"]
       }
     },
     
     "papers": {
-      "enabled": false,
+      "enabled": true,
       "tracks": [
         "security",
         "data"
@@ -77,7 +80,7 @@
     },
 
     "registration": {
-      "enabled": false,
+      "enabled": true,
       "fields": {
         "country": {
           "display_name": "Country",

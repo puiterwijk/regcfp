@@ -1,7 +1,6 @@
 var utils = {}
 
-var env = process.env.NODE_ENV || "development";
-var config = require(__dirname + '/config/config.json')[env];
+var config = require('./configuration');
 
 var models = require('./models');
 var User = models.User;
@@ -58,14 +57,14 @@ utils.require_permission = function(permission) {
     }
     else
     {
-      res.render('auth/no_permission', { required_permission: JSON.stringify(permission) });
+      res.status(401).render('auth/no_permission', { required_permission: JSON.stringify(permission) });
     }
   };
 };
 
 utils.require_login = function(req, res, next) {
   if(req.session.currentUser == null) {
-    res.render('auth/no_permission', { required_permission: 'Login' });
+    res.status(401).render('auth/no_permission', { required_permission: 'Login' });
   } else {
     next();
   }
@@ -109,13 +108,13 @@ utils.get_user = function(req, res, next) {
 
 utils.require_user = function(req, res, next) {
   if(!req.session.currentUser) {
-    res.render('auth/no_permission', { required_permission: 'Login' });
+    res.status(401).render('auth/no_permission', { required_permission: 'Login' });
     return;
   }
 
   if(!req.user) {
     // Redirect to register
-    res.redirect(302, '/auth/register?origin=' + req.originalUrl);
+    res.redirect(302, '/authg/register?origin=' + req.originalUrl);
   } else {
       next();
   }

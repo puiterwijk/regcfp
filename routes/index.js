@@ -6,8 +6,7 @@ var User = models.User;
 var Registration = models.Registration;
 var RegistrationPayment = models.RegistrationPayment;
 
-var env = process.env.NODE_ENV || "development";
-var config = require(__dirname + '/../config/config.json')[env];
+var config = require('../configuration');
 
 var utils = require('../utils');
 
@@ -28,24 +27,5 @@ router.get('/', function(req, res, next) {
     res.render('index/index', { });
   }
 });
-
-function shuffle(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex ;
-
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-
-  return array;
-}
 
 module.exports = router;

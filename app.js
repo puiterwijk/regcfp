@@ -11,16 +11,19 @@ var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var db = require('./models/index');
 
 var routes_index = require('./routes/index');
-var routes_auth = require('./routes/auth');
 var routes_papers = require('./routes/papers');
 var routes_registration = require('./routes/registration');
 var routes_desk = require('./routes/desk');
 
 var app = express();
+app.db = db;
 
-var env = process.env.NODE_ENV || "development";
-var config = require(__dirname + '/config/config.json')[env];
+var config = require('./configuration');
 var utils = require('./utils')
+
+
+var routes_auth_global = require('./routes/auth_global');
+var routes_auth = require('./routes/auth/' + config.auth.module);
 
 // view engine setup
 var hbs = handlebars.create({
@@ -69,7 +72,11 @@ app.use(function(req, res, next) {
   res.locals.config = config;
   res.locals.req = { body: req.body,
                      query: req.query };
-  res.locals.development = env == 'development';
+  res.locals.development = config.env == 'development';
+
+  res.locals.login_buttons = routes_auth.buttons;
+  res.locals.extra_js = [];
+
   req.app = app;
   next();
 });
@@ -82,11 +89,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Inject auth middleware
+if(routes_auth.middleware) {
+  app.use(routes_auth.middleware);
+}
+
 // Get user if we have any
 app.use(utils.get_user);
 
 // Routing
 app.use('/', routes_index);
+app.use('/authg', routes_auth_global);
 app.use('/auth', routes_auth);
 app.use('/papers', routes_papers);
 app.use('/registration', routes_registration);
@@ -103,7 +116,7 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if (config.env === 'development' || config.env === 'test') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {

@@ -10,8 +10,7 @@ var PaperVote = models.PaperVote;
 var PaperTag = models.PaperTag;
 var PaperCoPresenter = models.PaperCoPresenter;
 
-var env       = process.env.NODE_ENV || "development";
-var config = require('../config/config.json')[env];
+var config = require('../configuration');
 
 router.all('/', utils.require_feature('papers'));
 

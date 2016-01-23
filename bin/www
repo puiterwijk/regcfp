@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 
+var servers = {
+  http: null,
+  https: null
+};
+
 /**
  * Module dependencies.
  */
 
-var env = process.env.NODE_ENV || "development";
-var config = require(__dirname + '/../config/config.json')[env];
+var config = require('../configuration');
 
 var app = require('../app');
 var debug = require('debug')('Event-Registration:server');
@@ -13,10 +17,6 @@ var http = require('http');
 var https = require('https');
 var fs = require('fs');
 var models = require('../models');
-
-
-var serverHttp = null;
-var serverHttps = null;
 
 
 if(config.listen.http.enabled) {
@@ -27,9 +27,9 @@ if(config.listen.http.enabled) {
       res.end();
     };
   }
-  serverHttp = http.createServer(httpApp);
-  serverHttp.on('error', onError);
-  serverHttp.on('listening', onListeningHttp);
+  servers.http = http.createServer(httpApp);
+  servers.http.on('error', onError);
+  servers.http.on('listening', onListeningHttp);
 }
 if(config.listen.https.enabled) {
   var ssloptions = {
@@ -40,19 +40,19 @@ if(config.listen.https.enabled) {
     ssloptions.ca = fs.readFileSync(config.listen.https.ca);
   }
 
-  serverHttps = https.createServer(ssloptions, app);
-  serverHttp.on('error', onError);
-  serverHttp.on('listening', onListeningHttps);
+  servers.https = https.createServer(ssloptions, app);
+  servers.https.on('error', onError);
+  servers.https.on('listening', onListeningHttps);
 }
 
 
 function startListening() {
   if(config.listen.http.enabled) {
-    serverHttp.listen(config.listen.http.port,
+    servers.http.listen(config.listen.http.port,
                       config.listen.http.listenip);
   }
   if(config.listen.https.enabled) {
-    serverHttps.listen(config.listen.https.port,
+    servers.https.listen(config.listen.https.port,
                        config.listen.https.listenip);
   }
 }
@@ -115,7 +115,7 @@ function onError(error) {
  */
 
 function onListeningHttp() {
-  var addr = serverHttp.address();
+  var addr = servers.http.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
@@ -123,9 +123,11 @@ function onListeningHttp() {
 }
 
 function onListeningHttps() {
-  var addr = serverHttps.address();
+  var addr = servers.https.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('HTTPS Listening on ' + bind);
 }
+
+module.exports = servers;
