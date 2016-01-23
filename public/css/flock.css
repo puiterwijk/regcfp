@@ -1,5 +1,5 @@
 .flock-groupimg {
-  background: url('/static/images/index/groupimg.jpg') no-repeat left center fixed;
+  background: url('../img/index/groupimg.jpg') no-repeat left center fixed;
   background-size: cover;
   min-height: 415px;
 }

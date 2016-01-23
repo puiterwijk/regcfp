@@ -323,7 +323,7 @@ margin-top:4px;
   margin-right: auto;
 }
 .product-box a {
-  background-image: url("../images/product-sprite.png");
+  background-image: url("../img/product-sprite.png");
 }
 
 .product-box .greyscale,
@@ -350,32 +350,32 @@ margin-top:4px;
 
 .product-box .product-server .greyscale
 {
- background-image:url(../images/smalllogo-grey-server.png);
+ background-image:url(../img/smalllogo-grey-server.png);
 }
 
 .product-box .product-server .color
 {
- background-image:url(../images/smalllogo-color-server.png);
+ background-image:url(../img/smalllogo-color-server.png);
 }
 
 .product-box .product-workstation .greyscale
 {
- background-image:url(../images/smalllogo-grey-workstation.png);
+ background-image:url(../img/smalllogo-grey-workstation.png);
 }
 
 .product-box .product-workstation .color
 {
- background-image:url(../images/smalllogo-color-workstation.png);
+ background-image:url(../img/smalllogo-color-workstation.png);
 }
 
 .product-box .product-cloud .greyscale
 {
- background-image:url(../images/smalllogo-grey-cloud.png);
+ background-image:url(../img/smalllogo-grey-cloud.png);
 }
 
 .product-box .product-cloud .color
 {
- background-image:url(../images/smalllogo-color-cloud.png);
+ background-image:url(../img/smalllogo-color-cloud.png);
 }
 
 .product-box .product-server .greyscale,
@@ -429,7 +429,7 @@ margin-top:4px;
 
 .downloadheader .container
 {
-  background-image: url(../images/downloadicon.svg);
+  background-image: url(../img/downloadicon.svg);
   background-repeat: no-repeat;
   background-position: 50px center;
 }
@@ -444,12 +444,12 @@ margin-top:4px;
 #head .screenshot-text { background: #fff; padding: 0px 20px 20px 20px; }
 #head .screenshot-text h3 { color: #60605b; margin-top: 0px; }
 #head .screenshot-text a:hover { text-decoration: none; }
-#head .copr-design { background:url(../images/design/design-splash.jpg) 50% 50% / cover no-repeat; position:relative; min-height: 230px; }
-#head .copr-games { background:url(../images/games/games-splash.jpg) 50% 50% / cover no-repeat; position:relative; min-height: 230px; }
-#head .copr-jam { background:url(../images/jam/jam-splash.jpg) 50% 50% / cover no-repeat; position:relative; min-height: 230px; }
-#head .copr-robotics { background:url(../images/robotics/robotics-splash.jpg) 50% 50% / cover no-repeat; position:relative; min-height: 230px; }
-#head .copr-security { background:url(../images/security/security-splash.jpg) 50% 50% / cover no-repeat; position:relative; min-height: 230px; }
-#head .copr-scientific { background:url(../images/scientific/scientific-splash.jpg) 50% 50% / cover no-repeat; position:relative; min-height: 230px; }
+#head .copr-design { background:url(../img/design/design-splash.jpg) 50% 50% / cover no-repeat; position:relative; min-height: 230px; }
+#head .copr-games { background:url(../img/games/games-splash.jpg) 50% 50% / cover no-repeat; position:relative; min-height: 230px; }
+#head .copr-jam { background:url(../img/jam/jam-splash.jpg) 50% 50% / cover no-repeat; position:relative; min-height: 230px; }
+#head .copr-robotics { background:url(../img/robotics/robotics-splash.jpg) 50% 50% / cover no-repeat; position:relative; min-height: 230px; }
+#head .copr-security { background:url(../img/security/security-splash.jpg) 50% 50% / cover no-repeat; position:relative; min-height: 230px; }
+#head .copr-scientific { background:url(../img/scientific/scientific-splash.jpg) 50% 50% / cover no-repeat; position:relative; min-height: 230px; }
 #head .spin-banner { background: #fff; width: 100%; }
 #head .bottom-border { border-bottom: solid 10px; color: #3c6eb4; }
 // #head p { background: #fff; font-size: 18px; }
@@ -502,11 +502,11 @@ margin-top:4px;
 }
 
 .greybg {
-  background-image: url(../images/greybg.png);
+  background-image: url(../img/greybg.png);
 }
 
 .darkgreybg {
-  background-image: url(../images/greybgdark.png);
+  background-image: url(../img/greybgdark.png);
 }
 
 .darkgreybg p {
@@ -515,7 +515,7 @@ margin-top:4px;
 
 .main-head, .downloadheader
 {
-  background-image: url(../images/greybg.png);
+  background-image: url(../img/greybg.png);
   box-shadow: 0px 3px 7px 0px rgba(0,0,0,0.05) inset;
 }
 
@@ -602,16 +602,16 @@ text-align:center;
 
 .productitem.workstation .color
 {
-    background-image:url(../images/logo-color-workstation.png);
+    background-image:url(../img/logo-color-workstation.png);
 }
 
 .productitem.server .color
 {
-    background-image:url(../images/logo-color-server.png);
+    background-image:url(../img/logo-color-server.png);
 }
 .productitem.cloud .color
 {
- background-image:url(../images/logo-color-cloud.png);
+ background-image:url(../img/logo-color-cloud.png);
 }
 
 
@@ -634,17 +634,17 @@ text-align:center;
 
 .productitem.workstation .greyscale
 {
- background-image:url(../images/logo-grey-workstation.png);
+ background-image:url(../img/logo-grey-workstation.png);
 }
 
 .productitem.cloud .greyscale
 {
- background-image:url(../images/logo-grey-cloud.png);
+ background-image:url(../img/logo-grey-cloud.png);
 }
 
 .productitem.server .greyscale
 {
- background-image:url(../images/logo-grey-server.png);
+ background-image:url(../img/logo-grey-server.png);
    opacity:1;
 }
 
@@ -653,22 +653,22 @@ text-align:center;
 (min-resolution: 192dpi) {
 .productitem.workstation .greyscale
 {
- background-image:url(../images/logo-grey-workstation@2x.png);
+ background-image:url(../img/logo-grey-workstation@2x.png);
 }
 
 .productitem.cloud .greyscale
 {
- background-image:url(../images/logo-grey-cloud@2x.png);
+ background-image:url(../img/logo-grey-cloud@2x.png);
 }
 
 .productitem.server .greyscale
 {
- background-image:url(../images/logo-grey-server@2x.png);
+ background-image:url(../img/logo-grey-server@2x.png);
 }
 }
 
 .community {
-    background-image: url('../images/community.jpg');
+    background-image: url('../img/community.jpg');
     color: #FFF;
     text-shadow: 0em 0em 1em #000;
     padding-top: 10%;
