@@ -7,6 +7,21 @@
         <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.min.css" rel="stylesheet">
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
+	    <script type="text/javascript" src="/javascripts/jquery.expander.js"></script>
+	    <script type="text/javascript" src="/javascripts/jquery.tools.min.js"></script>
+	    <script type="text/javascript" src="/javascripts/jquery.query.min.js"></script>
+	    <script type="text/javascript" src="/javascripts/jquery.slideshow.minified.js"></script>
+	    <script type="text/javascript" src="/javascripts/jquery.tweet.js"></script>
+	    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+
+	    <script type="text/javascript" src="/javascripts/jquery.uls.data.js"></script>
+	    <script type="text/javascript" src="/javascripts/jquery.uls.data.utils.js"></script>
+	    <script type="text/javascript" src="/javascripts/jquery.uls.lcd.js"></script>
+	    <script type="text/javascript" src="/javascripts/jquery.uls.languagefilter.js"></script>
+	    <script type="text/javascript" src="/javascripts/jquery.uls.regionfilter.js"></script>
+	    <script type="text/javascript" src="/javascripts/jquery.uls.core.js"></script>
+	    <script type="text/javascript" src="/javascripts/translations.js"></script>
         {{#each extra_js}}
             <script type="text/javascript" src="{{this}}"></script>
         {{/each}}
@@ -28,6 +43,19 @@
         <script type="text/javascript" src="/javascripts/login.js"></script>
         <link rel="stylesheet" href="/css/style.css" type="text/css" media="all">
         <link rel="stylesheet" id="ttfmake-google-fonts-css" href="//fonts.googleapis.com/css?family=Open+Sans%3Aregular%2Citalic%2C700&amp;subset=latin&amp;ver=1.5.2" type="text/css" media="all">
+        <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+	    <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.css" />
+	    <link rel="stylesheet" type="text/css" href="/css/app.css" />
+	    <link rel="stylesheet" type="text/css" href="/css/flock.css" />
+	    <link rel="stylesheet" type="text/css" href="/css/font-awesome.css" />
+	    <link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin,latin-ext" />
+	    <link rel='stylesheet' media="screen" href='https://fonts.googleapis.com/css?family=Montserrat' />
+
+	    <!-- language selector -->
+	    <link rel="stylesheet" type="text/css" href="/css/jquery.uls.css" />
+	    <link rel="stylesheet" type="text/css" href="/css/jquery.uls.grid.css" />
+	    <link rel="stylesheet" type="text/css" href="/css/jquery.uls.lcd.css" />
+
     </head>
     <body>
         {{#if development}}
@@ -50,10 +78,114 @@
                 {{/if}}
 		        </div>
 		    </div>
-				
+
 				<div class="content">
 
         {{{ body }}}
         </div>
+        <div id="bottom">
+        <footer id="footer">
+
+        <div class="foot">
+            <div class="container">
+                <div class="row footerlinks">
+                    <div class="col-sm-3 col-xs-6 widget">
+                        <h3 class="widget-title">${_('About')}</h3>
+                        <div class="widget-body">
+                            <dl>
+                                <dd><a href="//fedoraproject.org/wiki/Overview">${_('About Fedora')}</a></dd>
+                                <dd><a href="//getfedora.org/${lang}/sponsors">${_('Sponsors')}</a></dd>
+                                <dd><a href="//fedoramagazine.org">${_('Fedora Magazine')}</a></dd>
+                                <dd><a href="https://fedoraproject.org/wiki/Legal:Main#Legal">${_('Legal')}</a></dd>
+                            </dl>
+                            <ul class="list-inline">
+                            <li>
+                                <a href="https://www.facebook.com/TheFedoraProject" class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
+                            </li>
+                            <li>
+                                <a href="https://plus.google.com/112917221531140868607" class="btn-social btn-outline"><i class="fa fa-fw fa-google-plus"></i></a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/fedora" class="btn-social btn-outline"><i class="fa fa-fw fa-twitter"></i></a>
+                            </li>
+                        </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 col-xs-6 widget">
+                        <h3 class="widget-title uppercase">${_('Download')}</h3>
+                        <div class="widget-body">
+                          <dl>
+                            <dd><a href="//getfedora.org/${lang}/workstation/download">${_('Get Fedora Workstation')}</a></dd>
+                            <dd><a href="//getfedora.org/${lang}/server/download">${_('Get Fedora Server')}</a></dd>
+                            <dd><a href="//getfedora.org/${lang}/cloud/download">${_('Get Fedora Cloud')}</a></dd>
+                            <dd><a href="//spins.fedoraproject.org">${_('Fedora Spins')}</a></dd>
+                            <dd><a href="//labs.fedoraproject.org">${_('Fedora Labs')}</a></dd>
+                            <dd><a href="//arm.fedoraproject.org">${Markup(_('Fedora ARM&lt;span class="sup"&gt;&reg;&lt;/span&gt;'))}</a></dd>
+                            <dd><a href="http://torrents.fedoraproject.org/">${_('Torrent Downloads')}</a></dd>
+
+                        </dl>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 col-xs-6 widget">
+                        <h3 class="widget-title">${_('Support')}</h3>
+                        <div class="widget-body">
+                            <dl>
+                                <dd><a href="//fedoraproject.org/wiki/Communicating_and_getting_help">${_('Get Help')}</a></dd>
+                                <dd><a href="//ask.fedoraproject.org/">${_('Ask Fedora')}</a></dd>
+                                <dd><a href="http://fedoraforum.org/">${_('Forums')}</a></dd>
+                                <dd><a href="//fedoraproject.org/wiki/Common_F${global_variables.release['curr_id']}_bugs">${_('Common Bugs')}</a></dd>
+                                <dd><a href="//developer.fedoraproject.org/">${_('Fedora Developer Portal')}</a></dd>
+                                <dd><a href="//docs.fedoraproject.org/en-US/Fedora/${global_variables.release['curr_id']}/html/Installation_Guide">${_('Installation Guide')}</a></dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 col-xs-6 widget">
+                        <h3 class="widget-title">${_('Join')}</h3>
+                        <div class="widget-body">
+                            <dl>
+                                <dd><a href="//fedoraproject.org/wiki/Join">${_('Join Fedora')}</a></dd>
+                                <dd><a href="http://fedoraplanet.org">${_('Planet Fedora')}</a></dd>
+                                <dd><a href="//fedoraproject.org/wiki/SIGs">${_('Fedora SIGs')}</a></dd>
+                                <dd><a href="//admin.fedoraproject.org/accounts/">${_('Fedora Account System')}</a></dd>
+                                <dd><a href="http://fedoracommunity.org/">${_('Fedora Community')}</a></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div> <!-- /row of widgets -->
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="widget-body">
+                            <a href="http://www.redhat.com/"><img class="rh-logo" src="../img/redhat.png" alt="Red Hat Logo" /></a>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="widget-body">
+                            <p class="sponsor">${_('Fedora is sponsored by Red Hat.')}</p>
+                            <p class="sponsor"><a href="//www.redhat.com/en/technologies/linux-platforms/articles/relationship-between-fedora-and-rhel">${_('Learn more about the relationship between Red Hat and Fedora &raquo;')}</a></p>
+                            <p class="copy">${_('&copy; %(year)s Red Hat, Inc. and others.') % {'year':'2015'}} ${Markup(_('Please send any comments or corrections to the &lt;a href="//fedorahosted.org/fedora-websites/"&gt;websites team&lt;/a&gt;.'))}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="widget-body">
+                            <div class="pull-left language-header">
+                              <span class="active uls-trigger lang-dropdown">${_('Change Language')}</span>
+                                <form action="" method="GET" style="visibility:hidden" id="langSelect" class="lang-dropdown">
+                                  <input type="hidden" name="lang" id="selectedLang" value="" />
+                        <!-- Allow uls script to change language through legacy system -->
+                                  <input type="submit" value="${_('OK')}" />
+                                </form>
+                              </div>
+                        </div>
+                    </div>
+                </div> <!-- /row of widgets -->
+
+            </div>
+        </div>
+    </footer>
+    </div>
     </body>
 </html>
