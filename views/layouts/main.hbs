@@ -67,23 +67,24 @@
             <h2>Data in this instance may be deleted at any time!</h1>
             </span>
         {{/if}}
-        <div class="site-branding">
-		        <div class="custom-logo">
-		        <a href="https://www.guadec.org/"></a>
-		        </div>
-		        <div class="navigation">
-		        		<a href="https://www.guadec.org">Back to main GUADEC website</a>
-		            <a href="/">Registration home</a>
-                {{#if session.currentUser}}
-                    <button id="logoutBtn" onclick="{{ login_buttons.logout.onclick }}">Log out</button>
-                {{else}}
-                    <button id="loginBtn" onclick="{{ login_buttons.login.onclick }}">Log in with Persona</button>
-                {{/if}}
-		        </div>
-		    </div>
+        <div class="main-head-index">
+            <div class="container">
+              <div class="row">
+                <div class="col-xs-8 col-xs-offset-2 bottom-margin">
+                    <h1 class="thin">Welcome to the Flock Registration System.</h1>
+                    <h4 class="thin">
+                        {{#if session.currentUser}}
+                        <button id="logoutBtn" onclick="{{ login_buttons.logout.onclick }}">Log out</button>
+                        {{else}}
+                        <button id="loginBtn" onclick="{{ login_buttons.login.onclick }}">Log in with Persona</button>
+                        {{/if}}
+                    </h4>
+                </div>
+              </div>
+            </div>
+        </div>
 
-				<div class="content">
-
+		<div class="content">
         {{{ body }}}
         </div>
 
