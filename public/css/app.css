@@ -137,6 +137,26 @@ background-color:white;
   text-align: left;
 }
 
+.grey-pattern-box {
+  background: url(https://getfedora.org/static/images/grey-pattern.png) no-repeat right 0px center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  width: 100%;
+  padding: 0;
+}
+
+.darkgrey-pattern-box {
+  background: url(https://spins.fedoraproject.org/static/images/greybgdark.png) no-repeat right 0px center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  width: 100%;
+  padding: 0;
+}
+
 .newsbox {
   background-color: #ebb05d;
   color: #000;
@@ -199,6 +219,7 @@ background-color:white;
     box-shadow: 0px 3px 7px 0px rgba(0,0,0,0.05) inset;
     padding-top: 20px;
     padding-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .main-head-index h1
@@ -218,6 +239,10 @@ background-color:white;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+}
+
+.thin {
+  font-weight:300;
 }
 
 .fedora-header h2 {
@@ -282,3 +307,11 @@ background-color:white;
 .foot dl {
   margin-bottom: 8px;
 }
+
+/* Helpers */
+.container-full { margin: 0 auto; width: 100%; }
+.top-space { margin-top: 60px; }
+.top-margin { margin-top:20px; }
+.bottom-space { margin-bottom: 60px; }
+.bottom-margin { margin-bottom:20px; }
+.bottom-margin-edition { margin-bottom:40px; }

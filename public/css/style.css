@@ -10,16 +10,6 @@ body {
   min-height: 70px;
 }
 
-.custom-logo {
-  background-image: url("https://www.guadec.org/wp-content/uploads/2014/10/guadec-logo-white.png");
-  background-repeat: no-repeat;
-  background-position: center center;
-  width: 176px;
-  height: 53px;
-  margin: auto;
-  padding: 40px;
-}
-
 .navigation {
   text-align: center;
   padding-bottom: 30px;
@@ -29,12 +19,6 @@ body {
   color: #F4F4F4;
   text-decoration: none;
   padding: 0px 10px;
-}
-
-.content {
-  max-width: 800px;
-  margin: auto;
-  padding-top: 20px;
 }
 
 #loginBtn,
@@ -53,18 +37,18 @@ body {
 }
 
 .submit-talk {
-  background: #6B8E9F;
+  background: #294172;
   color: #F4F4F4;
 }
 
 .button {
   display: inline-block;
-  background: #6B8E9F;
-  border-radius: 5px;
+  background: #294172;
+  border-radius: 8px;
   padding: 10px 15px;
 }
 
-.button a {
+.button a, .button a:hover {
   color: #fff;
   text-decoration: none;
 }
