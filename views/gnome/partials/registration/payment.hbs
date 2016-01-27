@@ -1,0 +1,8 @@
+To complete your registration, choose a payment for {{currency_symbol currency}}{{regfee}} below:<br/><br/>
+<form class="submission-form" action="/registration/pay/do" method="POST">
+<input type="hidden" name="currency" value="{{currency}}">
+<input type="hidden" name="regfee" value="{{regfee}}">
+<input type="radio" name="method" value="paypal" style="vertical-align: top;" checked="checked"> <div style="display: inline-block;">Pay using PayPal<p class="note">No PayPal account required</p></div><br/>
+<input type="radio" name="method" value="onsite" style="vertical-align: top;"> <div style="display: inline-block;">Pay at the conference<p class="note">If you select this option, you can pay at the registration desk at GUADEC</p></div><br/><br/>
+<input class="submit-talk" type="submit" value="Complete registration" style="float: right;">
+</form>

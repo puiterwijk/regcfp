@@ -1,0 +1,317 @@
+body
+{
+background-color:#fff;
+}
+
+#site-content
+{
+background-color:white;
+}
+/* Navbar */
+.navbar { border: 0px none; }
+
+.jumbotron h2 {
+  margin-top: 10px;
+}
+
+.jumbotron p {
+  font-weight: normal;
+}
+
+.bluebox p.thin {
+  font-size: large;
+  font-weight: 200;
+}
+
+.jumbotron a {
+  font-weight: 600;
+}
+
+.jumbotron h4 {
+  font-size: 120%;
+}
+
+.bluebox {
+  background-color: #3c6eb4;
+  color: #777;
+}
+
+.bluebox h2 {
+  color: #fff;
+  margin-top: 20px;
+}
+
+.bluebox h1 {
+  color: #f8f8f8;
+  margin-top: 20px;
+}
+
+.bluebox p {
+  color: #fff;
+  text-align: justify;
+  margin-top: 15px;
+  padding: 0 50px;
+  font-size: 100%;
+}
+
+.darkbluebox {
+  background-color: #294172;
+  color: #fff;
+}
+
+.darkbluebox h2 {
+  color: #fff;
+  margin-top: 10px;
+}
+
+.darkbluebox p {
+  color: #fff;
+  margin-top: 15px;
+  padding: 0 20px;
+  font-size: 100%;
+  text-align: left;
+}
+
+.whitebox,
+.whiteregulation {
+  background-color: #fff;
+  color: #60605b;
+}
+
+.whitebox h2 {
+  margin-top: 10px;
+}
+
+.whitebox h4,
+.whitebox a {
+  font-weight: 600;
+}
+
+.whitebox p {
+  margin-top: 15px;
+  padding: 0 10px;
+  font-size: 100%;
+  text-align: center;
+}
+
+.whiteregulation p {
+  padding: 0 10px;
+  text-align: left;
+}
+
+.jumbotron .whiteregulation {
+  padding: 8px 0px;
+}
+
+.whitebox .border {
+  border: 1px solid #ccc;
+  padding: 10px 0px;
+  margin-bottom: 10px;
+  min-height: 250px;
+}
+
+.whitebox .border a {
+  position: absolute;
+  top: 220px;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%)
+}
+
+.greybox {
+  background-color: #d1d3d4;
+  color: #000;
+}
+
+.greybox h2,
+.greybox h3 {
+  margin-top: 10px;
+  color: #000;
+}
+
+.greybox p {
+  color: #000;
+  margin-top: 15px;
+  padding: 0 20px;
+  font-size: 100%;
+  text-align: left;
+}
+
+.grey-pattern-box {
+  background: url(https://getfedora.org/static/images/grey-pattern.png) no-repeat right 0px center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  width: 100%;
+  padding: 0;
+}
+
+.darkgrey-pattern-box {
+  background: url(https://spins.fedoraproject.org/static/images/greybgdark.png) no-repeat right 0px center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  width: 100%;
+  padding: 0;
+}
+
+.newsbox {
+  background-color: #ebb05d;
+  color: #000;
+  padding: 20px;
+}
+
+.newsbox h2,
+.newsbox h3 {
+  margin-top: 10px;
+  color: #000;
+}
+
+.widewrapper {
+  width:100%;
+  padding: 0;
+  }
+
+.widewrapper > img {
+  width:100%;
+}
+
+.header-icon {
+  margin-right: 12px;
+}
+
+.fedoralogotext {
+  margin-top: 18px;
+}
+
+.greybg {
+  background-image: url(https://flocktofedora.org/static/images/greybg.png);
+}
+
+.darkgreybg {
+  background-image: url(https://flocktofedora.org/static/images/greybgdark.png);
+}
+
+.darkgreybg p {
+  text-align: left;
+}
+
+.main-head, .downloadheader
+{
+  background-image: url(https://flocktofedora.org/static/images/greybg.png);
+  box-shadow: 0px 3px 7px 0px rgba(0,0,0,0.05) inset;
+}
+
+.main-head h1
+{
+    margin-bottom: 0px!important;
+}
+
+.main-head-index
+{
+    background: url(https://getfedora.org/static/images/blue-pattern.png) no-repeat right 0px center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    box-shadow: 0px 3px 7px 0px rgba(0,0,0,0.05) inset;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.main-head-index h1
+{
+    margin-bottom: 0px!important;
+}
+
+.main-head-index h1, .main-head-index h4
+{
+  color: #fff;
+}
+
+.blue-pattern-box {
+  background: url(https://getfedora.org/static/images/blue-pattern.png) no-repeat right 0px center;
+  height: 70px;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.thin {
+  font-weight:300;
+}
+
+.fedora-header h2 {
+  line-height: 50px;
+  font-size: 18pt;
+}
+
+.logo-header{
+	margin-top: 19px;
+}
+.inline-logo {
+  margin-top: -14px;
+  padding-bottom: 10px;
+  padding-left: 2px;
+}
+.language-header {
+  margin-top: 43px;
+}
+
+/* Footer */
+.foot { background-color:#e6e6e6; padding: 30px 0 0 0; font-size: 13px; color: #777; }
+	.foot a { color: #333; }
+		.foot a:hover {color: #000; }
+	.foot .widget { margin-bottom:30px; }
+	.foot .widget-title { font-size: 17px; font-weight: bold; color: #8d8d8d; margin: 0 0 20px; text-transform: uppercase; }
+	.foot .entry-meta { border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; margin: 0 0 35px 0; padding: 2px 0; color: #888888; font-size: 12px; font-size: 0.75rem; }
+		.foot .entry-meta a { color: #333333; }
+		.foot .entry-meta .meta-in { border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 10px 0; }
+	.follow-me-icons { font-size:30px; }
+		.follow-me-icons i { float:left; margin:0 10px 0 0; }
+  .foot dd {
+    line-height: 1.6;
+  }
+
+  .foot .btn-social {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 2px solid #808080;
+    background-color: #808080 !important;
+    border-radius: 100%;
+    text-align: center;
+    font-size: 18px;
+    line-height: 25px;
+}
+.foot .btn-outline {
+    font-size: 18px;
+    color: #fff;
+    background: 0 0;
+    transition: all .3s ease-in-out;
+}
+
+.foot .btn-outline:hover,
+.foot .btn-outline:focus,
+.foot .btn-outline:active,
+.foot .btn-outline.active {
+    border: solid 2px #000;
+    color: #000;
+    background-color: #fff !important;
+}
+
+.foot dl {
+  margin-bottom: 8px;
+}
+
+/* Helpers */
+.container-full { margin: 0 auto; width: 100%; }
+.top-space { margin-top: 60px; }
+.top-margin { margin-top:20px; }
+.bottom-space { margin-bottom: 60px; }
+.bottom-margin { margin-bottom:20px; }
+.bottom-margin-edition { margin-bottom:40px; }

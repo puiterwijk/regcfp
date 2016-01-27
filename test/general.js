@@ -7,7 +7,7 @@ describe('general', function() {
   it('should have a homepage', function(done) {
     agent.get('/')
     .expect(200)
-    .expect(/Welcome to the event/)
+    .expect(/Welcome to the Flock Registration System/)
     .end(done);
   });
 

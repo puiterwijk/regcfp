@@ -29,6 +29,8 @@ var routes_auth = require('./routes/auth/' + config.auth.module);
 var hbs = handlebars.create({
   defaultLayout: 'main',
   extname: '.hbs',
+  layoutsDir: path.join(__dirname, 'views', config['theming']['theme'], 'layouts'),
+  partialsDir: path.join(__dirname, 'views', config['theming']['theme'], 'partials'),
   helpers: {
     breaklines: function(text) {
       return text
@@ -49,7 +51,7 @@ var hbs = handlebars.create({
     }
   }
 });
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views', config['theming']['theme']));
 app.engine('.hbs', hbs.engine);
 app.set('view engine', '.hbs');
 
