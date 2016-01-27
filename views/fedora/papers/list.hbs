@@ -1,3 +1,6 @@
+<div class="container">
+<div class="row">
+<div class="col-xs-12 bottom-margin">
 {{description}} submitted papers:<br /><br />
 
 {{#each papers}}
@@ -5,13 +8,13 @@
     {{#if ../showAuthors}}
       ({{ this.User.name }} &lt;{{ this.User.email }}&gt;)
     {{/if}}
-    - 
+    -
     {{ breaklines this.summary }}
 
     <br />
     (
     {{#each this.PaperTags}}
-        {{this.tag}}, 
+        {{this.tag}},
     {{/each}}
     )
 
@@ -24,7 +27,7 @@
     Co-presenters:
     {{#if ../showAuthors}}
         {{#each this.PaperCoPresenters}}
-            {{this.name}}, 
+            {{this.name}},
         {{/each}}
     {{/if}}
     {{#ifEqual ../this.User.id ../../user.id}}
@@ -38,3 +41,6 @@
     <br />
     <br />
 {{/each}}
+</div>
+</div>
+</div>
