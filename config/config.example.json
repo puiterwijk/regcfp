@@ -1,6 +1,7 @@
 {
   "development": {
     "theming": {
+      "theme": "fedora",
       "site_name": "My Event registration",
       "event_name": "My Event",
       "logo": ""

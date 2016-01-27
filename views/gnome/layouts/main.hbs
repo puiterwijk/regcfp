@@ -1,0 +1,59 @@
+<!doctype HTML>
+<html>
+    <head >
+        <title>{{ config.theming.siteName }}</title>
+
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.min.css" rel="stylesheet">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+        {{#each extra_js}}
+            <script type="text/javascript" src="{{this}}"></script>
+        {{/each}}
+
+        <script type="text/javascript">
+            // Inserted variables
+            {{#if session.currentUser}}
+                var currentUser = '{{session.currentUser}}';
+            {{else}}
+                var currentUser = null;
+            {{/if}}
+
+            // Login arguments
+            var login_args = {
+              siteName: "{{ config.theming.sitename }}",
+              siteLogo: "{{ config.theming.logo }}"
+            };
+        </script>
+        <script type="text/javascript" src="/javascripts/login.js"></script>
+        <link rel="stylesheet" href="/css/style.css" type="text/css" media="all">
+        <link rel="stylesheet" id="ttfmake-google-fonts-css" href="//fonts.googleapis.com/css?family=Open+Sans%3Aregular%2Citalic%2C700&amp;subset=latin&amp;ver=1.5.2" type="text/css" media="all">
+    </head>
+    <body>
+        {{#if development}}
+            <span style="border: 1px solid blue; color:red;" align="center">
+            <h1>DEVELOPMENT INSTANCE</h1>
+            <h2>Data in this instance may be deleted at any time!</h1>
+            </span>
+        {{/if}}
+        <div class="site-branding">
+		        <div class="custom-logo">
+		        <a href="https://www.guadec.org/"></a>
+		        </div>
+		        <div class="navigation">
+		        		<a href="https://www.guadec.org">Back to main GUADEC website</a>
+		            <a href="/">Registration home</a>
+                {{#if session.currentUser}}
+                    <button id="logoutBtn" onclick="{{ login_buttons.logout.onclick }}">Log out</button>
+                {{else}}
+                    <button id="loginBtn" onclick="{{ login_buttons.login.onclick }}">Log in with Persona</button>
+                {{/if}}
+		        </div>
+		    </div>
+				
+				<div class="content">
+
+        {{{ body }}}
+        </div>
+    </body>
+</html>

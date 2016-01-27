@@ -1,0 +1,94 @@
+<p>Welcome to the event registration system</p>
+
+{{#unless session.currentUser}}
+Hello, please login using Persona.<br/>
+You can log in with your Persona Account or with a persona provider, for example, a gnome.org, fedoraproject.org or gmail.com account"
+
+<h1>Please log in</h1>
+
+{{else}}
+Welcome, {{name}}<br />
+
+
+{{#has_permission "registration/desk"}}
+<div class="button"><a href="/desk">Desk</a></div>
+{{/has_permission}}
+
+
+{{#if config.papers.enabled}}
+
+<h2>Papers management</h2>
+<div class="buttons">
+{{#has_permission "papers/submit" }}
+<div class="button"><a href="/papers/submit">Submit a talk</a></div>
+{{/has_permission}}
+{{#has_permission "papers/list/own" }}
+<div class="button"><a href="/papers/list/own">View your submitted talks</a></div>
+{{/has_permission}}
+{{#has_permission "papers/list/accepted" }}
+<div class="button"><a href="/papers/list">View accepted talks</a></div>
+{{/has_permission}}
+</div>
+
+{{/if}}
+
+
+
+{{#if config.registration.enabled}}
+
+<h2>Registration</h2>
+{{#has_permission "registration/view_public"}}
+<div class="button"><a href="/registration/list">Current registrations</a></div>
+{{/has_permission}}
+<div class="buttons">
+{{#has_permission "registration/register" }}
+{{#if registration}}
+<h3>Registration ID: {{registration.display_id}}</h3>
+<div class="button"><a href="/registration/register">Update registration</a></div><br/>
+
+{{#has_permission "registration/request_receipt"}}
+{{#if registration.eligible_for_receipt}}
+<div class="button"><a href="/registration/receipt" target="_blank">Get receipt</a></div>
+{{else}}
+Not enough paid for receipt (Paid {{registration.paid}}, outstanding for onsite payment: {{registration.outstanding_onsite}}, PayPal outstanding: {{registration.outstanding_paypal}}. Any of these needed: {{registration.needed_for_receipt}})<br/>
+{{/if}}
+{{/has_permission}}
+
+{{#has_permission "registration/pay"}}
+{{#unless registration.badge_printed}}
+<div class="button"><a href="/registration/pay">Pay more</a></div>
+{{/unless}}
+{{/has_permission}}
+{{else}}
+<div class="button"><a href="/registration/register">Register</a></div>
+{{/if}}
+{{/has_permission}}
+</div>
+{{/if}}
+
+
+{{#has_permission "admin" }}
+<h2>Admin</h2>
+
+<h3>Papers management</h3>
+<div class="buttons">
+{{#has_permission "papers/list/all"}}
+<div class="button"><a href="/papers/admin/list">View all talks</a></div>
+{{/has_permission}}
+{{#has_permission "papers/vote"}}
+<div class="button"><a href="/papers/admin/vote">Vote on talks</a></div>
+{{/has_permission}}
+{{#has_permission "papers/showvotes" }}
+<div class="button"><a href="/papers/admin/vote/show">Show talk votes</a></div>
+{{/has_permission}}
+</div>
+
+<h3>Registration</h3>
+<div class="buttons">
+{{#has_permission "registration/view_all" }}
+<div class="button"><a href="/registration/admin/list">List all registrations</a></div>
+{{/has_permission}}
+</div>
+
+{{/has_permission}}
+{{/unless}}
