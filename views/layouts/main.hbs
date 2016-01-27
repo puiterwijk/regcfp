@@ -4,9 +4,28 @@
         <title>{{ config.theming.siteName }}</title>
 
         <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.min.css" rel="stylesheet">
+
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="https://flocktofedora.org/static/js/jquery.min.js"></script>
+        <script type="text/javascript" src="https://flocktofedora.org/static/js/jquery.expander.js"></script>
+        <script type="text/javascript" src="https://flocktofedora.org/static/js/jquery.tools.min.js"></script>
+        <script type="text/javascript" src="https://flocktofedora.org/static/js/jquery.query.min.js"></script>
+        <script type="text/javascript" src="https://flocktofedora.org/static/js/jquery.slideshow.minified.js"></script>
+        <script type="text/javascript" src="https://flocktofedora.org/static/js/jquery.tweet.js"></script>
+        <script type="text/javascript" src="https://flocktofedora.org/static/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/javascripts/translations.js"></script>
+
+        <!-- language selector -->
+        <script type="text/javascript" src="https://flocktofedora.org/static/js/jquery.uls.data.js"></script>
+        <script type="text/javascript" src="https://flocktofedora.org/static/js/jquery.uls.data.utils.js"></script>
+        <script type="text/javascript" src="https://flocktofedora.org/static/js/jquery.uls.lcd.js"></script>
+        <script type="text/javascript" src="https://flocktofedora.org/static/js/jquery.uls.languagefilter.js"></script>
+        <script type="text/javascript" src="https://flocktofedora.org/static/js/jquery.uls.regionfilter.js"></script>
+        <script type="text/javascript" src="https://flocktofedora.org/static/js/jquery.uls.core.js"></script>
         {{#each extra_js}}
             <script type="text/javascript" src="{{this}}"></script>
         {{/each}}
@@ -28,32 +47,50 @@
         <script type="text/javascript" src="/javascripts/login.js"></script>
         <link rel="stylesheet" href="/css/style.css" type="text/css" media="all">
         <link rel="stylesheet" id="ttfmake-google-fonts-css" href="//fonts.googleapis.com/css?family=Open+Sans%3Aregular%2Citalic%2C700&amp;subset=latin&amp;ver=1.5.2" type="text/css" media="all">
+        <link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&amp;subset=latin,latin-ext" />
+        <link rel='stylesheet' media="screen" href='https://fonts.googleapis.com/css?family=Montserrat' />
+        <link rel="stylesheet" type="text/css" href="https://flocktofedora.org/static/css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="https://flocktofedora.org/static/css/bootstrap-theme.css" />
+        <link rel="stylesheet" type="text/css" href="/css/app.css" />
+        <link rel="stylesheet" type="text/css" href="https://flocktofedora.org/static/css/flock.css" />
+        <link rel="stylesheet" type="text/css" href="/css/font-awesome.css" />
+
+        <!-- language selector -->
+        <link rel="stylesheet" type="text/css" href="https://flocktofedora.org/static/css/jquery.uls.css" />
+        <link rel="stylesheet" type="text/css" href="https://flocktofedora.org/static/css/jquery.uls.grid.css" />
+        <link rel="stylesheet" type="text/css" href="https://flocktofedora.org/static/css/jquery.uls.lcd.css" />
     </head>
     <body>
+        {{>header}}
+
         {{#if development}}
             <span style="border: 1px solid blue; color:red;" align="center">
             <h1>DEVELOPMENT INSTANCE</h1>
             <h2>Data in this instance may be deleted at any time!</h1>
             </span>
         {{/if}}
-        <div class="site-branding">
-		        <div class="custom-logo">
-		        <a href="https://www.guadec.org/"></a>
-		        </div>
-		        <div class="navigation">
-		        		<a href="https://www.guadec.org">Back to main GUADEC website</a>
-		            <a href="/">Registration home</a>
-                {{#if session.currentUser}}
-                    <button id="logoutBtn" onclick="{{ login_buttons.logout.onclick }}">Log out</button>
-                {{else}}
-                    <button id="loginBtn" onclick="{{ login_buttons.login.onclick }}">Log in with Persona</button>
-                {{/if}}
-		        </div>
-		    </div>
-				
-				<div class="content">
-
-        {{{ body }}}
+        <div class="main-head-index">
+            <div class="container">
+              <div class="row">
+                <div class="col-xs-8 col-xs-offset-2 bottom-margin">
+                    <h1 class="thin">Welcome to the Flock Registration System.</h1>
+                    <h4 class="thin">
+                        {{#if session.currentUser}}
+                        <button id="logoutBtn" onclick="{{ login_buttons.logout.onclick }}">Log out</button>
+                        {{else}}
+                        <button id="loginBtn" onclick="{{ login_buttons.login.onclick }}">Log in with Persona</button>
+                        {{/if}}
+                    </h4>
+                </div>
+              </div>
+            </div>
         </div>
+
+                {{{ body }}}
+
+        <div id="bottom">
+        {{>footer}}
+        </div>
+
     </body>
 </html>
