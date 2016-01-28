@@ -85,6 +85,7 @@
       "fields": {
         "country": {
           "display_name": "Country",
+          "short_display_name": "Ctr",
           "type": "country",
           "required": true,
           "private": true,
@@ -92,6 +93,7 @@
         },
         "ircnick": {
           "display_name": "IRC Nickname",
+          "short_display_name": "IRC",
           "type": "string",
           "required": true,
           "private": true,
@@ -99,6 +101,7 @@
         },
         "shirtsize": {
           "display_name": "T-shirt size",
+          "short_display_name": "T-shirt",
           "type": "select",
           "message": "This will be kept private",
           "required": false,

@@ -72,7 +72,7 @@ function show_list(req, res, next, show_private) {
       for(var field in fields) {
         if(show_private || !fields[field]['private']) {
           field_ids.push(field);
-          field_display_names.push(fields[field]['display_name']);
+          field_display_names.push(fields[field]['short_display_name']);
         }
       }
       var display_regs = [];
