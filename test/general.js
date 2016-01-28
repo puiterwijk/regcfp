@@ -8,6 +8,7 @@ describe('general', function() {
     agent.get('/')
     .expect(200)
     .expect(/Welcome to the Flock Registration System/)
+    .expect(/My Event registration/)
     .end(done);
   });
 
