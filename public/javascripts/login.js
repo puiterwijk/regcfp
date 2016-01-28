@@ -21,7 +21,7 @@ navigator.id.watch({
           type: 'POST',
           url: '/auth/logout/',
           success: function(res, status, xhr) {
-            window.location.reload();
+            window.location = '/';
           },
           error: function(xhr, status, err) {
             window.alert('Logout failure: ' + err);
