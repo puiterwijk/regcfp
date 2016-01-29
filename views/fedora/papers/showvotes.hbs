@@ -1,7 +1,10 @@
+<div class="container">
+<div class="row">
+<div class="col-xs-12 bottom-margin">
 Vote on papers:
 
 <form action="/papers/admin/vote/show" method="POST">
-<table border="1">
+<table class="table table-striped table-bordered">
 <tr><th>Title</th><th>Author</th><th>Vote average</th><th>Accepted</th></tr>
     {{#each papers}}
         <tr>
@@ -39,3 +42,6 @@ Vote on papers:
 <input type="submit" value="Submit">
 {{/has_permission}}
 </form>
+</div>
+</div>
+</div>
