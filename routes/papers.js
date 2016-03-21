@@ -23,13 +23,13 @@ router.get('/submit', function(req, res, next) {
 function add_paper(req, res, paper) {
   Paper
     .create(paper)
-    .catch(function(error) {
+    .catch(function(err) {
         console.log('Error saving paper: ' + err);
         res.status(500).send('Error saving paper submission');
     })
     .then(function(paper) {
       req.user.addPaper(paper)
-        .catch(function(error) {
+        .catch(function(err) {
           console.log('Error attaching paper to user: ' + err);
           res.status(500).send('Error attaching your paper to your user');
         })
@@ -67,8 +67,8 @@ router.post('/submit', function(req, res, next) {
 
 function get_paper_copresenters(res, papers, cb) {
   User.findAll()
-  .catch(function(error) {
-    console.log('Error getting users: ' + error);
+  .catch(function(err) {
+    console.log('Error getting users: ' + err);
     res.status(500).send('Error getting users');
   })
   .then(function(users) {
@@ -275,9 +275,9 @@ function save_votes(keys, errors, req, res, next) {
               PaperId: id,
               UserId: req.user.id,
             })
-            .catch(function(error) {
-              console.log("ERRORS: " + error);
-              errors.push({id: id, err: error, phase: "addVote"});
+            .catch(function(err) {
+              console.log("ERRORS: " + err);
+              errors.push({id: id, err: err, phase: "addVote"});
               save_votes(keys, errors, req, res, next);
             })
             .then(function(vote) {
@@ -289,8 +289,8 @@ function save_votes(keys, errors, req, res, next) {
           vote.vote = vote_val;
           vote.abstained = abstained;
           vote.save()
-            .catch(function(error) {
-              errors.push({id: id, err: error});
+            .catch(function(err) {
+              errors.push({id: id, err: err});
               save_votes(keys, errors, req, res, next);
             })
             .then(function(vote) {
@@ -317,8 +317,8 @@ router.post('/tag', function(req, res, next) {
   };
   PaperTag
     .create(info)
-    .catch(function(error) {
-        console.log('Error saving paper ta: ' + error);
+    .catch(function(err) {
+        console.log('Error saving paper ta: ' + err);
         res.status(500).send('Error saving paper tag');
     })
     .then(function(paper) {
@@ -359,7 +359,7 @@ router.post('/copresenter/add', function(req, res, next) {
             };
             PaperCoPresenter
               .create(info)
-              .catch(function(error) {
+              .catch(function(err) {
                 console.log('Error adding copresenter: ' + err);
                 res.status(500).send('Error adding copresenter');
               })

@@ -141,10 +141,10 @@ router.post('/pay/paypal/execute', function(req, res, next) {
   console.log('Request');
   console.log(JSON.stringify(execute_payment));
   var paymentID = req.body.paymentId;
-  paypal.payment.execute(paymentID, execute_payment, function(error, payment) {
-    if(!!error) {
+  paypal.payment.execute(paymentID, execute_payment, function(err, payment) {
+    if(!!err) {
       console.log('ERROR');
-      console.log(JSON.stringify(error));
+      console.log(JSON.stringify(err));
       res.status(500).send('authorization-failure');
     } else {
       console.log('Response: ');
@@ -160,7 +160,7 @@ router.post('/pay/paypal/execute', function(req, res, next) {
       console.log(info);
       RegistrationPayment
         .create(info)
-        .catch(function(error) {
+        .catch(function(err) {
           console.log('Error saving payment: ' + err);
           res.status(500).send('ERROR saving payment');
         })
@@ -168,7 +168,7 @@ router.post('/pay/paypal/execute', function(req, res, next) {
           req.user.getRegistration({include: [RegistrationInfo]})
             .then(function(reg) {
               reg.addRegistrationPayment(payment)
-                .catch(function(error) {
+                .catch(function(err) {
                   console.log('Error attaching payment to reg: ' + err);
                   res.status(500).send('error');
                 })
@@ -214,12 +214,12 @@ function create_payment(req, res, next, currency, amount) {
     }]
   };
 
-  paypal.payment.create(create_payment, function(error, payment) {
-    if(!!error) {
+  paypal.payment.create(create_payment, function(err, payment) {
+    if(!!err) {
       console.log('ERROR: ');
-      console.log(error);
-      console.log(error['response']['details']);
-      res.error(500).send('Error requesting payment authorization');
+      console.log(err);
+      console.log(err['response']['details']);
+      res.status(500).send('Error requesting payment authorization');
     } else {
       req.session.payment = {'request': create_payment, 'response': payment};
       for(var index = 0; index < payment.links.length; index++) {
@@ -248,7 +248,7 @@ router.post('/pay/do', function(req, res, next) {
     };
     RegistrationPayment
       .create(info)
-      .catch(function(error) {
+      .catch(function(err) {
         console.log('Error saving payment: ' + err);
         res.status(500).send('ERROR saving payment');
       })
@@ -256,8 +256,8 @@ router.post('/pay/do', function(req, res, next) {
         req.user.getRegistration({include: [RegistrationInfo]})
           .then(function(reg) {
             reg.addRegistrationPayment(payment)
-              .catch(function(error) {
-                console.log('Error attaching payment to reg: ' + error);
+              .catch(function(err) {
+                console.log('Error attaching payment to reg: ' + err);
                 res.status(500).send('Error attaching payment');
               })
               .then(function() {
@@ -277,7 +277,7 @@ router.all('/receipt', utils.require_user);
 router.all('/receipt', utils.require_permission('registration/request_receipt'));
 router.get('/receipt', function(req, res, next) {
   req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
-  .catch(function(error) {
+  .catch(function(err) {
     res.status(500).send('Error retrieving your registration');
   })
   .then(function(reg) {
@@ -323,7 +323,7 @@ router.post('/register', function(req, res, next) {
         name: req.body.name.trim()
       };
       User.create(user_info)
-        .catch(function(error) {
+        .catch(function(err) {
           console.log("Error saving user object: " + err);
           res.status(500).send('Error saving user');
         })
@@ -366,13 +366,13 @@ function handle_registration(req, res, next) {
       if(reg == null) {
         // Create new registration
         Registration.create(reg_info)
-          .catch(function(error) {
+          .catch(function(err) {
             console.log('Error saving reg: ' + err);
             res.status(500).send('Error saving registration');
           })
           .then(function(reg) {
             req.user.setRegistration(reg)
-              .catch(function(error) {
+              .catch(function(err) {
                 console.log('Error adding reg to user: ' + err);
                 res.status(500).send('Error attaching registration to your user');
               })
@@ -388,7 +388,7 @@ function handle_registration(req, res, next) {
         // Update
         reg.is_public = reg_info.is_public;
         reg.save()
-          .catch(function(error) {
+          .catch(function(err) {
             res.render('registration/register', { registration: reg_info,
                                                   registration_fields: get_reg_fields(req, reg),
                                                   save_error: true,
@@ -435,7 +435,7 @@ function update_field_values(req, res, next, is_update, reg, field_values, curre
       updated = true;
       info.value = current.value;
       info.save()
-        .catch(function(error) {
+        .catch(function(err) {
           console.log('Error saving reg: ' + err);
           res.status(500).send('Error saving registration info');
           return null;
@@ -454,8 +454,8 @@ function update_field_values(req, res, next, is_update, reg, field_values, curre
     };
 
     RegistrationInfo.create(info)
-      .catch(function(error) {
-        console.log('Error saving reg: ' + error);
+      .catch(function(err) {
+        console.log('Error saving reg: ' + err);
         res.status(500).send('Error saving registration info');
       })
       .then(function() {
