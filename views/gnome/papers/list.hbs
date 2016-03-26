@@ -28,6 +28,8 @@
     {{/ifEqual}}
     </td>
     </tr>
+    {{#if this.type}}<tr><th>Type:</th><td>{{this.type}}</td>{{/if}}
+    {{#if this.track}}<tr><th>Track:</th><td>{{this.track}}</td>{{/if}}
     <tr><th>Tags:</th><td>
     {{#each this.PaperTags}}
         {{this.tag}}, 

@@ -77,7 +77,8 @@
       "tracks": [
         "security",
         "data"
-      ]
+      ],
+      "types": ["25min talk", "50min talk"]
     },
 
     "registration": {
