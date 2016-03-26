@@ -4,16 +4,16 @@
 
 <form action="/registration/register" method="post">
 <table class="submission-form">
-<tr><td>Your name</td><td><input type="text" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td></tr>
+<tr><td><label for="reg-name">Your name</label></td><td><input type="text" id="reg-name" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td></tr>
 <input type="hidden" name="is_public" value="true">
 
 
 {{#has_permission "registration/pay"}}
-<tr><td>Registration fee</td><td>
+<tr><td><label for="reg-fee">Registration fee</label></td><td>
 {{#unless ask_regfee}}
 Registered
 {{else}}
-{{>currency_selector}} <input type="text" name="regfee" class="reg-fee" value="{{config.registration.default_amount}}">
+{{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="{{config.registration.default_amount}}">
 <p class="note">Feel free to support us by donating as much as you're able to.<br />
 We can only provide receipts for payments over {{currency_symbol config.registration.main_currency}}{{min_amount_main_currency}} or an equivalent value in another currency.
 {{/unless}}</p>
@@ -22,15 +22,15 @@ We can only provide receipts for payments over {{currency_symbol config.registra
 
 
 {{#each registration_fields}}
-<tr><td>{{ this.display_name }}</td>
+<tr><td><label for="reg-{{@key}}">{{ this.display_name }}</label></td>
 <td>
 
 {{#ifEqual this.type "string"}}
-<input type="text" name="field_{{@key}}" value="{{ this.value }}" placeholder="{{ this.placeholder }}">
+<input type="text" id="reg-{{@key}}" name="field_{{@key}}" value="{{ this.value }}" placeholder="{{ this.placeholder }}">
 {{else}}
 {{#ifEqual this.type "select"}}
 
-<select name="field_{{@key}}">
+<select name="field_{{@key}}" id="reg-{{@key}}" >
 {{#each this.options}}
 <option
 {{#ifEqual ../value this}}
@@ -54,11 +54,11 @@ Unknown field type
 {{/each}}
 
 
-<tr><td>&nbsp;</td><td><input type="checkbox" value="false" name="is_public" 
+<tr><td>&nbsp;</td><td><label><input type="checkbox" value="false" name="is_public" 
 {{#unless registration.is_public}}
 checked
 {{/unless}}
-> Hide my name in the public list of attendees</td></tr>
+>Hide my name in the public list of attendees</label></td></tr>
 <tr><td>&nbsp;</td>
 <td><input class="submit-talk" type="submit" value="Submit" /></td>
 </tr>
