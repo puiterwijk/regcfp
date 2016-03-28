@@ -1,40 +1,46 @@
 {{description}} submitted papers:<br /><br />
 
 {{#each papers}}
-    <b>{{ this.title }}</b>
-    {{#if ../showAuthors}}
-      ({{ this.User.name }} &lt;{{ this.User.email }}&gt;)
-    {{/if}}
-    - 
+  <div class="paper">
+    <h3>{{ this.title }}</h3>
+    <p class="summary">
     {{ breaklines this.summary }}
+    </p>
 
-    <br />
-    (
-    {{#each this.PaperTags}}
-        {{this.tag}}, 
-    {{/each}}
-    )
-
-    <form action="/papers/tag" method="post">
-    <input type="hidden" name="paper" value="{{this.id}}">
-    <input type="text" name="tag">
-    <input type="submit" value="Tag">
-    </form>
-
-    Co-presenters:
+    <table>
+      <tbody>
+    {{#if ../showAuthors}}
+        <tr><th>Author:</th>
+        <td>{{ this.User.name }} &lt;{{ this.User.email }}&gt;</td><tr>
+    {{/if}}
+    <tr><th>Co-presenters:</th><td>
     {{#if ../showAuthors}}
         {{#each this.PaperCoPresenters}}
             {{this.name}}, 
         {{/each}}
     {{/if}}
     {{#ifEqual ../this.User.id ../../user.id}}
-        <form action="/papers/copresenter/add" method="post">
+        <form action="/papers/copresenter/add" method="post" style="display: inline">
         <input type="hidden" name="paper" value="{{this.id}}">
         <input type="text" name="email">
         <input type="submit" value="Add copresenter">
         </form>
     {{/ifEqual}}
+    </td>
+    </tr>
+    {{#if this.type}}<tr><th>Type:</th><td>{{this.type}}</td>{{/if}}
+    {{#if this.track}}<tr><th>Track:</th><td>{{this.track}}</td>{{/if}}
+    <tr><th>Tags:</th><td>
+    {{#each this.PaperTags}}
+        {{this.tag}}, 
+    {{/each}}
+    <form action="/papers/tag" method="post" style="display: inline">
+    <input type="hidden" name="paper" value="{{this.id}}">
+    <input type="text" name="tag">
+    <input type="submit" value="Add Tag">
+    </form></td>
+    </tbody>
+    </table>
 
-    <br />
-    <br />
+  </div>
 {{/each}}

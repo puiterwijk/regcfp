@@ -28,6 +28,19 @@ selected="selected"
 </select>
 </td></tr>
 
+<tr><td>Type:</td>
+<td>
+<select name="type">
+{{#each types}}
+<option
+{{#ifEqual ../paper.type this}}
+selected="selected"
+{{/ifEqual}}
+>{{this}}</option>
+{{/each}}
+</select>
+</td></tr>
+
 <tr><td>&nbsp;</td>
 <td><input class="submit-talk" type="submit" value="Submit" /></td>
 </tr>

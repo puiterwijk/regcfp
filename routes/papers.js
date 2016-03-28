@@ -17,7 +17,11 @@ router.all('/', utils.require_feature('papers'));
 router.all('/submit', utils.require_user);
 router.all('/submit', utils.require_permission('papers/submit'));
 router.get('/submit', function(req, res, next) {
-  res.render('papers/submit', { paper: {}, tracks: config['papers']['tracks'] });
+  res.render('papers/submit', {
+    paper: {},
+    tracks: config['papers']['tracks'],
+    types: config['papers']['types']
+  });
 });
 
 function add_paper(req, res, paper) {
@@ -48,6 +52,7 @@ router.post('/submit', function(req, res, next) {
     title: req.body.paper_title.trim(),
     summary: req.body.paper_summary.trim(),
     track: req.body.track.trim(),
+    type: req.body.type.trim(),
     accepted: false
   };
 
@@ -58,6 +63,7 @@ router.post('/submit', function(req, res, next) {
     res.render('papers/submit', {
       paper: paper,
       tracks: config['papers']['tracks'],
+      types: config['papers']['types'],
       submission_error: true
     });
   } else {

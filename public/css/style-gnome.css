@@ -45,3 +45,9 @@ table:not(.submission-form) th, table:not(.submission-form) td {
   border-bottom: 1px solid #ddd;
 }
 
+.paper table th, .paper table td {
+  padding: 0px;
+  padding-right: 5px;
+  border-bottom: none;
+  text-align: left;
+}

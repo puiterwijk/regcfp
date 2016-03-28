@@ -4,6 +4,7 @@ module.exports = function(sequelize, DataTypes) {
   var Paper = sequelize.define("Paper", {
     title: DataTypes.STRING,
     summary: DataTypes.TEXT,
+    type: DataTypes.STRING,
     track: DataTypes.STRING,
     accepted: DataTypes.BOOLEAN
   }, {
