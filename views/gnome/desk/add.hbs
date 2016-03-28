@@ -1,18 +1,18 @@
 <form action="/desk/add" method="post">
 <table class="submission-form">
-<tr><td>Your name</td><td><input type="text" id="name" name="name"></td></tr>
-<tr><td>Your email</td><td><input type="text" id="email1" name="email"></td></tr>
-<tr><td>Confirm email</td><td><input type="text" id="email2" name="email2"></td></tr>
-<tr><td>IRC nickname</td><td><input type="text" name="irc"></td></tr>
+<tr><td><label for="reg-name">Your name</label></td><td><input type="text" id="reg-name" id="name" name="name"></td></tr>
+<tr><td><label for="email1">Your email</label></td><td><input type="text" id="email1" name="email"></td></tr>
+<tr><td><label for="email2">Confirm email</label></td><td><input type="text" id="email2" name="email2"></td></tr>
+<tr><td><label for="reg-irc">IRC nickname</label></td><td><input type="text" id="reg-irc" name="irc"></td></tr>
 <input type="hidden" name="is_public" value="true">
 
 
-<tr><td>Gender</td><td><input type="text" name="gender" value="{{registration.gender}}" placeholder="(optional: male, female, genderqueer, etc.)"><br/><p class="note">We will not publish gender data.<br/> It will only be used for attendee statistics and for an invitation to the women's dinner.</p></td></tr>
+<tr><td><label for="reg-gender">Gender</label></td><td><input type="text" id="reg-gender" name="gender" value="{{registration.gender}}" placeholder="(optional: male, female, genderqueer, etc.)"><br/><p class="note">We will not publish gender data.<br/> It will only be used for attendee statistics and for an invitation to the women's dinner.</p></td></tr>
 
-<tr><td>Country</td><td><input type="text" name="country" value="{{registration.country}}" placeholder="(optional)"><br/><p class="note">We will not publish country data.<br/> It will only be used for attendee statistics.</p></td></tr>
+<tr><td><label for="reg-country">Country</label></td><td><input type="text" id="reg-country" name="country" value="{{registration.country}}" placeholder="(optional)"><br/><p class="note">We will not publish country data.<br/> It will only be used for attendee statistics.</p></td></tr>
 
 
-<tr><td>&nbsp;</td><td><input type="checkbox" value="false" name="is_public"> Hide my name in the public list of attendees</td></tr>
+<tr><td>&nbsp;</td><td><label><input type="checkbox" value="false" name="is_public"> Hide my name in the public list of attendees</label></td></tr>
 <tr><td>&nbsp;</td>
 <td><input class="submit-talk" type="submit" value="Submit" /></td>
 </tr>
