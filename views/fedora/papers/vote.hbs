@@ -9,8 +9,8 @@ Vote on papers:
     {{#each papers}}
         <tr>
             <th><span title="{{this.summary}}">{{ this.title }}</span></th>
-            <td>{{ this.User.name }}</td>
             <td>{{ this.track }}</td>
+            <td>{{ this.User.name }}</td>
             <td>
                 <input type="radio" name="vote_{{this.id}}" id="vote_{{this.id}}_A" value="A"
                 {{#if this.vote.abstained}}
