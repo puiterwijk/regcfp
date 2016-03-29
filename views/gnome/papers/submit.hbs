@@ -6,13 +6,13 @@
 <table class="submission-form">
 <tr><td><label for="submit-submitter">Submitter:</label></td><td><input type="text" id="submit-submitter" value="{{user.email}}" disabled /></td></tr>
 <tr><td><label for="submit-name">Your name:</label></td><td><input type="text" id="submit-name" name="submitter_name" value="{{user.name}}" disabled /><br />You will be able to add extra speakers after you have submitted the paper</td></tr>
-<tr><td><label for="submit-title">Paper title:</label></td><td><input type="text" id="submit-title" name="paper_title" value="{{paper.title}}" maxlength=50 /></td></tr>
+<tr><td><label for="submit-title">Talk title:</label></td><td><input type="text" id="submit-title" name="paper_title" value="{{paper.title}}" maxlength=50 /></td></tr>
 
-<tr><td><label for="submit-summary">Paper summary:</label></td>
+<tr><td><label for="submit-summary">Talk summary:</label></td>
 <td><textarea id="submit-summary" name="paper_summary">{{paper.summary}}</textarea></td>
 </tr>
 
-<tr><td><label for="submit-track">Track:</label></td>
+<tr><td><label for="submit-track">Talk length:</label></td>
 <td>
 <select id="submit-track" name="track">
 {{#each tracks}}
@@ -24,6 +24,10 @@ selected="selected"
 {{/each}}
 </select>
 </td></tr>
+
+<tr><td>&nbsp;</td>
+<td><p>By submitting your talk, you are agreeing to license your submission under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. If your talk is accepted, details of your submission will be published on the website and on printed media (such as the badge).</p>
+<p>If you your talk is accepted, your presentation may be recorded and streamed live. The recording of your talk will also be distributed under CC BY-SA 4.0.</p></tr>
 
 <tr><td>&nbsp;</td>
 <td><input class="submit-talk" type="submit" value="Submit" /></td>
