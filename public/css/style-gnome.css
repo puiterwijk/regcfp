@@ -1,0 +1,53 @@
+
+.button {
+    display: inline-block;
+    padding: 0 14px;
+    border: 1px solid #ccc;
+    margin-left:20px;
+    margin-right:20px;
+    background: #ececec url(//static.gnome.org/img/action_button-bg.png) center repeat-x;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    color: #2e3436;
+    text-shadow: 0 1px 0 #fff;
+    text-decoration: none;
+    line-height: 1.8;
+    -webkit-transition: background-position 100ms linear;
+    -moz-transition: background-position 100ms linear;
+    transition: background-position 100ms linear;
+    -moz-box-shadow: inset 0 1px 0 #fff;
+    -webkit-box-shadow: inset 0 1px 0 #fff;
+    box-shadow: inset 0 1px 0 #fff;
+    outline: none;
+}
+.button a {
+    color: #000;
+}
+.button:hover, .button a:hover {
+    background-position: top;
+    color: #000;
+}
+.button:visited, .button a:visited {
+    color: inherit;
+}
+.button:active, .button a:active {
+    -moz-box-shadow: inset 0 2px 3px rgba(0,0,0,0.4);
+    -webkit-box-shadow: inset 0 2px 3px rgba(0,0,0,0.4);
+    box-shadow: inset 0 2px 3px rgba(0,0,0,0.4);
+    background-position: bottom;
+}
+
+
+table:not(.submission-form) th, table:not(.submission-form) td {
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+.paper table th, .paper table td {
+  padding: 0px;
+  padding-right: 5px;
+  border-bottom: none;
+  text-align: left;
+}
