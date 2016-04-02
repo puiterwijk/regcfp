@@ -1,10 +1,21 @@
 <p>Welcome to the event registration system</p>
 
 {{#unless session.currentUser}}
-Hello, please login using Persona.<br/>
-You can log in with your Persona Account or with a persona provider, for example, a gnome.org, fedoraproject.org or gmail.com account"
+<h2>Please log in using Persona</h2>
 
-<h1>Please log in</h1>
+<p>
+To use this registration and CfP system you need to login using Mozilla
+Persona. Both gnome.org or fedorproject.org accounts can be used for
+authentication (i.e. account@gnome.org).<br />
+If you do not have such an account then simply enter any email address you
+own. Some providers like Gmail can be used without further verification, in all other
+cases a verification email will be send to you and you can use this email
+address to authenticate afterwards (see the <a
+href="https://support.mozilla.org/en-US/kb/what-is-persona-and-how-does-it-work#w_how-do-i-create-an-account">Mozilla
+Persona FAQ</a> for more information).
+</p>
+
+<div class="button"><a href="/#login" onclick="{{ login_buttons.login.onclick }}">Log in with Persona</a></div>
 
 {{else}}
 Welcome, {{name}}<br />
