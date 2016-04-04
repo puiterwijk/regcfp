@@ -64,6 +64,7 @@ body {
 .submission-form tr td {
   padding-bottom: 7px;
   padding-top: 5px;
+  max-width: 50em;
 }
 
 .submission-form tr td:first-child {
