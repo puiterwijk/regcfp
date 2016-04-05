@@ -48,7 +48,7 @@ router.post('/submit', function(req, res, next) {
     title: req.body.paper_title.trim(),
     summary: req.body.paper_summary.trim(),
     track: req.body.track.trim(),
-    accepted: false
+    accepted: 'none'
   };
 
   if(paper.title.length > 50 ||
@@ -65,6 +65,78 @@ router.post('/submit', function(req, res, next) {
   }
 });
 
+router.all('/delete', utils.require_user);
+router.all('/delete', utils.require_permission('papers/delete/own'));
+router.post('/delete', function(req, res, next) {
+  console.log(req.body);
+  Paper.findOne({where: {id: req.body.paper}})
+    .then(function(paper) {
+      if(!paper) {
+        res.status(404).send("Paper could not be found");
+        return;
+      }
+      if(req.user.id != paper.UserId) {
+        res.status(403).send("This is not your paper to edit");
+        return;
+      }
+
+      paper.destroy();
+      res.redirect('/papers/list/own');
+    });
+});
+
+router.all('/edit', utils.require_user);
+router.all('/edit', utils.require_permission('papers/edit/own'));
+router.post('/edit', function(req, res, next) {
+  console.log(req.body);
+  Paper.findOne({where: {id: req.body.paper}})
+    .then(function(paper) {
+      if(!paper) {
+        res.status(404).send("Paper could not be found");
+        return;
+      }
+      if(req.user.id != paper.UserId) {
+        res.status(403).send("This is not your paper to edit");
+        return;
+      }
+      if(req.body.paper_title == null) {
+        res.render('papers/submit', {
+          paper: paper,
+          tracks: config['papers']['tracks'],
+          edit: true
+        });
+      } else {
+        var new_title = req.body.paper_title.trim();
+        var new_summary = req.body.paper_summary.trim();
+        var new_track = req.body.track.trim();
+        if(new_title == '' || new_title.length > 50 || new_summary == '') {
+          res.render('papers/submit', {
+            paper: {'id': paper.id,
+                    'title': new_title,
+                    'summary': new_summary,
+                    'track': new_track},
+            tracks: config['papers']['tracks'],
+            submission_error: true,
+            edit: true
+          });
+        } else {
+          paper.title = new_title;
+          paper.summary = new_summary;
+          paper.track = new_track;
+
+          paper.save()
+            .catch(function(error) {
+              console.log("Error editing: " + error);
+              res.status(500).send("Error saving update");
+            })
+            .then(function(paper) {
+              res.render("papers/submit_success", {'edit': true});
+          });
+        }
+      }
+    });
+});
+
 function get_paper_copresenters(res, papers, cb) {
   User.findAll()
   .catch(function(err) {
@@ -73,13 +145,21 @@ function get_paper_copresenters(res, papers, cb) {
   })
   .then(function(users) {
     for(var paper in papers) {
+      var copresenters = [];
       for(var copresenter in papers[paper].PaperCoPresenters) {
         for(var user in users) {
           user = users[user];
           if(papers[paper].PaperCoPresenters[copresenter].UserId == user.id) {
-            papers[paper].PaperCoPresenters[copresenter] = user;
+            copresenters.push(user.name);
           }
         }
+      }
+
+      if(copresenters.length == 0)
+      {
+        papers[paper].PaperCoPresenters = 'none';
+      } else {
+        papers[paper].PaperCoPresenters = copresenters.join(', ');
       }
     }
     cb(papers);
@@ -93,6 +173,8 @@ router.get('/list/own', function(req, res, next) {
     get_paper_copresenters(res, papers, function(papers_with_copresenters) {
       res.render('papers/list', { description: 'Your',
                                   showAuthors: true,
+                                  allowEdit: 'papers/edit/own',
+                                  allowDelete: 'papers/delete/own',
                                   papers: papers });
     });
   });
@@ -104,13 +186,15 @@ router.get('/list', function(req, res, next) {
     .findAll({
       include: [PaperTag, PaperCoPresenter, User],
       where: {
-        accepted: true
+        accepted: 'yes'
       }
     })
     .then(function(papers) {
       get_paper_copresenters(res, papers, function(papers_with_copresenters) {
         res.render('papers/list', { description: 'Accepted',
                                     showAuthors: true,
+                                    allowEdit: '',
+                                    allowDelete: '',
                                     papers: papers });
       });
     });
@@ -125,6 +209,8 @@ router.get('/admin/list', function(req, res, next) {
         res.render('papers/list', { description: 'All',
                                     showAuthors: true,
                                     showVotes: true,
+                                    allowEdit: 'papers/edit/all',
+                                    allowDelete: 'papers/delete/all',
                                     papers: papers });
       });
     });
@@ -135,10 +221,10 @@ router.all('/admin/vote/show', utils.require_permission('papers/showvotes'));
 router.get('/admin/vote/show', function(req, res, next) {
   Paper.findAll({include: [User, PaperVote, PaperTag]})
     .then(function(papers) {
-      paper_info = [];
-      for(paper in papers) {
+      var paper_info = [];
+      for(var paper in papers) {
         paper = papers[paper];
-        ppr = {
+        var ppr = {
           id: paper.id,
           title: paper.title,
           summary: paper.summary,
@@ -148,7 +234,7 @@ router.get('/admin/vote/show', function(req, res, next) {
           vote_total: 0,
           votes: []
         };
-        for(vote in paper.PaperVotes) {
+        for(var vote in paper.PaperVotes) {
           vote = paper.PaperVotes[vote];
           if(!vote.abstained) {
             ppr.vote_count++;
@@ -167,7 +253,8 @@ router.get('/admin/vote/show', function(req, res, next) {
       paper_info = paper_info.sort(function(a, b) {
         return b.vote_average - a.vote_average;
       });
-      res.render('papers/showvotes', { papers: paper_info });
+      res.render('papers/showvotes', { papers: paper_info,
+                                       acceptOptions: ['none', 'yes', 'no']});
     });
 });
 
@@ -185,11 +272,7 @@ function save_accepts(keys, errors, req, res, next) {
       Paper.findOne({where: {
         id: id
       }}).then(function(paper) {
-        if(accepted == 'no') {
-          paper.accepted = false;
-        } else {
-          paper.accepted = true;
-        }
+        paper.accepted = accepted;
         paper.save()
           .catch(function(error) {
             errors.push({id: id, err: err});
@@ -213,16 +296,17 @@ router.all('/admin/vote', utils.require_permission('papers/vote'));
 router.get('/admin/vote', function(req, res, next) {
   Paper.findAll({include: [User, PaperVote, PaperTag]})
     .then(function(papers) {
-      paper_info = [];
-      for(paper in papers) {
+      var paper_info = [];
+      for(var paper in papers) {
         paper = papers[paper];
-        ppr = {
+        var ppr = {
           id: paper.id,
           title: paper.title,
           summary: paper.summary,
+          track: paper.track,
           User: paper.User
         };
-        for(vote in paper.PaperVotes) {
+        for(var vote in paper.PaperVotes) {
           vote = paper.PaperVotes[vote];
           if(vote.UserId == req.user.id)
           {
@@ -344,6 +428,15 @@ function already_copresenter(paper, copresenter) {
 router.post('/copresenter/add', function(req, res, next) {
   Paper.findOne({where: {id: req.body.paper}, include: [PaperCoPresenter, User]})
     .then(function(paper) {
+      if(!paper) {
+        res.status(404).send("Paper could not be found");
+        return;
+      }
+      if(req.user.id != paper.UserId) {
+        res.status(403).send("This is not your paper to edit");
+        return;
+      }
+
       User.findOne({where: {email: req.body.email}})
         .then(function(copresenter) {
           if(!copresenter || !paper) {

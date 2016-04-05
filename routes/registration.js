@@ -61,7 +61,7 @@ function show_list(req, res, next, show_private) {
   Registration
     .findAll({
       where: {
-        is_public: true
+        is_public: !show_private
       },
       include: [User, RegistrationInfo]
     })

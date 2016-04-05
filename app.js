@@ -34,14 +34,23 @@ var hbs = handlebars.create({
   helpers: {
     breaklines: function(text) {
       return text
+      /* This doesn't work, so let's comment it out for now
       text = handlebars.handlebars.Utils.escapeExpression(text);
       text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
       return new handlebars.handlebars.SafeString(text);
+      */
     },
     currency_symbol: function(currency) {
       return config['registration']['currencies'][currency]['symbol'];
     },
     has_permission: utils.has_permission,
+    ifNotEqual: function(v1, v2, options) {
+      if(v1 != v2) {
+        return options.fn(this);
+      } else {
+        return options.inverse(this);
+      }
+    },
     ifEqual: function(v1, v2, options) {
       if(v1 == v2) {
         return options.fn(this);
@@ -120,6 +129,11 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (config.env === 'development' || config.env === 'test') {
     app.use(function(err, req, res, next) {
+        console.log("ERROR OCCURED");
+        console.log("Status: " + err.status);
+        console.log("Message: " + err.message);
+        console.log("Error: " + err);
+        console.log("Stack: " + err.stack);
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -131,6 +145,11 @@ if (config.env === 'development' || config.env === 'test') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
+    console.log("ERROR OCCURED");
+    console.log("Status: " + err.status);
+    console.log("Message: " + err.message);
+    console.log("Error: " + err);
+    console.log("Stack: " + err.stack);
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
