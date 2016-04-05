@@ -356,7 +356,11 @@ describe('papers', function() {
     agent.get('/papers/admin/vote')
     .expect(200)
     .expect(/Secret Talk/)
+    .expect(/security/)
+    .expect(/TestUser B/)
     .expect(/Second Talk/)
+    .expect(/data/)
+    .expect(/TestUser A/)
     .end(done);
   });
 });

@@ -294,6 +294,7 @@ router.get('/admin/vote', function(req, res, next) {
           id: paper.id,
           title: paper.title,
           summary: paper.summary,
+          track: paper.track,
           User: paper.User
         };
         for(var vote in paper.PaperVotes) {
