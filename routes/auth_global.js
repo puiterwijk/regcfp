@@ -40,7 +40,7 @@ router.post('/register', function(req, res, next) {
       });
     } else {
       // The user already existed...
-      res.redirect(302, '/');
+      res.redirect(302, origin);
     }
   });
 
