@@ -213,10 +213,10 @@ router.all('/admin/vote/show', utils.require_permission('papers/showvotes'));
 router.get('/admin/vote/show', function(req, res, next) {
   Paper.findAll({include: [User, PaperVote, PaperTag]})
     .then(function(papers) {
-      paper_info = [];
+      var paper_info = [];
       for(paper in papers) {
         paper = papers[paper];
-        ppr = {
+        var ppr = {
           id: paper.id,
           title: paper.title,
           summary: paper.summary,
@@ -287,16 +287,16 @@ router.all('/admin/vote', utils.require_permission('papers/vote'));
 router.get('/admin/vote', function(req, res, next) {
   Paper.findAll({include: [User, PaperVote, PaperTag]})
     .then(function(papers) {
-      paper_info = [];
-      for(paper in papers) {
+      var paper_info = [];
+      for(var paper in papers) {
         paper = papers[paper];
-        ppr = {
+        var ppr = {
           id: paper.id,
           title: paper.title,
           summary: paper.summary,
           User: paper.User
         };
-        for(vote in paper.PaperVotes) {
+        for(var vote in paper.PaperVotes) {
           vote = paper.PaperVotes[vote];
           if(vote.UserId == req.user.id)
           {
