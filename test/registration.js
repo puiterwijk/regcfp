@@ -67,6 +67,31 @@ describe('registration', function() {
     .end(done)
   });
 
+  it('should show filled in registration form', function(done) {
+    agent.get('/registration/register')
+    .expect(200)
+    .expect(/name="name" value="TestUser A"/)
+    .expect(/Hide my name/)
+    .end(done);
+  });
+
+  it('should allow updates', function(done) {
+    agent.post('/registration/register')
+    .send({'name': 'TestUser A'})
+    .send({'field_ircnick': 'testirc'})
+    .send({'is_public': 'false'})
+    .expect(200)
+    .expect(/Your registration was updated, thank you/)
+    .end(done);
+  });
+
+  it('should no longer list user', function(done) {
+    agent.get('/registration/list')
+    .expect(200)
+    .expect(/<\/tr>\n<\/table>/)
+    .end(done)
+  });
+
   // Test admin stuff
   it('logout second user', function(done) {
     agent.post('/auth/logout')
