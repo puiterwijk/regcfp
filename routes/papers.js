@@ -185,8 +185,6 @@ router.get('/list', function(req, res, next) {
       get_paper_copresenters(res, papers, function(papers_with_copresenters) {
         res.render('papers/list', { description: 'Accepted',
                                     showAuthors: true,
-                                    allowEdit: '',
-                                    allowDelete: '',
                                     papers: papers });
       });
     });

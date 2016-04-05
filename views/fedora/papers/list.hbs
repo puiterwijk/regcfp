@@ -11,13 +11,15 @@
     -
     {{ breaklines this.summary }}
 
-    {{#ifNotEqual ../../allowEdit ''}}
+    {{#if ../../allowEdit}}
         {{#has_permission ../../allowEdit}}
             <form action="/papers/edit" method="post">
                 <input type="hidden" name="paper" value="{{this.id}}">
                 <input type="submit" value="Edit">
             </form>
         {{/has_permission}}
+    {{/if}}
+    {{#if ../../allowDelete}}
         {{#has_permission ../../allowDelete}}
             <form action="/papers/delete" method="post"
                   onsubmit="return confirm('Do you really want to delete this paper?')">
@@ -25,7 +27,7 @@
                 <input type="submit" value="Delete">
             </form>
         {{/has_permission}}
-    {{/ifNotEqual}}
+    {{/if}}
 
 
     <br />
