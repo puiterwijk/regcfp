@@ -348,8 +348,8 @@ router.post('/copresenter/add', function(req, res, next) {
         .then(function(copresenter) {
           if(!copresenter || !paper) {
             res.render('papers/copresenter_add_failed', { reason: 'invalid email, copresenter may not be registered'});
-          //} else if(copresenter.id == paper.User.id) {
-          //  res.render('papers/copresenter_add_failed', { reason: 'Copresenter is main presenter' });
+          } else if(copresenter.id == paper.User.id) {
+            res.render('papers/copresenter_add_failed', { reason: 'Copresenter is main presenter' });
           } else if(already_copresenter(paper, copresenter)) {
             res.render('papers/copresenter_add_failed', { reason: 'copresenter has already been added' });
           } else {
