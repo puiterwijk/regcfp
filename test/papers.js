@@ -363,4 +363,65 @@ describe('papers', function() {
     .expect(/TestUser A/)
     .end(done);
   });
+
+  it('should allow vote saving', function(done) {
+    agent.post('/papers/admin/vote')
+    .send({'vote_1': '1'})
+    .send({'comment_vote_1': 'Some Comment'})
+    .send({'vote_3': 'A'})
+    .send({'comment_vote_3': 'Second Comment'})
+    .expect(200)
+    .expect(/Votes saved/)
+    .expect(/Errors: \n<\/div>/)
+    .end(done);
+  });
+
+  it('should list previous voting results', function(done) {
+    agent.get('/papers/admin/vote')
+    .expect(200)
+    .expect(/Some Comment/)
+    .expect(/Second Comment/)
+    .expect(/checked/)
+    .end(done);
+  });
+
+  it('should show voting results', function(done) {
+    agent.get('/papers/admin/vote/show')
+    .expect(200)
+    .expect(/Some Comment/)
+    .expect(/Second Comment/)
+    .expect(/1 \(num: 1, total: 1\)/)
+    // We cannot make an average from only abstainments
+    .expect(/NaN \(num: 0, total: 0\)/)
+    .expect(/none/)
+    .expect(/yes/)
+    .expect(/no/)
+    .end(done);
+  });
+
+  it('should allow acceptance saving', function(done) {
+    agent.post('/papers/admin/vote/show')
+    .send({'accept_1': 'yes'})
+    .send({'accept_3': 'no'})
+    .expect(200)
+    .expect(/Acceptances saved/)
+    .expect(/Errors: \n<\/div>/)
+    .end(done);
+  });
+
+  it('should list acceptances', function(done) {
+    agent.get('/papers/admin/vote/show')
+    .expect(200)
+    .expect(/id="accept_1_yes"\n( )*selected="selected"/)
+    .expect(/id="accept_3_no"\n( )*selected="selected"/)
+    .end(done);
+  });
+
+  it('should list accepted talks', function(done) {
+    agent.get('/papers/list')
+    .expect(200)
+    .expect(/Secret Talk/)
+    .end(done);
+  });
+
 });
