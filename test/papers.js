@@ -242,6 +242,14 @@ describe('papers', function() {
     .end(done);
   });
 
+  it('should should show editing form', function(done) {
+    agent.post('/papers/edit')
+    .send({'paper': '2'})
+    .expect(200)
+    .expect(/name="paper_title" value="Testing Talk"/)
+    .end(done);
+  });
+
   it('should handle empty forms on edit', function(done) {
     agent.post('/papers/edit')
     .send({'paper': '2'})
