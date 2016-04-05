@@ -79,7 +79,8 @@ describe('registration', function() {
     agent.post('/registration/register')
     .send({'name': 'TestUser A'})
     .send({'field_ircnick': 'testirc'})
-    .send({'is_public': 'false'})
+    // Not sending it defaults to false. And this adds another tested line.
+    //.send({'is_public': 'false'})
     .expect(200)
     .expect(/Your registration was updated, thank you/)
     .end(done);

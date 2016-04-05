@@ -407,6 +407,30 @@ describe('papers', function() {
     .end(done);
   });
 
+  it('should allow vote updating', function(done) {
+    agent.post('/papers/admin/vote')
+    .send({'vote_1': '1'})
+    .send({'comment_vote_1': 'Some Comment'})
+    .send({'vote_3': '2'})
+    .send({'comment_vote_3': 'Second Comment'})
+    .expect(200)
+    .expect(/Votes saved/)
+    .expect(/Errors: \n<\/div>/)
+    .end(done);
+  });
+
+  it('should show updated voting results', function(done) {
+    agent.get('/papers/admin/vote/show')
+    .expect(200)
+    .expect(/1 \(num: 1, total: 1\)/)
+    // We cannot make an average from only abstainments
+    .expect(/2 \(num: 1, total: 2\)/)
+    .expect(/none/)
+    .expect(/yes/)
+    .expect(/no/)
+    .end(done);
+  });
+
   it('should allow acceptance saving', function(done) {
     agent.post('/papers/admin/vote/show')
     .send({'accept_1': 'yes'})
