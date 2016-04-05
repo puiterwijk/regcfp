@@ -48,7 +48,7 @@ router.post('/submit', function(req, res, next) {
     title: req.body.paper_title.trim(),
     summary: req.body.paper_summary.trim(),
     track: req.body.track.trim(),
-    accepted: false
+    accepted: 'none'
   };
 
   if(paper.title.length > 50 ||
@@ -178,7 +178,7 @@ router.get('/list', function(req, res, next) {
     .findAll({
       include: [PaperTag, PaperCoPresenter, User],
       where: {
-        accepted: true
+        accepted: 'yes'
       }
     })
     .then(function(papers) {
@@ -263,11 +263,7 @@ function save_accepts(keys, errors, req, res, next) {
       Paper.findOne({where: {
         id: id
       }}).then(function(paper) {
-        if(accepted == 'no') {
-          paper.accepted = false;
-        } else {
-          paper.accepted = true;
-        }
+        paper.accepted = accepted;
         paper.save()
           .catch(function(error) {
             errors.push({id: id, err: err});
@@ -317,7 +313,8 @@ router.get('/admin/vote', function(req, res, next) {
         paper_info.push(ppr);
       }
       res.render('papers/vote', { papers: paper_info,
-                                  voteOptions: [-2, -1, 0, 1, 2]});
+                                  voteOptions: [-2, -1, 0, 1, 2],
+                                  acceptOptions: ['none', 'yes', 'no']});
     });
 });
 
