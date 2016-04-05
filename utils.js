@@ -145,7 +145,7 @@ utils.send_email = function(req, res, recipient, template, variables, cb) {
         body: contents
       };
       Email.create(info)
-      .catch(function(error) {
+      .catch(function(err) {
         console.log('Error saving email: ' + err);
         res.status(500).send('Error sending email');
         return null;
