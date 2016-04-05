@@ -24,6 +24,15 @@ describe('papers', function() {
     .end(done);
   });
 
+  before('submit test talk', function(done) {
+    agent.post('/papers/submit')
+    .send({'paper_title': 'Secret Talk'})
+    .send({'paper_summary': 'Some Nonlisted summary'})
+    .send({'track': 'security'})
+    .end(done);
+  });
+
+
   before('logout second user', function(done) {
     agent.post('/auth/logout')
     .expect(200)
@@ -123,7 +132,7 @@ describe('papers', function() {
 
   it('should allow tag', function(done) {
     agent.post('/papers/tag')
-    .send({'paper': '1'})
+    .send({'paper': '2'})
     .send({'tag': 'Testing Tag'})
     .expect(200)
     .expect(/Your paper tag was added, thank you!/)
@@ -137,9 +146,25 @@ describe('papers', function() {
     .end(done);
   });
 
-  it('should refuse adding presenter to copresenters', function(done) {
+  it('should refuse adding copresenters for unknown talk', function(done) {
+    agent.post('/papers/copresenter/add')
+    .send({'paper': '3'})
+    .send({'email': 'usera@regcfp'})
+    .expect(404)
+    .end(done);
+  });
+
+  it('should refuse adding copresenters for other persons talk', function(done) {
     agent.post('/papers/copresenter/add')
     .send({'paper': '1'})
+    .send({'email': 'usera@regcfp'})
+    .expect(403)
+    .end(done);
+  });
+
+  it('should refuse adding presenter to copresenters', function(done) {
+    agent.post('/papers/copresenter/add')
+    .send({'paper': '2'})
     .send({'email': 'usera@regcfp'})
     .expect(200)
     .expect(/is main presenter/)
@@ -148,7 +173,7 @@ describe('papers', function() {
 
   it('should refuse adding unregistered copresenters', function(done) {
     agent.post('/papers/copresenter/add')
-    .send({'paper': '1'})
+    .send({'paper': '2'})
     .send({'email': 'userc@regcfp'})
     .expect(200)
     .expect(/may not be registered/)
@@ -157,7 +182,7 @@ describe('papers', function() {
 
   it('should allow adding copresenters', function(done) {
     agent.post('/papers/copresenter/add')
-    .send({'paper': '1'})
+    .send({'paper': '2'})
     .send({'email': 'userb@regcfp'})
     .expect(200)
     .expect(/The copresenter was added/)
@@ -166,7 +191,7 @@ describe('papers', function() {
 
   it('should not allow the same copresenter twice', function(done) {
     agent.post('/papers/copresenter/add')
-    .send({'paper': '1'})
+    .send({'paper': '2'})
     .send({'email': 'userb@regcfp'})
     .expect(200)
     .expect(/copresenter has already been added/)
@@ -177,6 +202,112 @@ describe('papers', function() {
     agent.get('/papers/list/own')
     .expect(200)
     .expect(/TestUser B/)
+    .end(done);
+  });
+
+  it('should show edit button', function(done) {
+    agent.get('/papers/list/own')
+    .expect(200)
+    .expect(/Edit/)
+    .end(done);
+  });
+
+  it('should should not allow to edit nonexisting paper', function(done) {
+    agent.post('/papers/edit')
+    .send({'paper': '3'})
+    .send({'paper_title': ''})
+    .send({'paper_summary': ''})
+    .send({'track': 'security'})
+    .expect(404)
+    .end(done);
+  });
+
+  it('should should not allow to edit other persons paper', function(done) {
+    agent.post('/papers/edit')
+    .send({'paper': '1'})
+    .send({'paper_title': ''})
+    .send({'paper_summary': ''})
+    .send({'track': 'security'})
+    .expect(403)
+    .end(done);
+  });
+
+  it('should handle empty forms on edit', function(done) {
+    agent.post('/papers/edit')
+    .send({'paper': '2'})
+    .send({'paper_title': ''})
+    .send({'paper_summary': ''})
+    .send({'track': 'security'})
+    .expect(200)
+    .expect(/name="submitter_name" value="TestUser A"/)
+    .expect(/value="usera@regcfp"/)
+    .end(done);
+  });
+
+  it('should refuse talk title lenght >50 chars on edit', function(done) {
+    agent.post('/papers/edit')
+    .send({'paper': '2'})
+    .send({'paper_title': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
+    .send({'paper_summary': 'Some summary'})
+    .send({'track': 'security'})
+    .expect(200)
+    .expect(/name="submitter_name" value="TestUser A"/)
+    .expect(/value="usera@regcfp"/)
+    .end(done);
+  });
+
+  it('should allow to edit a talk', function(done) {
+    agent.post('/papers/edit')
+    .send({'paper': '2'})
+    .send({'paper_title': 'Updated Testing Talk'})
+    .send({'paper_summary': 'Some New summary'})
+    .send({'track': 'data'})
+    .expect(200)
+    .expect(/Your paper was submitted, thank you!/)
+    .end(done);
+  });
+
+  it('should list updated talk', function(done) {
+    agent.get('/papers/list/own')
+    .expect(200)
+    .expect(/Updated Testing Talk/)
+    .expect(/New summary/)
+    .end(done);
+  });
+
+  it('should show delete button', function(done) {
+    agent.get('/papers/list/own')
+    .expect(200)
+    .expect(/Delete/)
+    .end(done);
+  });
+
+  it('should should not allow to delete nonexisting paper', function(done) {
+    agent.post('/papers/delete')
+    .send({'paper': '3'})
+    .expect(404)
+    .end(done);
+  });
+
+  it('should should not allow to delete other persons paper', function(done) {
+    agent.post('/papers/delete')
+    .send({'paper': '1'})
+    .expect(403)
+    .end(done);
+  });
+
+  it('should allow to delete a talk', function(done) {
+    agent.post('/papers/delete')
+    .send({'paper': '2'})
+    .expect(302)
+    .expect('Location', '/papers/list/own')
+    .end(done);
+  });
+
+  it('should show empty list', function(done) {
+    agent.get('/papers/list/own')
+    .expect(200)
+    .expect(/Your submitted papers:<br \/><br \/>\n\n<\/div>/)
     .end(done);
   });
 

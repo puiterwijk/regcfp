@@ -55,6 +55,14 @@
           "own": ["*authenticated*"],
           "all": ["admin@regcfp", "voter@regcfp"]
         },
+        "edit": {
+          "own": ["*authenticated*"],
+          "all": ["admin@regcfp"]
+        },
+        "delete": {
+          "own": ["*authenticated*"],
+          "all": ["admin@regcfp"]
+        },
         "tag": ["*authenticated*"],
         "vote": ["admin@regcfp", "voter@regcfp"],
         "showvotes": ["admin@regcfp"],

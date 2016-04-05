@@ -65,6 +65,78 @@ router.post('/submit', function(req, res, next) {
   }
 });
 
+router.all('/delete', utils.require_user);
+router.all('/delete', utils.require_permission('papers/delete/own'));
+router.post('/delete', function(req, res, next) {
+  console.log(req.body);
+  Paper.findOne({where: {id: req.body.paper}})
+    .then(function(paper) {
+      if(!paper) {
+        res.status(404).send("Paper could not be found");
+        return;
+      }
+      if(req.user.id != paper.UserId) {
+        res.status(403).send("This is not your paper to edit");
+        return;
+      }
+
+      paper.destroy();
+      res.redirect('/papers/list/own');
+    });
+});
+
+router.all('/edit', utils.require_user);
+router.all('/edit', utils.require_permission('papers/edit/own'));
+router.post('/edit', function(req, res, next) {
+  console.log(req.body);
+  Paper.findOne({where: {id: req.body.paper}})
+    .then(function(paper) {
+      if(!paper) {
+        res.status(404).send("Paper could not be found");
+        return;
+      }
+      if(req.user.id != paper.UserId) {
+        res.status(403).send("This is not your paper to edit");
+        return;
+      }
+      if(req.body.paper_title == null) {
+        res.render('papers/submit', {
+          paper: paper,
+          tracks: config['papers']['tracks'],
+          edit: true
+        });
+      } else {
+        var new_title = req.body.paper_title.trim();
+        var new_summary = req.body.paper_summary.trim();
+        var new_track = req.body.track.trim();
+        if(new_title == '' || new_title.length > 50 || new_summary == '') {
+          res.render('papers/submit', {
+            paper: {'id': paper.id,
+                    'title': new_title,
+                    'summary': new_summary,
+                    'track': new_track},
+            tracks: config['papers']['tracks'],
+            submission_error: true,
+            edit: true
+          });
+        } else {
+          paper.title = new_title;
+          paper.summary = new_summary;
+          paper.track = new_track;
+
+          paper.save()
+            .catch(function(error) {
+              console.log("Error editing: " + error);
+              res.status(500).send("Error saving update");
+            })
+            .then(function(paper) {
+              res.render("papers/submit_success", {'edit': true});
+          });
+        }
+      }
+    });
+});
+
 function get_paper_copresenters(res, papers, cb) {
   User.findAll()
   .catch(function(err) {
@@ -93,6 +165,8 @@ router.get('/list/own', function(req, res, next) {
     get_paper_copresenters(res, papers, function(papers_with_copresenters) {
       res.render('papers/list', { description: 'Your',
                                   showAuthors: true,
+                                  allowEdit: 'papers/edit/own',
+                                  allowDelete: 'papers/delete/own',
                                   papers: papers });
     });
   });
@@ -111,6 +185,8 @@ router.get('/list', function(req, res, next) {
       get_paper_copresenters(res, papers, function(papers_with_copresenters) {
         res.render('papers/list', { description: 'Accepted',
                                     showAuthors: true,
+                                    allowEdit: '',
+                                    allowDelete: '',
                                     papers: papers });
       });
     });
@@ -125,6 +201,8 @@ router.get('/admin/list', function(req, res, next) {
         res.render('papers/list', { description: 'All',
                                     showAuthors: true,
                                     showVotes: true,
+                                    allowEdit: 'papers/edit/all',
+                                    allowDelete: 'papers/delete/all',
                                     papers: papers });
       });
     });
@@ -344,6 +422,15 @@ function already_copresenter(paper, copresenter) {
 router.post('/copresenter/add', function(req, res, next) {
   Paper.findOne({where: {id: req.body.paper}, include: [PaperCoPresenter, User]})
     .then(function(paper) {
+      if(!paper) {
+        res.status(404).send("Paper could not be found");
+        return;
+      }
+      if(req.user.id != paper.UserId) {
+        res.status(403).send("This is not your paper to edit");
+        return;
+      }
+
       User.findOne({where: {email: req.body.email}})
         .then(function(copresenter) {
           if(!copresenter || !paper) {

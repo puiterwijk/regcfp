@@ -5,7 +5,12 @@
 <font color="red"><b>Something went wrong submitting. Please check you filled in all fields!</b></font>
 {{/if}}
 
-<form action="/papers/submit" method="post">
+{{#if edit}}
+    <form action="/papers/edit" method="post">
+    <input type="hidden" name="paper" value="{{paper.id}}">
+{{else}}
+    <form action="/papers/submit" method="post">
+{{/if}}
 <table class="table table-striped table-bordered">
 <tr><td>Submitter:</td><td><input type="text" value="{{user.email}}" disabled /></td></tr>
 <tr><td>Your name:</td><td><input type="text" name="submitter_name" value="{{user.name}}" disabled /></td></tr>
