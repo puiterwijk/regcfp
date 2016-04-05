@@ -143,6 +143,11 @@ if (config.env === 'development' || config.env === 'test') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
+    console.log("ERROR OCCURED");
+    console.log("Status: " + err.status);
+    console.log("Message: " + err.message);
+    console.log("Error: " + err);
+    console.log("Stack: " + err.stack);
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
