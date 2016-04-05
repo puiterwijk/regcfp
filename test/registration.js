@@ -53,9 +53,50 @@ describe('registration', function() {
   it('should allow registration', function(done) {
     agent.post('/registration/register')
     .send({'name': 'TestUser A'})
+    .send({'field_ircnick': 'testirc'})
     .send({'is_public': 'true'})
     .expect(200)
     .expect(/Thanks for registering/)
     .end(done);
   });
+
+  it('should list registrations', function(done) {
+    agent.get('/registration/list')
+    .expect(200)
+    .expect(/TestUser A/)
+    .end(done)
+  });
+
+  // Test admin stuff
+  it('logout second user', function(done) {
+    agent.post('/auth/logout')
+    .expect(200)
+    .expect('Logged out')
+    .end(done);
+  });
+
+  it('should login as admin', function(done) {
+    agent.post('/auth/login')
+    .send({'email': 'admin@regcfp'})
+    .expect(200)
+    .expect('Welcome admin@regcfp')
+    .end(done);
+  });
+
+  it('register admin', function(done) {
+    agent.post('/authg/register')
+    .send({'origin': '/papers/submit'})
+    .send({'fullname': 'Admin'})
+    .end(done);
+  });
+
+  it('should list all info for admin', function(done) {
+    agent.get('/registration/admin/list')
+    .expect(200)
+    .expect(/TestUser A/)
+    .expect(/testirc/)
+    .end(done)
+  });
+
+
 });
