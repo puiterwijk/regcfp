@@ -32,7 +32,6 @@ describe('papers', function() {
     .end(done);
   });
 
-
   before('logout second user', function(done) {
     agent.post('/auth/logout')
     .expect(200)
@@ -123,10 +122,21 @@ describe('papers', function() {
     .end(done);
   });
 
+  it('should allow to submit second talk', function(done) {
+    agent.post('/papers/submit')
+    .send({'paper_title': 'Second Talk'})
+    .send({'paper_summary': 'Second summary'})
+    .send({'track': 'data'})
+    .expect(200)
+    .expect(/Your paper was submitted, thank you!/)
+    .end(done);
+  });
+
   it('should list submitted talk', function(done) {
     agent.get('/papers/list/own')
     .expect(200)
     .expect(/Testing Talk/)
+    .expect(/Second Talk/)
     .end(done);
   });
 
@@ -148,7 +158,7 @@ describe('papers', function() {
 
   it('should refuse adding copresenters for unknown talk', function(done) {
     agent.post('/papers/copresenter/add')
-    .send({'paper': '3'})
+    .send({'paper': '4'})
     .send({'email': 'usera@regcfp'})
     .expect(404)
     .end(done);
@@ -214,7 +224,7 @@ describe('papers', function() {
 
   it('should should not allow to edit nonexisting paper', function(done) {
     agent.post('/papers/edit')
-    .send({'paper': '3'})
+    .send({'paper': '4'})
     .send({'paper_title': ''})
     .send({'paper_summary': ''})
     .send({'track': 'security'})
@@ -284,7 +294,7 @@ describe('papers', function() {
 
   it('should should not allow to delete nonexisting paper', function(done) {
     agent.post('/papers/delete')
-    .send({'paper': '3'})
+    .send({'paper': '4'})
     .expect(404)
     .end(done);
   });
@@ -304,12 +314,49 @@ describe('papers', function() {
     .end(done);
   });
 
-  it('should show empty list', function(done) {
-    agent.get('/papers/list/own')
-    .expect(200)
-    .expect(/Your submitted papers:<br \/><br \/>\n\n<\/div>/)
+  it('should have deleted the paper', function(done) {
+    agent.post('/papers/delete')
+    .send({'paper': '2'})
+    .expect(404)
     .end(done);
   });
 
+  // Test admin stuff
+  it('logout second user', function(done) {
+    agent.post('/auth/logout')
+    .expect(200)
+    .expect('Logged out')
+    .end(done);
+  });
 
+  it('should login as admin', function(done) {
+    agent.post('/auth/login')
+    .send({'email': 'admin@regcfp'})
+    .expect(200)
+    .expect('Welcome admin@regcfp')
+    .end(done);
+  });
+
+  it('register admin', function(done) {
+    agent.post('/authg/register')
+    .send({'origin': '/papers/submit'})
+    .send({'fullname': 'Admin'})
+    .end(done);
+  });
+
+  it('should list all talks for admin', function(done) {
+    agent.get('/papers/admin/list')
+    .expect(200)
+    .expect(/Secret Talk/)
+    .expect(/Second Talk/)
+    .end(done);
+  });
+
+  it('should list all talks for voting for admin', function(done) {
+    agent.get('/papers/admin/vote')
+    .expect(200)
+    .expect(/Secret Talk/)
+    .expect(/Second Talk/)
+    .end(done);
+  });
 });
