@@ -214,7 +214,7 @@ router.get('/admin/vote/show', function(req, res, next) {
   Paper.findAll({include: [User, PaperVote, PaperTag]})
     .then(function(papers) {
       var paper_info = [];
-      for(paper in papers) {
+      for(var paper in papers) {
         paper = papers[paper];
         var ppr = {
           id: paper.id,
@@ -226,7 +226,7 @@ router.get('/admin/vote/show', function(req, res, next) {
           vote_total: 0,
           votes: []
         };
-        for(vote in paper.PaperVotes) {
+        for(var vote in paper.PaperVotes) {
           vote = paper.PaperVotes[vote];
           if(!vote.abstained) {
             ppr.vote_count++;
@@ -245,7 +245,8 @@ router.get('/admin/vote/show', function(req, res, next) {
       paper_info = paper_info.sort(function(a, b) {
         return b.vote_average - a.vote_average;
       });
-      res.render('papers/showvotes', { papers: paper_info });
+      res.render('papers/showvotes', { papers: paper_info,
+                                       acceptOptions: ['none', 'yes', 'no']});
     });
 });
 
@@ -314,8 +315,7 @@ router.get('/admin/vote', function(req, res, next) {
         paper_info.push(ppr);
       }
       res.render('papers/vote', { papers: paper_info,
-                                  voteOptions: [-2, -1, 0, 1, 2],
-                                  acceptOptions: ['none', 'yes', 'no']});
+                                  voteOptions: [-2, -1, 0, 1, 2]});
     });
 });
 

@@ -13,8 +13,10 @@ Vote on papers:
             <td>{{ this.vote_average }} (num: {{this.vote_count}}, total: {{this.vote_total}})</td>
             <td>
                 <select name="accept_{{this.id}}">
-                {{#each acceptOptions}}
+                {{#each ../acceptOptions}}
                     <option
+                        value="{{this}}"
+                        id="accept_{{../this.id}}_{{this}}"
                         {{#ifEqual ../this.accepted this}}
                             selected="selected"
                         {{/ifEqual}}
