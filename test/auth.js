@@ -76,12 +76,29 @@ describe('auth', function() {
     .end(done);
   });
 
+  it('should handle empty origin', function(done) {
+    agent.post('/authg/register')
+    .send({'fullname': ''})
+    .expect(302)
+    .expect('Location', '/authg/register?origin=/')
+    .end(done);
+  });
+
   it('should register correctly', function(done) {
     agent.post('/authg/register')
     .send({'origin': '/papers/submit'})
     .send({'fullname': 'TestUser A'})
     .expect(302)
     .expect('Location', '/papers/submit')
+    .end(done);
+  });
+
+  it('should not do covert redirects', function(done) {
+    agent.post('/authg/register')
+    .send({'origin': 'https://fedoraproject.org/'})
+    .send({'fullname': 'Some User'})
+    .expect(302)
+    .expect('Location', '/')
     .end(done);
   });
 
