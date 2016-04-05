@@ -127,6 +127,10 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (config.env === 'development' || config.env === 'test') {
     app.use(function(err, req, res, next) {
+        console.log("ERROR OCCURED");
+        console.log("Status: " + err.status);
+        console.log("Message: " + err.message);
+        console.log("Error: " + err);
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
