@@ -34,9 +34,11 @@ var hbs = handlebars.create({
   helpers: {
     breaklines: function(text) {
       return text
+      /* This doesn't work, so let's comment it out for now
       text = handlebars.handlebars.Utils.escapeExpression(text);
       text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
       return new handlebars.handlebars.SafeString(text);
+      */
     },
     currency_symbol: function(currency) {
       return config['registration']['currencies'][currency]['symbol'];
