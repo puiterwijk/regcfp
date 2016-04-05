@@ -212,6 +212,7 @@ describe('papers', function() {
     agent.get('/papers/list/own')
     .expect(200)
     .expect(/TestUser B/)
+    .expect(/Co-presenters:\n( )*none/)
     .end(done);
   });
 

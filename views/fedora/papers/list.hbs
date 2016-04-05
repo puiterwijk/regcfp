@@ -45,9 +45,7 @@
 
     Co-presenters:
     {{#if ../showAuthors}}
-        {{#each this.PaperCoPresenters}}
-            {{this.name}},
-        {{/each}}
+        {{this.PaperCoPresenters}}
     {{/if}}
     {{#ifEqual ../this.User.id ../../user.id}}
         <form action="/papers/copresenter/add" method="post">

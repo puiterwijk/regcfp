@@ -145,13 +145,21 @@ function get_paper_copresenters(res, papers, cb) {
   })
   .then(function(users) {
     for(var paper in papers) {
+      var copresenters = [];
       for(var copresenter in papers[paper].PaperCoPresenters) {
         for(var user in users) {
           user = users[user];
           if(papers[paper].PaperCoPresenters[copresenter].UserId == user.id) {
-            papers[paper].PaperCoPresenters[copresenter] = user;
+            copresenters.push(user.name);
           }
         }
+      }
+
+      if(copresenters.length == 0)
+      {
+        papers[paper].PaperCoPresenters = 'none';
+      } else {
+        papers[paper].PaperCoPresenters = copresenters.join(', ');
       }
     }
     cb(papers);
