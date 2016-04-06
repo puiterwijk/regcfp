@@ -372,7 +372,7 @@ describe('registration', function() {
   it('should print badge', function(done) {
     agent.get('/desk/badge?regida=1&regidb=2')
     .expect(200)
-    .expect(/%PDF-1.4/)
+    .expect(/%PDF-1./)
     .end(done);
   });
 
