@@ -277,7 +277,7 @@ describe('registration', function() {
   });
 
   it('should detect desk receipt requirement', function(done) {
-    agent.get('/desk/receipt/?regid=1')
+    agent.get('/desk/receipt/?regid=2')
     .expect(401)
     .expect(/Not enough paid for receipt/)
     .end(done);
@@ -285,26 +285,26 @@ describe('registration', function() {
 
   it('should accept payment add', function(done) {
     agent.post('/desk/payment/add')
-    .send({'regid': '1'})
+    .send({'regid': '2'})
     .send({'currency': 'EUR'})
-    .send({'amount': '20'})
+    .send({'amount': '25'})
     .expect(302)
-    .expect('Location', '/desk?added=1&amount=20')
+    .expect('Location', '/desk?added=2&amount=25')
     .end(done);
   });
 
   it('should detect desk receipt requirement', function(done) {
-    agent.get('/desk/receipt/?regid=1')
+    agent.get('/desk/receipt/?regid=2')
     .expect(200)
-    .expect(/your payment of €20/)
+    .expect(/your payment of €25/)
     .end(done);
   });
 
   it('should accept clear', function(done) {
     agent.post('/desk/payment/clear')
-    .send({'regid': '1'})
+    .send({'regid': '2'})
     .expect(302)
-    .expect('Location', '/desk?cleared=1')
+    .expect('Location', '/desk?cleared=2')
     .end(done);
   });
 
@@ -317,13 +317,13 @@ describe('registration', function() {
 
   it('should accept markpaid', function(done) {
     agent.post('/desk/payment/markpaid')
-    .send({'regid': '2'})
+    .send({'regid': '1'})
     .expect(302)
-    .expect('Location', '/desk?paid=2')
+    .expect('Location', '/desk?paid=1')
     .end(done);
   });
 
-  it('should show desk message added', function(done) {
+  it('should show desk message new_id', function(done) {
     agent.get('/desk/?new_id=1')
     .expect(200)
     .expect(/Registration 1 was added/)
@@ -344,11 +344,35 @@ describe('registration', function() {
     .end(done);
   });
 
+  it('should show desk message added', function(done) {
+    agent.get('/desk/?added=1&amount=10')
+    .expect(200)
+    .expect(/Payment of 10 registered for 1/)
+    .end(done);
+  });
+
   it('should show desk message printed', function(done) {
     agent.get('/desk/?printed=1')
     .expect(200)
     .expect(/Registration 1 was finished/)
     .expect(/Please finish a second one to print badges/)
+    .end(done);
+  });
+
+  it('should accept finish', function(done) {
+    agent.post('/desk/finish')
+    .send({'regid': '1'})
+    .send({'printed': '2'})
+    .expect(200)
+    .expect(/The user did not pay enough for a receipt/)
+    .expect(/Click here to print badge/)
+    .end(done);
+  });
+
+  it('should print badge', function(done) {
+    agent.get('/desk/badge?regida=1&regidb=2')
+    .expect(200)
+    .expect(/%PDF-1.4/)
     .end(done);
   });
 

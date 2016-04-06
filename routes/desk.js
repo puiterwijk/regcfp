@@ -145,7 +145,7 @@ router.get('/badge', function(req, res, next) {
               longname: ""
             }
           };
-          for(reg in regs) {
+          for(var reg in regs) {
             if(!!regs[reg]) {
               var name = regs[reg].User.name;
               var longname = "";
@@ -210,7 +210,7 @@ router.post('/payment/markpaid', function(req, res, next) {
   var regid = req.body.regid;
   Registration.findOne({where: {id:regid}, include: [RegistrationPayment]})
     .then(function(registration) {
-      for(payment in registration.RegistrationPayments) {
+      for(var payment in registration.RegistrationPayments) {
         payment = registration.RegistrationPayments[payment];
         if(!payment.paid && payment.type == 'onsite') {
           payment.paid = true;
