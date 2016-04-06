@@ -116,11 +116,23 @@ describe('registration', function() {
     .end(done);
   });
 
+  it('should allow registration by admin', function(done) {
+    agent.post('/registration/register')
+    .send({'name': 'Admin'})
+    .send({'field_ircnick': 'adminnick'})
+    .send({'is_public': 'true'})
+    .expect(200)
+    .expect(/Thanks for registering/)
+    .end(done);
+  });
+
   it('should list all info for admin', function(done) {
     agent.get('/registration/admin/list')
     .expect(200)
     .expect(/TestUser A/)
     .expect(/testirc/)
+    .expect(/Admin/)
+    .expect(/adminnick/)
     .end(done)
   });
 
