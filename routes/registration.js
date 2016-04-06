@@ -114,12 +114,12 @@ router.get('/pay', function(req, res, next) {
 
 router.post('/pay', function(req, res, next) {
   var currency = req.body.currency;
-  var regfee = req.body.regfee.trim();
+  var regfee = req.body.regfee;
   
   if(regfee == null) {
     res.render('registration/pay');
   } else {
-    res.render('registration/pay_do', {currency: currency, regfee: regfee});
+    res.render('registration/pay_do', {currency: currency, regfee: regfee.trim()});
   }
 });
 
@@ -254,7 +254,7 @@ router.post('/pay/do', function(req, res, next) {
         console.log('Error saving payment: ' + err);
         res.status(500).send('ERROR saving payment');
       })
-      .then(function(err, payment) {
+      .then(function(payment) {
         req.user.getRegistration({include: [RegistrationInfo]})
           .then(function(reg) {
             reg.addRegistrationPayment(payment)
@@ -420,7 +420,8 @@ function update_field_values(req, res, next, is_update, reg, field_values, curre
       registration: reg,
       reg_fields: allfields
     }, function() {
-      return res.render(template, {currency: currency, regfee: regfee, canpay: canpay});
+      return res.render(template, {currency: currency, regfee: regfee,
+                                   needpay: canpay && regfee != '0'});
     });
     return;
   }

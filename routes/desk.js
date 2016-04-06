@@ -24,8 +24,8 @@ var os = require('os');
 router.all('/', utils.require_user);
 router.all('/', utils.require_permission('registration/desk'));
 router.get('/', function(req, res, next) {
-  printed = null;
-  message = null;
+  var printed = null;
+  var message = null;
   if(req.query.new_id) {
     message = "Registration " + req.query.new_id + " was added";
   }
@@ -70,7 +70,7 @@ router.post('/add', function(req, res, next) {
     .catch(function(error) {
         res.status(500).send("Error saving user: " + err);
     })
-    .then(function(err, new_user) {
+    .then(function(new_user) {
       var reg_info = {
         irc: req.body.irc.trim(),
         gender: req.body.gender.trim(),
@@ -227,7 +227,7 @@ router.post('/payment/clear', function(req, res, next) {
   var regid = req.body.regid;
   Registration.findOne({where: {id:regid}, include: [RegistrationPayment]})
     .then(function(registration) {
-      for(payment in registration.RegistrationPayments) {
+      for(var payment in registration.RegistrationPayments) {
         payment = registration.RegistrationPayments[payment];
         if(!payment.paid && payment.type == 'onsite') {
           payment.destroy();

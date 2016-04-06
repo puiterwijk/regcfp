@@ -63,6 +63,7 @@ utils.require_permission = function(permission) {
     }
     else
     {
+      console.log("Unauthorized request: " + req.session.currentUser + " needed " + permission);
       res.status(401).render('auth/no_permission', { required_permission: JSON.stringify(permission) });
     }
   };
