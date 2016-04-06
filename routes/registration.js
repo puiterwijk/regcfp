@@ -58,11 +58,13 @@ function get_reg_fields(request, registration) {
 router.all('/', utils.require_feature("registration"));
 
 function show_list(req, res, next, show_private) {
+  var filter = {};
+  if(!show_private) {
+    filter = { is_public: true };
+  }
   Registration
     .findAll({
-      where: {
-        is_public: !show_private
-      },
+      where: filter,
       include: [User, RegistrationInfo]
     })
     .then(function(registrations) {
