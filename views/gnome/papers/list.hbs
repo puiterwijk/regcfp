@@ -7,6 +7,24 @@
     {{ breaklines this.summary }}
     </p>
 
+    {{#ifNotEqual ../allowEdit ''}}
+        {{#has_permission ../allowEdit}}
+            <form action="/papers/edit" method="post" style="display: inline">
+                <input type="hidden" name="paper" value="{{this.id}}" />
+                <input type="submit" value="Edit" />
+            </form>
+        {{/has_permission}}
+    {{/ifNotEqual}}
+    {{#ifNotEqual ../allowDelete ''}}
+        {{#has_permission ../allowDelete}}
+            <form action="/papers/delete" method="post" style="display: inline"
+                  onsubmit="return confirm('Do you really want to delete this paper?')">
+                <input type="hidden" name="paper" value="{{this.id}}" />
+                <input type="submit" value="Delete" />
+            </form>
+        {{/has_permission}}
+    {{/ifNotEqual}}
+
     <table>
       <tbody>
     {{#if ../showAuthors}}

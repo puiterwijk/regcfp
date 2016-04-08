@@ -2,7 +2,12 @@
 <font color="red"><b>Something went wrong submitting. Please check you filled in all fields!</b></font>
 {{/if}}
 
-<form action="/papers/submit" method="post">
+{{#if edit}}
+    <form action="/papers/edit" method="post">
+    <input type="hidden" name="paper" value="{{paper.id}}">
+{{else}}
+    <form action="/papers/submit" method="post">
+{{/if}}
 <table class="submission-form">
 <tr><td><label for="submit-submitter">Submitter:</label></td><td><input type="text" id="submit-submitter" value="{{user.email}}" disabled /></td></tr>
 <tr><td><label for="submit-name">Your name:</label></td><td><input type="text" id="submit-name" name="submitter_name" value="{{user.name}}" disabled /><br />You will be able to add extra speakers after you have submitted the paper</td></tr>
