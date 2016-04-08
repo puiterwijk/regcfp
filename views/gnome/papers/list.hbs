@@ -15,9 +15,7 @@
     {{/if}}
     <tr><th>Co-presenters:</th><td>
     {{#if ../showAuthors}}
-        {{#each this.PaperCoPresenters}}
-            {{this.name}}, 
-        {{/each}}
+        {{this.PaperCoPresenters}}
     {{/if}}
         <tr><th>Talk length:</th>
         <td>{{ this.track }}</td><tr>
