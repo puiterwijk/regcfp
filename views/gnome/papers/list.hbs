@@ -19,6 +19,8 @@
             {{this.name}}, 
         {{/each}}
     {{/if}}
+        <tr><th>Talk length:</th>
+        <td>{{ this.track }}</td><tr>
     {{#ifEqual ../this.User.id ../../user.id}}
         <form action="/papers/copresenter/add" method="post" style="display: inline">
         <input type="hidden" name="paper" value="{{this.id}}">
