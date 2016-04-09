@@ -227,6 +227,7 @@ router.get('/admin/vote/show', function(req, res, next) {
         var ppr = {
           id: paper.id,
           title: paper.title,
+          track: paper.track,
           summary: paper.summary,
           User: paper.User,
           accepted: paper.accepted,
