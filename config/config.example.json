@@ -128,18 +128,12 @@
       "currencies": {
         "EUR": {
           "symbol": "€",
-          "min_amount_for_receipt": 20,
           "default_amount": 40,
           "conversion_rate": 1
-        },
-        "SEK": {
-          "symbol": "kr",
-          "min_amount_for_receipt": 190,
-          "default_amount": 380,
-          "conversion_rate": 0.11
         }
       },
       "main_currency": "EUR",
+      "min_amount_for_receipt": 20,
       "paypal_experience_profile": "",
       "desk_word": "something",
 

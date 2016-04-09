@@ -3,12 +3,12 @@
 <div class="col-xs-12 bottom-margin">
 <strong>Thanks for registering for FLOCK 2016!</strong><br/>
 
-{{#has_permission "registration/pay"}}
+{{#if needpay}}
 {{>registration/payment}}
 {{else}}
 See you in Krakow!<br />
 <a href="/">Return</a>
-{{/has_permission}}
+{{/if}}
 </div>
 </div>
 </div>
