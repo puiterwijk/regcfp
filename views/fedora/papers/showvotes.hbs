@@ -5,7 +5,14 @@ Vote on papers:
 
 <form action="/papers/admin/vote/show" method="POST">
 <table class="table table-striped table-bordered">
-<tr><th>Title</th><th>Author</th><th>Vote average</th><th>Accepted</th></tr>
+<tr><th>Title</th><th>Author</th><th>Vote average</th><th>Accepted</th>
+{{#has_permission "papers/edit/all"}}
+    <th>Edit</th>
+{{/has_permission}}
+{{#has_permission "papers/delete/all"}}
+    <th>Delete</th>
+{{/has_permission}}
+</tr>
     {{#each papers}}
         <tr>
             <th><span title="{{this.summary}}">{{ this.title }}</span></th>
@@ -28,6 +35,20 @@ Vote on papers:
                 {{/each}}
                 </select>
             </td>
+            {{#has_permission "papers/edit/all"}}
+                <td>
+                    <a href="/papers/edit?paper={{this.id}}" target="_blank">Edit</a>
+                </td>
+            {{/has_permission}}
+            {{#has_permission "papers/delete/all"}}
+                <td>
+                    <form action="/papers/delete" method="post"
+                          onsubmit="return confirm('Do you really want to delete this paper?')">
+                        <input type="hidden" name="paper" value="{{this.id}}">
+                        <input type="submit" value="Delete">
+                    </form>
+                </td>
+            {{/has_permission}}
         </tr>
         {{#each this.votes}}
             <tr>

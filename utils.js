@@ -54,10 +54,27 @@ utils.has_permission = function(permission, options) {
 };
 
 utils.require_permission = function(permission) {
-  var check_function = get_permission_checker(permission);
+  if(typeof permission === 'string') {
+    permission = [permission];
+  }
+
+  var checkers = [];
+  for(var perm in permission) {
+    perm = permission[perm];
+    checkers.push(get_permission_checker(perm));
+  }
 
   return function(req, res, next) {
-    if(check_function(req.session.currentUser))
+    var has_one = false;
+    for(var checker in checkers) {
+      checker = checkers[checker];
+      if(checker(req.session.currentUser)) {
+        has_one = true;
+        break;
+      }
+    }
+
+    if(has_one)
     {
       next();
     }
