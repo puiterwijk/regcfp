@@ -42,11 +42,7 @@ Vote on papers:
             {{/has_permission}}
             {{#has_permission "papers/delete/all"}}
                 <td>
-                    <form action="/papers/delete" method="post"
-                          onsubmit="return confirm('Do you really want to delete this paper?')">
-                        <input type="hidden" name="paper" value="{{this.id}}">
-                        <input type="submit" value="Delete">
-                    </form>
+                    <a href="/papers/delete?paper={{this.id}}" target="_blank">Delete</a>
                 </td>
             {{/has_permission}}
         </tr>

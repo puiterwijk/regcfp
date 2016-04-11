@@ -67,9 +67,12 @@ router.post('/submit', function(req, res, next) {
 
 router.all('/delete', utils.require_user);
 router.all('/delete', utils.require_permission(['papers/delete/own', '/papers/delete/all']));
-router.post('/delete', function(req, res, next) {
-  console.log(req.body);
-  Paper.findOne({where: {id: req.body.paper}})
+router.all('/delete', function(req, res, next) {
+  var paperid = req.body.paper;
+  if(paperid == null) {
+    paperid = req.query.paper;
+  }
+  Paper.findOne({where: {id: paperid}})
     .then(function(paper) {
       if(!paper) {
         res.status(404).send("Paper could not be found");
