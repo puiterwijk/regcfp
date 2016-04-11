@@ -468,14 +468,10 @@ describe('papers', function() {
   });
 
   it('should should show admin editing form', function(done) {
-    agent.post('/papers/edit')
-    .send({'paper': '1'})
+    agent.get('/papers/edit?paper=1')
     .expect(200)
     .expect(/name="paper_title" value="Secret Talk"/)
     .end(done);
   });
-
-
-
 
 });

@@ -96,12 +96,11 @@ router.post('/delete', function(req, res, next) {
 
 router.all('/edit', utils.require_user);
 router.all('/edit', utils.require_permission(['papers/edit/own', 'papers/edit/all']));
-router.post('/edit', function(req, res, next) {
+router.all('/edit', function(req, res, next) {
   var paperid = req.body.paper;
   if(paperid == null) {
-    paperid = req.params.paper;
+    paperid = req.query.paper;
   }
-  console.log(req.body);
   Paper.findOne({where: {id: paperid}})
     .then(function(paper) {
       if(!paper) {
