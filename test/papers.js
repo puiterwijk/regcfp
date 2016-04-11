@@ -402,6 +402,8 @@ describe('papers', function() {
     .expect(/1 \(num: 1, total: 1\)/)
     // We cannot make an average from only abstainments
     .expect(/NaN \(num: 0, total: 0\)/)
+    .expect(/\/papers\/edit\?paper=1/)
+    .expect(/Delete/)
     .expect(/none/)
     .expect(/yes/)
     .expect(/no/)
@@ -454,6 +456,21 @@ describe('papers', function() {
     agent.get('/papers/list')
     .expect(200)
     .expect(/Secret Talk/)
+    .end(done);
+  });
+
+  it('should allow admin to delete a talk', function(done) {
+    agent.post('/papers/delete')
+    .send({'paper': '3'})
+    .expect(302)
+    .expect('Location', '/papers/vote/show')
+    .end(done);
+  });
+
+  it('should should show admin editing form', function(done) {
+    agent.get('/papers/edit?paper=1')
+    .expect(200)
+    .expect(/name="paper_title" value="Secret Talk"/)
     .end(done);
   });
 

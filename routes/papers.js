@@ -66,7 +66,7 @@ router.post('/submit', function(req, res, next) {
 });
 
 router.all('/delete', utils.require_user);
-router.all('/delete', utils.require_permission('papers/delete/own'));
+router.all('/delete', utils.require_permission(['papers/delete/own', '/papers/delete/all']));
 router.post('/delete', function(req, res, next) {
   console.log(req.body);
   Paper.findOne({where: {id: req.body.paper}})
@@ -75,29 +75,43 @@ router.post('/delete', function(req, res, next) {
         res.status(404).send("Paper could not be found");
         return;
       }
+      var is_admin = false;
       if(req.user.id != paper.UserId) {
-        res.status(403).send("This is not your paper to edit");
-        return;
+        if(!utils.get_permission_checker("papers/edit/all")(req.session.currentUser)) {
+          res.status(403).send("This is not your paper to edit");
+          return;
+        } else {
+          is_admin = true;
+        }
       }
 
       paper.destroy();
-      res.redirect('/papers/list/own');
+      if(is_admin) {
+        res.redirect('/papers/vote/show');
+      } else {
+        res.redirect('/papers/list/own');
+      }
     });
 });
 
 router.all('/edit', utils.require_user);
-router.all('/edit', utils.require_permission('papers/edit/own'));
-router.post('/edit', function(req, res, next) {
-  console.log(req.body);
-  Paper.findOne({where: {id: req.body.paper}})
+router.all('/edit', utils.require_permission(['papers/edit/own', 'papers/edit/all']));
+router.all('/edit', function(req, res, next) {
+  var paperid = req.body.paper;
+  if(paperid == null) {
+    paperid = req.query.paper;
+  }
+  Paper.findOne({where: {id: paperid}})
     .then(function(paper) {
       if(!paper) {
         res.status(404).send("Paper could not be found");
         return;
       }
       if(req.user.id != paper.UserId) {
-        res.status(403).send("This is not your paper to edit");
-        return;
+        if(!utils.get_permission_checker("papers/edit/all")(req.session.currentUser)) {
+          res.status(403).send("This is not your paper to edit");
+          return;
+        }
       }
       if(req.body.paper_title == null) {
         res.render('papers/submit', {
