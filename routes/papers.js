@@ -66,7 +66,7 @@ router.post('/submit', function(req, res, next) {
 });
 
 router.all('/delete', utils.require_user);
-router.all('/delete', utils.require_permission(['papers/delete/own', '/papers/delete/all']));
+router.all('/delete', utils.require_permission(['papers/delete/own', 'papers/delete/all']));
 router.all('/delete', function(req, res, next) {
   var paperid = req.body.paper;
   if(paperid == null) {
