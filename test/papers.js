@@ -136,7 +136,9 @@ describe('papers', function() {
     agent.get('/papers/list/own')
     .expect(200)
     .expect(/Testing Talk/)
+    .expect(/security/)
     .expect(/Second Talk/)
+    .expect(/data/)
     .end(done);
   });
 
