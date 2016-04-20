@@ -236,8 +236,7 @@ router.get('/admin/list', function(req, res, next) {
 router.all('/admin/vote/show', utils.require_user);
 router.all('/admin/vote/show', utils.require_permission('papers/showvotes'));
 router.get('/admin/vote/show', function(req, res, next) {
-  Paper.findAll({include: [User, PaperVote, PaperTag],
-                 order: [['track', 'ASC']]})
+  Paper.findAll({include: [User, PaperVote, PaperTag]})
     .then(function(papers) {
       var paper_info = [];
       for(var paper in papers) {
@@ -270,7 +269,13 @@ router.get('/admin/vote/show', function(req, res, next) {
         paper_info.push(ppr);
       }
       paper_info = paper_info.sort(function(a, b) {
-        return b.vote_average - a.vote_average;
+        if(a.track == b.track) {
+          return b.vote_average - a.vote_average;
+        } else if(a.track < b.track) {
+          return -1;
+        } else {
+          return 1;
+        }
       });
       res.render('papers/showvotes', { papers: paper_info,
                                        acceptOptions: ['none', 'yes', 'no']});
