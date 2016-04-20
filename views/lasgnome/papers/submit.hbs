@@ -1,0 +1,43 @@
+{{#if submission_error}}
+<font color="red"><b>Something went wrong submitting. Please check you filled in all fields!</b></font>
+{{/if}}
+
+{{#if edit}}
+    <form action="/papers/edit" method="post">
+    <input type="hidden" name="paper" value="{{paper.id}}">
+{{else}}
+    <form action="/papers/submit" method="post">
+{{/if}}
+<table class="submission-form">
+<tr><td><label for="submit-submitter">Submitter:</label></td><td><input type="text" id="submit-submitter" value="{{user.email}}" disabled /></td></tr>
+<tr><td><label for="submit-name">Your name:</label></td><td><input type="text" id="submit-name" name="submitter_name" value="{{user.name}}" disabled /><br />You will be able to add extra speakers after you have submitted the paper</td></tr>
+<tr><td><label for="submit-title">Talk title:</label></td><td><input type="text" id="submit-title" name="paper_title" value="{{paper.title}}" maxlength=50 /></td></tr>
+
+<tr><td><label for="submit-summary">Talk summary:</label></td>
+<td><textarea id="submit-summary" name="paper_summary">{{paper.summary}}</textarea></td>
+</tr>
+
+<tr><td><label for="submit-track">Talk length:</label></td>
+<td>
+<select id="submit-track" name="track">
+{{#each tracks}}
+<option
+{{#ifEqual ../paper.track this}}
+selected="selected"
+{{/ifEqual}}
+>{{this}}</option>
+{{/each}}
+</select>
+</td></tr>
+
+<tr><td>License</td>
+<td><p></p>By submitting your talk, you are agreeing to license your submission under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. If your talk is accepted, details of your submission will be published on the website and on printed media (such as the badge).</p>
+<p>If you your talk is accepted, your presentation may be recorded and streamed live. All recordings of talks will also be distributed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. If you provide other materials, such as your slides or a screencast of a demo, those will also be distributed under the same license.</p>
+</tr>
+
+<tr><td>&nbsp;</td>
+<td><input class="submit-talk" type="submit" value="Submit" /></td>
+</tr>
+
+</table>
+</form>

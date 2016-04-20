@@ -1,0 +1,60 @@
+<script type="text/javascript">
+    var payerId = '{{payerId}}';
+    var paymentId = '{{paymentId}}';
+
+    function execute_payment() {
+        $('#confirm_payment').hide();
+        $('#confirming').show();
+        $.ajax({
+            type: 'POST',
+            url: '/registration/pay/paypal/execute',
+            data: {
+                payerId: payerId,
+                paymentId: paymentId
+            }
+        })
+        .done(function(data) {
+            $('#confirming').hide();
+            if(data == 'approved') {
+                $('#payment_approved').show();
+            } else {
+                $('#payment_delayed').show();
+            }
+        })
+        .fail(function(data) {
+            $('#confirming').hide();
+            $('#payment_error').show();
+        });
+    };
+</script>
+
+<div id="confirm_payment">
+Please confirm you want to pay {{config.registration.currency_symbol}}{{regfee}} via Paypal:
+<div class="button"><a href="#" onclick="execute_payment();">Execute payment</a></div>
+</div>
+
+<div id="confirming" style="display: none">
+Payment confirmation in progress.
+Please do not close this window!
+</div>
+
+<div id="payment_approved" style="display: none">
+Thank you!<br/>
+Your PayPal payment has come in and has been approved. <br />
+See you in Karlsruhe, Germany!<br />
+<a href="/">Return</a>
+</div>
+
+<div id="payment_delayed" style="display:none">
+Thank you!<br/>
+Your PayPal payment has come in, and will be processed.
+It can take some time for your payment to be verified.<br/>
+See you in Karlsruhe, Germany!<br />
+<a href="/">Return</a>
+</div>
+
+<div id="payment_error" style="display:none">
+PayPal payment execution failed, please retry.
+If it fails multiple times, please contact the GUADEC team.<br />
+<a href="/">Return</a>
+</div>
