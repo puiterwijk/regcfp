@@ -236,7 +236,8 @@ router.get('/admin/list', function(req, res, next) {
 router.all('/admin/vote/show', utils.require_user);
 router.all('/admin/vote/show', utils.require_permission('papers/showvotes'));
 router.get('/admin/vote/show', function(req, res, next) {
-  Paper.findAll({include: [User, PaperVote, PaperTag]})
+  Paper.findAll({include: [User, PaperVote, PaperTag],
+                 order: [['track', 'ASC']]})
     .then(function(papers) {
       var paper_info = [];
       for(var paper in papers) {
