@@ -15,7 +15,7 @@ Vote on papers:
 </tr>
     {{#each papers}}
         <tr>
-            <th><span title="{{this.summary}}">{{ this.title }}</span></th>
+            <th><span title="{{this.summary}}">{{ this.title }} ({{this.track}})</span></th>
             <td>{{ this.User.name }}</td>
             <td>{{ this.vote_average }} (num: {{this.vote_count}}, total: {{this.vote_total}})</td>
             <td>
