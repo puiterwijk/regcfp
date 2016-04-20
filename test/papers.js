@@ -132,6 +132,26 @@ describe('papers', function() {
     .end(done);
   });
 
+  it('should allow to submit third talks', function(done) {
+    agent.post('/papers/submit')
+    .send({'paper_title': 'Second Talk'})
+    .send({'paper_summary': 'Second summary'})
+    .send({'track': 'data'})
+    .expect(200)
+    .expect(/Your paper was submitted, thank you!/)
+    .end(done);
+  });
+
+  it('should allow to submit fourth talks', function(done) {
+    agent.post('/papers/submit')
+    .send({'paper_title': 'Second Talk'})
+    .send({'paper_summary': 'Second summary'})
+    .send({'track': 'zulu'})
+    .expect(200)
+    .expect(/Your paper was submitted, thank you!/)
+    .end(done);
+  });
+
   it('should list submitted talk', function(done) {
     agent.get('/papers/list/own')
     .expect(200)
@@ -160,7 +180,7 @@ describe('papers', function() {
 
   it('should refuse adding copresenters for unknown talk', function(done) {
     agent.post('/papers/copresenter/add')
-    .send({'paper': '4'})
+    .send({'paper': '50'})
     .send({'email': 'usera@regcfp'})
     .expect(404)
     .end(done);
@@ -227,7 +247,7 @@ describe('papers', function() {
 
   it('should should not allow to edit nonexisting paper', function(done) {
     agent.post('/papers/edit')
-    .send({'paper': '4'})
+    .send({'paper': '50'})
     .send({'paper_title': ''})
     .send({'paper_summary': ''})
     .send({'track': 'security'})
@@ -305,7 +325,7 @@ describe('papers', function() {
 
   it('should should not allow to delete nonexisting paper', function(done) {
     agent.post('/papers/delete')
-    .send({'paper': '4'})
+    .send({'paper': '50'})
     .expect(404)
     .end(done);
   });
