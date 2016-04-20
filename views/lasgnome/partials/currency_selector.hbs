@@ -1,0 +1,5 @@
+<select name="currency">
+    {{#each config.registration.currencies}}
+        <option value="{{@key}}">{{this.symbol}}</option>
+    {{/each}}
+</select>

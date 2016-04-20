@@ -1,0 +1,72 @@
+{{description}} submitted papers:<br /><br />
+
+{{#each papers}}
+  <div class="paper">
+    <h3>{{ this.title }}</h3>
+    <p class="summary">
+    {{ breaklines this.summary }}
+    </p>
+
+    {{#ifNotEqual ../allowEdit ''}}
+        {{#has_permission ../allowEdit}}
+            <form action="/papers/edit" method="post" style="display: inline">
+                <input type="hidden" name="paper" value="{{this.id}}" />
+                <input type="submit" value="Edit" />
+            </form>
+        {{/has_permission}}
+    {{/ifNotEqual}}
+    {{#ifNotEqual ../allowDelete ''}}
+        {{#has_permission ../allowDelete}}
+            <form action="/papers/delete" method="post" style="display: inline"
+                  onsubmit="return confirm('Do you really want to delete this paper?')">
+                <input type="hidden" name="paper" value="{{this.id}}" />
+                <input type="submit" value="Delete" />
+            </form>
+        {{/has_permission}}
+    {{/ifNotEqual}}
+
+    <table>
+      <tbody>
+    {{#if ../showAuthors}}
+        <tr>
+          <th>Author:</th>
+          <td>{{ this.User.name }} &lt;{{ this.User.email }}&gt;</td>
+        <tr>
+    {{/if}}
+      <tr>
+        <th>Co-presenters:</th>
+        <td>
+          {{#if ../showAuthors}}
+              {{this.PaperCoPresenters}}
+          {{/if}}
+          {{#ifEqual ../this.User.id ../../user.id}}
+              <form action="/papers/copresenter/add" method="post" style="display: inline">
+              <input type="hidden" name="paper" value="{{this.id}}">
+              <input type="text" name="email">
+              <input type="submit" value="Add copresenter">
+              </form>
+          {{/ifEqual}}
+        </td>
+      </tr>
+      <tr>
+        <th>Talk length:</th>
+        <td>{{ this.track }}</td>
+      </tr>
+      <tr>
+        <th>Tags:</th>
+        <td>
+          {{#each this.PaperTags}}
+              {{this.tag}}, 
+          {{/each}}
+          <form action="/papers/tag" method="post" style="display: inline">
+            <input type="hidden" name="paper" value="{{this.id}}">
+            <input type="text" name="tag">
+            <input type="submit" value="Add Tag">
+          </form>
+        </td>
+      </tr>
+    </tbody>
+    </table>
+
+  </div>
+{{/each}}
