@@ -62,9 +62,7 @@
                     <input type="submit" value="Add payment">
                 </form>
                 <form class="finish_reg_form" method="post" action="/desk/finish"
-                 data-message="Really finish registration for '{{this.User.name}}' and print badge?"
-                 data-needed="{{this.needed_for_receipt}}"
-                 data-receipteligible="{{this.eligible_for_receipt}}">
+                 data-message="Really finish registration for '{{this.User.name}}' and print badge?">
                     {{#if ../../../printed}}
                         <input type="hidden" name="printed" value="{{../../../../printed}}">
                     {{/if}}
@@ -101,13 +99,6 @@ $(function() {
             return true;
         } else {
             return window.confirm($(event.target).data('message'));
-        }
-    });
-
-    $('.finish_reg_form').submit(function(event) {
-        var eligible = $(event.target).data('receipteligible');
-        if(eligible != true) {
-            return !window.confirm('CAUTION: User did not pay enough for receipt (needed: ' + $(event.target).data('needed') + '). Do you want to cancel?');
         }
     });
 
