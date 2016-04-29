@@ -99,14 +99,6 @@ describe('registration', function() {
     .end(done);
   });
 
-  it('should show the amount to pay before receipt', function(done) {
-    agent.get('/')
-    .expect(200)
-    .expect(/Not enough paid/)
-    .expect(/20/)
-    .end(done);
-  });
-
   it('should show the payment form', function(done) {
     agent.get('/registration/pay')
     .expect(200)
@@ -160,14 +152,6 @@ describe('registration', function() {
     .end(done);
   });
 
-  it('should show the amount to pay before receipt', function(done) {
-    agent.get('/')
-    .expect(200)
-    .expect(/Not enough paid/)
-    .expect(/onsite payment: €10/)
-    .end(done);
-  });
-
   it('should accept second non-zero onsite payment', function(done) {
     agent.post('/registration/pay/do')
     .send({'currency': 'EUR'})
@@ -175,14 +159,6 @@ describe('registration', function() {
     .send({'method': 'onsite'})
     .expect(200)
     .expect(/asked to pay for your registration/)
-    .end(done);
-  });
-
-  it('should show the updated amount to pay before receipt', function(done) {
-    agent.get('/')
-    .expect(200)
-    .expect(/Not enough paid/)
-    .expect(/onsite payment: €20/)
     .end(done);
   });
 
@@ -276,13 +252,6 @@ describe('registration', function() {
     .end(done);
   });
 
-  it('should detect desk receipt requirement', function(done) {
-    agent.get('/desk/receipt/?regid=2')
-    .expect(401)
-    .expect(/Not enough paid for receipt/)
-    .end(done);
-  });
-
   it('should accept payment add', function(done) {
     agent.post('/desk/payment/add')
     .send({'regid': '2'})
@@ -305,13 +274,6 @@ describe('registration', function() {
     .send({'regid': '2'})
     .expect(302)
     .expect('Location', '/desk?cleared=2')
-    .end(done);
-  });
-
-  it('should detect receipt requirement', function(done) {
-    agent.get('/registration/receipt')
-    .expect(401)
-    .expect(/Not enough paid for receipt/)
     .end(done);
   });
 
@@ -364,7 +326,6 @@ describe('registration', function() {
     .send({'regid': '1'})
     .send({'printed': '2'})
     .expect(200)
-    .expect(/The user did not pay enough for a receipt/)
     .expect(/Click here to print badge/)
     .end(done);
   });
