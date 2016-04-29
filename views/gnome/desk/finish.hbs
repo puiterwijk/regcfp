@@ -1,11 +1,7 @@
 You have finished the registration of {{registration.User.name}}!<br />
 
-{{#if registration.eligible_for_receipt}}
-    Receipt: <a href="/desk/receipt?regid={{registration.id}}" target="_blank">Click here to print receipt</a><br />
-    <b>Note: The user can also log in to the applicaton and get his receipt at any time.</b><br />
-{{else}}
-    The user did not pay enough for a receipt.<br />
-{{/if}}
+Receipt: <a href="/desk/receipt?regid={{registration.id}}" target="_blank">Click here to print receipt</a><br />
+<b>Note: The user can also log in to the applicaton and get his receipt at any time.</b><br />
 <br />
 
 {{#if previous}}

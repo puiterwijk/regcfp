@@ -58,11 +58,7 @@ Welcome, {{name}}<br />
 <div class="button"><a href="/registration/register">Update registration</a></div><br/>
 
 {{#has_permission "registration/request_receipt"}}
-{{#if registration.eligible_for_receipt}}
 <div class="button"><a href="/registration/receipt" target="_blank">Get receipt</a></div>
-{{else}}
-Not enough paid for receipt (Paid {{registration.paid}}, outstanding for onsite payment: {{registration.outstanding_onsite}}, PayPal outstanding: {{registration.outstanding_paypal}}. Any of these needed: {{registration.needed_for_receipt}})<br/>
-{{/if}}
 {{/has_permission}}
 
 {{#has_permission "registration/pay"}}

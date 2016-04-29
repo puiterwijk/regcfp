@@ -96,11 +96,7 @@ router.get('/receipt', function(req, res, next) {
   var regid = req.query.regid;
   Registration.findOne({where: {id:regid}, include: [User, RegistrationPayment]})
     .then(function(registration) {
-      if(registration.paid < config.registration.min_amount_for_receipt) {
-        res.status(401).send('Not enough paid for receipt');
-      } else {
-        res.render('registration/receipt', { registration: registration , layout:false });
-      }
+      res.render('registration/receipt', { registration: registration , layout:false });
     });
 });
 
