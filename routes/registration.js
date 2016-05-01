@@ -114,7 +114,7 @@ router.get('/pay', function(req, res, next) {
 
 router.post('/pay', function(req, res, next) {
   var currency = req.body.currency;
-  var regfee = req.body.regfee;
+  var regfee = config.registration.specific_amount || req.body.regfee;
   
   if(regfee == null) {
     res.render('registration/pay');
@@ -238,13 +238,14 @@ router.all('/pay/do', utils.require_permission('registration/pay'));
 router.post('/pay/do', function(req, res, next) {
   var method = req.body.method;
   req.body.regfee = Math.abs(req.body.regfee);
-  if(req.body.regfee == 0 || req.body.regfee == null) {
+  var regfee = config.registration.specific_amount || req.body.regfee;
+  if(regfee == 0 || regfee == null) {
     method = 'onsite';
   }
   if(method == 'onsite') {
     var info = {
       currency: req.body.currency,
-      amount: req.body.regfee,
+      amount: regfee,
       paid: false,
       type: 'onsite',
     };
@@ -268,8 +269,8 @@ router.post('/pay/do', function(req, res, next) {
           });
       });
   } else if(method == 'paypal') {
-    req.session.regfee = req.body.regfee;
-    create_payment(req, res, next, req.body.currency, req.body.regfee);
+    req.session.regfee = regfee;
+    create_payment(req, res, next, req.body.currency, regfee);
   } else {
     res.status(402).send('Invalid payment method selected');
   }
@@ -353,7 +354,7 @@ function handle_registration(req, res, next) {
       UserId: req.user.Id
     };
     var currency = req.body.currency;
-    var regfee = req.body.regfee;
+    var regfee = config.registration.specific_amount || req.body.regfee;
     reg_info.UserId = req.user.Id;
 
     var can_pay = utils.get_permission_checker("registration/pay")(req.session.currentUser);
