@@ -3,6 +3,8 @@ var router = express.Router();
 
 var utils = require('../utils');
 
+var extend = require('util')._extend;
+
 var models = require('../models');
 var User = models.User;
 var Registration = models.Registration;
@@ -26,7 +28,7 @@ function get_min_main() {
 function get_reg_fields(request, registration) {
   var fields = {};
   for(var field in config['registration']['fields']) {
-    fields[field] = config['registration']['fields'][field];
+    fields[field] = extend({}, config['registration']['fields'][field]);
     if(fields[field]['type'] == 'country') {
       fields[field]['type'] = 'select';
       var options = [];
