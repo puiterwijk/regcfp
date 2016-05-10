@@ -120,8 +120,10 @@
             "S",
             "M",
             "L",
-            "XL"
-          ]
+            "XL",
+            "baby"
+          ],
+          "limits" : [ 2, 4, 15, 5, -1, 0]
         }
       },
       "payment_product_name": "My Event Registration Fee",

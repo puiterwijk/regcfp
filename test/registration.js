@@ -55,6 +55,7 @@ describe('registration', function() {
     .send({'name': 'TestUser A'})
     .send({'field_ircnick': 'testirc'})
     .send({'is_public': 'true'})
+    .send({'field_shirtsize': 'M'})
     .expect(200)
     .expect(/name="name" value=""/)
     .expect(/Please make sure you have filled all required fields./)
@@ -67,9 +68,21 @@ describe('registration', function() {
     .send({'field_ircnick': 'testirc'})
     .send({'is_public': 'true'})
     .send({'currency': 'EUR'})
+    .send({'field_shirtsize': 'M'})
     .send({'regfee': '0'})
     .expect(200)
     .expect(/Thanks for registering/)
+    .end(done);
+  });
+
+  it('should prevent t-shirt selection change', function(done) {
+    agent.post('/registration/register')
+    .send({'name': 'TestUser A'})
+    .send({'field_ircnick': 'testirc'})
+    .send({'field_shirtsize': 'baby'})
+    .send({'is_public': 'true'})
+    .expect(200)
+    .expect(/Please make sure you have filled all required fields./)
     .end(done);
   });
 
@@ -196,6 +209,7 @@ describe('registration', function() {
     agent.post('/registration/register')
     .send({'name': 'Admin'})
     .send({'field_ircnick': 'adminnick'})
+    .send({'field_shirtsize': 'M'})
     .send({'is_public': 'true'})
     .send({'currency': 'EUR'})
     .send({'regfee': '0'})
