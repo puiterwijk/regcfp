@@ -95,7 +95,7 @@
           "display_name": "Country",
           "short_display_name": "Ctr",
           "type": "country",
-          "required": true,
+          "required": false,
           "private": true,
           "placeholder": "Country of origin"
         },

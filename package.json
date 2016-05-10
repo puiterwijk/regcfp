@@ -15,6 +15,7 @@
     "connect-session-sequelize": "*",
     "morgan": "*",
     "serve-favicon": "*",
+    "bluebird": "*",
     "sequelize": "2.*",
     "sqlite3": "*",
     "pg": "*",
