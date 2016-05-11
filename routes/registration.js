@@ -1,7 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var Promise = require("bluebird");
 
 var utils = require('../utils');
+
+var extend = require('util')._extend;
 
 var models = require('../models');
 var User = models.User;
@@ -26,7 +29,7 @@ function get_min_main() {
 function get_reg_fields(request, registration) {
   var fields = {};
   for(var field in config['registration']['fields']) {
-    fields[field] = config['registration']['fields'][field];
+    fields[field] = extend({}, config['registration']['fields'][field]);
     if(fields[field]['type'] == 'country') {
       fields[field]['type'] = 'select';
       var options = [];
@@ -294,19 +297,26 @@ router.get('/receipt', function(req, res, next) {
 
 router.all('/register', utils.require_permission('registration/register'));
 router.get('/register', function(req, res, next) {
-  if(req.user){
+  if(req.user) {
     req.user.getRegistration({include: [RegistrationInfo]})
     .then(function(reg) {
-      res.render('registration/register', { registration: reg,
-                                            registration_fields: get_reg_fields(null, reg),
-                                            ask_regfee: reg == null,
-                                            min_amount_main_currency: get_min_main() });
+      query_fields_left(reg, get_reg_fields(null, reg))
+      .then(function(reg_fields) {
+        console.log(reg_fields);
+        res.render('registration/register', { registration: reg,
+                                              registration_fields: reg_fields,
+                                              ask_regfee: reg == null,
+                                              min_amount_main_currency: get_min_main() });
+      });
     });
   } else {
-    res.render('registration/register', { registration: {is_public: true}, ask_regfee: true,
-                                          registration_fields: get_reg_fields(null, null),
-                                          min_amount_main_currency: get_min_main()});
-  };
+    query_fields_left(null, get_reg_fields(null, null))
+    .then(function(reg_fields) {
+      res.render('registration/register', { registration: {is_public: true}, ask_regfee: true,
+                                            registration_fields: reg_fields,
+                                            min_amount_main_currency: get_min_main()});
+    });
+  }
 });
 
 router.post('/register', function(req, res, next) {
@@ -317,9 +327,12 @@ router.post('/register', function(req, res, next) {
     }
 
     if(req.body.name.trim() == '') {
-      res.render('registration/register', { registration: null, submission_error: true, ask_regfee: true,
-                                            registration_fields: get_reg_fields(req, null),
-                                            min_amount_main_currency: get_min_main()} );
+      query_fields_left(null, get_reg_fields(req, null))
+      .then(function(reg_fields) {
+        res.render('registration/register', { registration: null, submission_error: true, ask_regfee: true,
+                                              registration_fields: reg_fields,
+                                              min_amount_main_currency: get_min_main()} );
+      });
     } else {
       var user_info = {
         email: req.session.currentUser,
@@ -340,69 +353,176 @@ router.post('/register', function(req, res, next) {
   }
 });
 
+function query_fields_left(reg, field_values, keys, result) {
+  if (result === undefined)
+    result = {};
+
+  if (keys === undefined)
+    keys = Object.keys(field_values);
+
+  return new Promise(function (resolve, reject) {
+
+    while (keys.length > 0) {
+      var fieldname = keys[0];
+      var field = field_values[fieldname];
+      result[fieldname] = field;
+
+      if (field['type'] !== 'select' || field['limits'] === undefined) {
+        delete keys.shift();
+        continue;
+      }
+
+      if (field['left'] === undefined)
+        field['left'] = [];
+
+      for (var i = field['left'].length; i < field['limits'].length; i++) {
+        var limit = field['limits'][i];
+        if (limit < 0) {
+          field['left'].push({option: field['options'][i], left: -1});
+          continue;
+        }
+
+        var reg_where = {};
+        if (reg) {
+          reg_where = {
+            /* Not this user. */
+            'id' : {
+              ne : reg.id
+            }
+          };
+        }
+
+        Registration.count(
+          {
+            include: [{
+              model: RegistrationInfo,
+              'where' : {
+                'field' : fieldname,
+                'value' : field['options'][i]
+              }
+            }],
+            'where' : reg_where
+          }
+        ) .then(function(count) {
+            var left = Math.max(0, limit - count);
+            field['left'].push({option: field['options'][i], left: left});
+
+            query_fields_left(reg, field_values, keys, result)
+              .then(function (res) { resolve(res); });
+          });
+
+        return;
+      }
+
+      keys.shift();
+      query_fields_left(reg, field_values, keys, result)
+        .then(function (res) { resolve(res); });
+
+      return;
+    }
+
+    resolve(result);
+  });
+}
+
+function check_field_values(req, reg, field_values) {
+  for (var fieldname in field_values) {
+    var field = field_values[fieldname];
+    if (field['type'] == 'string') {
+      if (field['required'] && field['value'].trim() == '')
+        return false;
+    } else if (field['type'] == 'select') {
+      if (field['required']) {
+        /* Check whether the option exists. */
+        if (field['options'].indexOf(field['value']) == -1) {
+          return false;
+        }
+      }
+
+      if (field['left'] !== undefined) {
+        var idx = field['options'].indexOf(field['value']);
+        if (idx == -1)
+          return false;
+        var left = field['left'][idx]['left'];
+        if (left == 0)
+          return false;
+      }
+    }
+  }
+  return true;
+}
+
 function handle_registration(req, res, next) {
   req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
   .then(function(reg) {
-    if(req.body.is_public === undefined) {
-      req.body.is_public = 'false';
-    }
-
-    var reg_info = {
-      is_public: req.body.is_public.indexOf('false') == -1,
-      badge_printed: false,
-      receipt_sent: false,
-      UserId: req.user.Id
-    };
-    var currency = req.body.currency;
-    var regfee = config.registration.specific_amount || req.body.regfee;
-    reg_info.UserId = req.user.Id;
-
-    var can_pay = utils.get_permission_checker("registration/pay")(req.session.currentUser);
-
-    if(reg == null && regfee == null && can_pay) {
-      res.render('registration/register', { registration: reg_info,
-                                            registration_fields: get_reg_fields(req, reg),
-                                            submission_error: true, ask_regfee: reg == null,
-                                            min_amount_main_currency: get_min_main()});
-    } else {
-      // Form OK
-      if(reg == null) {
-        // Create new registration
-        Registration.create(reg_info)
-          .catch(function(err) {
-            console.log('Error saving reg: ' + err);
-            res.status(500).send('Error saving registration');
-          })
-          .then(function(reg) {
-            req.user.setRegistration(reg)
-              .catch(function(err) {
-                console.log('Error adding reg to user: ' + err);
-                res.status(500).send('Error attaching registration to your user');
-              })
-              .then(function() {
-                var field_values = get_reg_fields(req, null);
-                return update_field_values(req, res, next,
-                                           false,
-                                           reg, get_reg_fields(req, null),
-                                           currency, regfee, can_pay, get_reg_fields(req, null));
-            });
-        });
-      } else {
-        // Update
-        reg.is_public = reg_info.is_public;
-        reg.save()
-          .catch(function(err) {
-            res.render('registration/register', { registration: reg_info,
-                                                  registration_fields: get_reg_fields(req, reg),
-                                                  save_error: true,
-                                                  min_amount_main_currency: get_min_main() });
-          })
-          .then(function (reg){
-            return update_field_values(req, res, next, true, reg,
-                                       get_reg_fields(req, reg), null, null, null, get_reg_fields(req, reg));
-        });
+    query_fields_left(reg, get_reg_fields(req, reg))
+    .then(function (reg_fields) {
+      if(req.body.is_public === undefined) {
+        req.body.is_public = 'false';
       }
-    }
+
+      var reg_info = {
+        is_public: req.body.is_public.indexOf('false') == -1,
+        badge_printed: false,
+        receipt_sent: false,
+        UserId: req.user.Id
+      };
+      var currency = req.body.currency;
+      var regfee = config.registration.specific_amount || req.body.regfee;
+      reg_info.UserId = req.user.Id;
+
+      var can_pay = utils.get_permission_checker("registration/pay")(req.session.currentUser);
+
+      if(reg == null && regfee == null && can_pay) {
+        res.render('registration/register', { registration: reg_info,
+                                              registration_fields: reg_fields,
+                                              submission_error: true, ask_regfee: reg == null,
+                                              min_amount_main_currency: get_min_main()});
+      } else if (!check_field_values(req, reg, reg_fields)) {
+        console.log('bad submit');
+        res.render('registration/register', { registration: reg_info,
+                                              registration_fields: reg_fields,
+                                              submission_error: true, ask_regfee: reg == null,
+                                              min_amount_main_currency: get_min_main()});
+      } else {
+        // Form OK
+        if(reg == null) {
+          // Create new registration
+          Registration.create(reg_info)
+            .catch(function(err) {
+              console.log('Error saving reg: ' + err);
+              res.status(500).send('Error saving registration');
+            })
+            .then(function(reg) {
+              req.user.setRegistration(reg)
+                .catch(function(err) {
+                  console.log('Error adding reg to user: ' + err);
+                  res.status(500).send('Error attaching registration to your user');
+                })
+                .then(function() {
+                  return update_field_values(req, res, next,
+                                             false,
+                                             reg, reg_fields,
+                                             currency, regfee, can_pay, reg_fields);
+              });
+          });
+        } else {
+          // Update
+          reg.is_public = reg_info.is_public;
+          reg.save()
+            .catch(function(err) {
+              res.render('registration/register', { registration: reg_info,
+                                                    registration_fields: reg_fields,
+                                                    save_error: true,
+                                                    min_amount_main_currency: get_min_main() });
+            })
+            .then(function (reg){
+              return update_field_values(req, res, next, true, reg,
+                                         reg_fields, null, null, null, reg_fields);
+          });
+        }
+      }
+    });
   });
 };
 
