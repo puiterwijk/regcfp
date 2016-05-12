@@ -458,7 +458,7 @@ describe('papers', function() {
 
   it('should allow acceptance saving', function(done) {
     agent.post('/papers/admin/vote/show')
-    .send({'accept_1': 'yes'})
+    .send({'accept_1': 'confirmed'})
     .send({'accept_3': 'no'})
     .expect(200)
     .expect(/Acceptances saved/)
@@ -469,7 +469,7 @@ describe('papers', function() {
   it('should list acceptances', function(done) {
     agent.get('/papers/admin/vote/show')
     .expect(200)
-    .expect(/id="accept_1_yes"\n( )*selected="selected"/)
+    .expect(/id="accept_1_confirmed"\n( )*selected="selected"/)
     .expect(/id="accept_3_no"\n( )*selected="selected"/)
     .end(done);
   });
