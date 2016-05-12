@@ -203,7 +203,7 @@ router.get('/list', function(req, res, next) {
     .findAll({
       include: [PaperTag, PaperCoPresenter, User],
       where: {
-        accepted: 'yes'
+        accepted: 'confirmed'
       }
     })
     .then(function(papers) {
@@ -278,7 +278,7 @@ router.get('/admin/vote/show', function(req, res, next) {
         }
       });
       res.render('papers/showvotes', { papers: paper_info,
-                                       acceptOptions: ['none', 'yes', 'no']});
+                                       acceptOptions: ['none', 'yes', 'no', 'confirmed']});
     });
 });
 
