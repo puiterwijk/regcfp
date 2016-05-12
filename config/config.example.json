@@ -95,7 +95,7 @@
           "display_name": "Country",
           "short_display_name": "Ctr",
           "type": "country",
-          "required": true,
+          "required": false,
           "private": true,
           "placeholder": "Country of origin"
         },
@@ -120,8 +120,10 @@
             "S",
             "M",
             "L",
-            "XL"
-          ]
+            "XL",
+            "baby"
+          ],
+          "limits" : [ 2, 4, 15, 5, -1, 0]
         }
       },
       "payment_product_name": "My Event Registration Fee",
@@ -132,6 +134,7 @@
           "conversion_rate": 1
         }
       },
+      "specific_amount": null,
       "main_currency": "EUR",
       "min_amount_for_receipt": 20,
       "paypal_experience_profile": "",

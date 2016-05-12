@@ -31,6 +31,7 @@ We can only provide receipts for payments over {{currency_symbol config.registra
 {{#ifEqual this.type "select"}}
 
 <select name="field_{{@key}}" id="reg-{{@key}}" >
+{{#ifEqual this.left undefined}}
 {{#each this.options}}
 <option
 {{#ifEqual ../value this}}
@@ -38,6 +39,19 @@ selected="selected"
 {{/ifEqual}}
 >{{this}}</option>
 {{/each}}
+{{else}}
+{{#each this.left}}
+<option value="{{this.option}}"
+{{#ifEqual ../value this.option}}
+selected="selected"
+{{/ifEqual}}
+{{#ifEqual this.left -1}}
+>{{this.option}}</option>
+{{else}}
+>{{this.option}} - {{ this.left }} left</option>
+{{/ifEqual}}
+{{/each}}
+{{/ifEqual}}
 </select>
 
 {{else }}

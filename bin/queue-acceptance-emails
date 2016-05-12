@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+
+var app = require('../app');
+var db = require('../models/index');
+
+var config = require('../configuration');
+
+var models = require('../models');
+var User = models.User;
+var Paper = models.Paper;
+var PaperCoPresenter = models.PaperCoPresenter;
+
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
+
+var utils = require('../utils');
+
+
+var transporter = nodemailer.createTransport(config['email']['transport']);
+
+Paper.findAll({
+    include: [User, PaperCoPresenter],
+    accepted: {
+        $ne: "none"
+    }
+}).catch(function(error) {
+    console.log("Error getting papers: " + error);
+}).then(function(papers) {
+    papers.forEach(function(paper, index, array) {
+        template = null;
+        if(paper.accepted == 'yes') {
+            template = 'papers/talk_accepted';
+        } else if (paper.accepted == 'no') {
+            template = 'papers/talk_rejected';
+        }
+        var users = [paper.User];
+        for(var copresenter in paper.PaperCoPresenters) {
+            copresenter = paper.PaperCoPresenters[copresenter];
+            users.push({'id': copresenter.UserId});
+        }
+
+        for(var user in users) {
+            utils.send_email({'app': app}, null,
+                             user, template,
+                             {'paper': paper, 'user': user},
+                             function() {
+                                console.log('Paper ' + paper.title + ' email sent to ' + user.id);
+                             });
+        }
+    });
+});
