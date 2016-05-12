@@ -33,13 +33,14 @@ Paper.findAll({
         } else if (paper.accepted == 'no') {
             template = 'papers/talk_rejected';
         }
-        var users = [paper.User];
+        var users = [{'id': paper.User.id}];
         for(var copresenter in paper.PaperCoPresenters) {
             copresenter = paper.PaperCoPresenters[copresenter];
             users.push({'id': copresenter.UserId});
         }
 
         for(var user in users) {
+            user = users[user];
             utils.send_email({'app': app}, null,
                              user, template,
                              {'paper': paper, 'user': user},

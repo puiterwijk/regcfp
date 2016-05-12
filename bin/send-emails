@@ -22,28 +22,25 @@ Email.findAll({
 }).catch(function(error) {
     console.log("Error getting emails: " + error);
 }).then(function(emails) {
-    if(!!err) {
-    } else {
-        emails.forEach(function(email, index, array) {
-            console.log("Email " + email.id + " to: " + email.User.email);
-            var mailOptions = {
-                from: config['email']['from'],
-                to: email.User.email,
-                subject: email.subject,
-                text: email.body
-            };
-            
-            transporter.sendMail(mailOptions, function(error, info){
-                if(!!error) {
-                    console.log("Email " + email.id + " failed to send: " + error);
-                } else {
-                    console.log("Email " + email.id + " sent");
-                    email.sent = true;
-                    email.save().then(function(email) {
-                        console.log("Email " + email.id + " done");
-                    });
-                }
-            });
+    emails.forEach(function(email, index, array) {
+        console.log("Email " + email.id + " to: " + email.User.email);
+        var mailOptions = {
+            from: config['email']['from'],
+            to: email.User.email,
+            subject: email.subject,
+            text: email.body
+        };
+
+        transporter.sendMail(mailOptions, function(error, info){
+            if(!!error) {
+                console.log("Email " + email.id + " failed to send: " + error);
+            } else {
+                console.log("Email " + email.id + " sent");
+                email.sent = true;
+                email.save().then(function(email) {
+                    console.log("Email " + email.id + " done");
+                });
+            }
         });
-    }
+    });
 });
