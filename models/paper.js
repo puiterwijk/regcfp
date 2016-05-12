@@ -5,7 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     title: DataTypes.STRING,
     summary: DataTypes.TEXT,
     track: DataTypes.STRING,
-    accepted: DataTypes.ENUM('none', 'yes', 'no')
+    accepted: DataTypes.ENUM('none', 'yes', 'no', 'confirmed')
   }, {
     classMethods: {
       associate: function(models) {
