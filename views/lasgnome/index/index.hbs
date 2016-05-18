@@ -1,7 +1,7 @@
-<p>Welcome to the event registration system</p>
-
 {{#unless session.currentUser}}
-<h2>Please log in using Persona</h2>
+<div id="las-register">
+<div class="grid_8">
+<h2>Welcome to LAS GNOME registration system</h2>
 
 <p>
 To use this registration and CfP system you need to login using Mozilla
@@ -14,88 +14,166 @@ address to authenticate afterwards (see the <a
 href="https://support.mozilla.org/en-US/kb/what-is-persona-and-how-does-it-work#w_how-do-i-create-an-account">Mozilla
 Persona FAQ</a> for more information).
 </p>
+</div>
 
-<div class="button"><a href="/#login" onclick="{{ login_buttons.login.onclick }}">Log in with Persona</a></div>
+<div class="las-icons-container las-icons grid_4" style="padding-top: 75px;">
+    <span class="fa-stack fa-3x">
+      <i class="fa fa-circle fa-stack-2x circle-background"></i>
+      <i class="fa fa-sign-in fa-stack-1x circle-text"></i>
+    </span>
+    <h4><a href="/#login" onclick="{{ login_buttons.login.onclick }}">LOG IN WITH PERSONA</a></h4>
+</div>
+
+<div class="clearfix"></div>
+</div>
 
 {{else}}
-Welcome, {{name}}<br />
 
-
-{{#has_permission "registration/desk"}}
-<div class="button"><a href="/desk">Desk</a></div>
-{{/has_permission}}
-
+<h2>Welcome, {{name}} to the  Libre Application Summit registration system</h2><br />
 
 {{#if config.papers.enabled}}
 
-<h2>Papers management</h2>
-<div class="buttons">
+<div class="las-icons-container">
+
 {{#has_permission "papers/submit" }}
-<div class="button"><a href="/papers/submit">Submit a talk</a></div>
+<div class="las-icons-inline grid_3">
+    <span class="fa-stack fa-4x">
+      <i class="fa fa-circle fa-stack-2x circle-background"></i>
+      <i class="fa fa-comment fa-stack-1x circle-text"></i>
+    </span>
+    <h4><a href="/papers/submit">Submit a talk</a></h4>
+</div>
 {{/has_permission}}
 {{#has_permission "papers/list/own" }}
-<div class="button"><a href="/papers/list/own">View your submitted talks</a></div>
+<div class="las-icons-inline grid_5">
+    <span class="fa-stack fa-4x">
+      <i class="fa fa-circle fa-stack-2x circle-background"></i>
+      <i class="fa fa-comments fa-stack-1x circle-text"></i>
+    </span>
+    <h4><a href="/papers/list/own">View your submitted talks</a></h4>
+</div>
 {{/has_permission}}
 {{#has_permission "papers/list/accepted" }}
-<div class="button"><a href="/papers/list">View accepted talks</a></div>
+<div class="las-icons-inline grid_3">
+    <span class="fa-stack fa-4x">
+      <i class="fa fa-circle fa-stack-2x circle-background"></i>
+      <i class="fa fa-check-circle fa-stack-1x circle-text"></i>
+    </span>
+    <h4><a href="/papers/list">View accepted talks</a></h4>
+</div>
 {{/has_permission}}
 </div>
-
 {{/if}}
 
-
+<div class="clearfix"></div>
 
 {{#if config.registration.enabled}}
-
+<div id="las-registration">
 <h2>Registration</h2>
+<div class="las-icons-container">
 {{#has_permission "registration/view_public"}}
-<div class="button"><a href="/registration/list">Current registrations</a></div>
+<div class="las-icons-inline grid_3">
+    <span class="fa-stack fa-4x">
+      <i class="fa fa-circle fa-stack-2x circle-background"></i>
+      <i class="fa fa-list-ul fa-stack-1x circle-text"></i>
+    </span>
+    <h4><a href="/registration/list">Current registrations</a></h4>
+</div>
 {{/has_permission}}
-<div class="buttons">
 {{#has_permission "registration/register" }}
 {{#if registration}}
-<h3>Registration ID: {{registration.display_id}}</h3>
-<div class="button"><a href="/registration/register">Update registration</a></div><br/>
-
+<div class="las-icons-inline grid_5">
+    <span class="fa-stack fa-4x">
+      <i class="fa fa-circle fa-stack-2x circle-background"></i>
+      <i class="fa fa-pencil fa-stack-1x circle-text"></i>
+    </span>
+    <h4><a href="/registration/register">Update registration</a></h4>
+</div>
 {{#has_permission "registration/request_receipt"}}
-<div class="button"><a href="/registration/receipt" target="_blank">Get receipt</a></div>
-{{/has_permission}}
-
-{{#has_permission "registration/pay"}}
-{{#unless registration.badge_printed}}
-<div class="button"><a href="/registration/pay">Pay more</a></div>
-{{/unless}}
+<div class="las-icons-inline grid_3">
+    <span class="fa-stack fa-4x">
+      <i class="fa fa-circle fa-stack-2x circle-background"></i>
+      <i class="fa fa-ticket fa-stack-1x circle-text"></i>
+    </span>
+    <h4><a href="/registration/receipt" target="_blank">Get receipt</a></h4>
+</div>
 {{/has_permission}}
 {{else}}
-<div class="button"><a href="/registration/register">Register</a></div>
-{{/if}}
-{{/has_permission}}
+<div class="las-icons-inline grid_5">
+    <span class="fa-stack fa-4x">
+      <i class="fa fa-circle fa-stack-2x circle-background"></i>
+      <i class="fa fa-list-ul fa-stack-1x circle-text"></i>
+    </span>
+    <h4><a href="/registration/register">Register</a></h4>
 </div>
 {{/if}}
-
+{{/has_permission}}
+<div class="clearfix"></div>
+</div>
+</div>
+{{/if}}
 
 {{#has_permission "admin" }}
 <h2>Admin</h2>
 
+{{#has_permission "registration/desk"}}
+<div id="las-admin" class="container_12">
+<div class="grid_2">
+<h3>Overview</h3>
+<div class="las-icons-container las-icons-inline">
+    <span class="fa-stack fa-4x">
+      <i class="fa fa-square fa-stack-2x circle-background"></i>
+      <i class="fa fa-sliders fa-stack-1x circle-text"></i>
+    </span>
+    <h4><a href="/desk">Desk</a></h4>
+</div>
+{{/has_permission}}
+</div>
+
+<div class="grid_8">
 <h3>Papers management</h3>
-<div class="buttons">
 {{#has_permission "papers/list/all"}}
-<div class="button"><a href="/papers/admin/list">View all talks</a></div>
+<div class="las-icons-inline">
+    <span class="fa-stack fa-4x">
+      <i class="fa fa-square fa-stack-2x circle-background"></i>
+      <i class="fa fa-comments fa-stack-1x circle-text"></i>
+    </span>
+    <h4><a href="/papers/admin/list">View all talks</a></h4>
+</div>
 {{/has_permission}}
 {{#has_permission "papers/vote"}}
-<div class="button"><a href="/papers/admin/vote">Vote on talks</a></div>
+<div class="las-icons-inline">
+    <span class="fa-stack fa-4x">
+      <i class="fa fa-square fa-stack-2x circle-background"></i>
+      <i class="fa fa-comments fa-stack-1x circle-text"></i>
+    </span>
+    <h4><a href="/papers/admin/vote">Vote on talks</a></h4>
+</div>
 {{/has_permission}}
 {{#has_permission "papers/showvotes" }}
-<div class="button"><a href="/papers/admin/vote/show">Show talk votes</a></div>
+<div class="las-icons-inline">
+    <span class="fa-stack fa-4x">
+      <i class="fa fa-square fa-stack-2x circle-background"></i>
+      <i class="fa fa-comments fa-stack-1x circle-text"></i>
+    </span>
+    <h4><a href="/papers/admin/vote/show">Show talk votes</a></h4>
+</div>
 {{/has_permission}}
 </div>
 
-<h3>Registration</h3>
-<div class="buttons">
+<div class="grid_2">
 {{#has_permission "registration/view_all" }}
-<div class="button"><a href="/registration/admin/list">List all registrations</a></div>
+<h3>Registration</h3>
+<div class="las-icons-inline">
+    <span class="fa-stack fa-4x">
+      <i class="fa fa-square fa-stack-2x circle-background"></i>
+      <i class="fa fa-list-ul fa-stack-1x circle-text"></i>
+    </span>
+    <h4><a href="/registration/admin/list">List all registrations</a></h4>
+</div>
 {{/has_permission}}
 </div>
-
+<div class="clearfix"></div>
+</div>
 {{/has_permission}}
 {{/unless}}

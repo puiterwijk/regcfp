@@ -1,3 +1,111 @@
+html{
+    background: url('http://las.gnome.org/wp-content/uploads/sites/8/2016/05/las-website-skyline-white-1.png')  50% 0 no-repeat fixed;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+	color: #404040;
+	font-family: Raleway;
+	font-weight: 400; 
+	font-size: 15px;
+	line-height: 1.8;
+}
+
+#header {
+    background: #028ea5;
+    background: url('http://las.gnome.org/wp-content/uploads/sites/8/2016/05/las-website-skyline.png')  50% 0 no-repeat fixed;
+    background-size: cover !important;
+    height: 650px;
+    margin: 0px !important;
+}
+
+#top_bar {
+    background: transparent !important;
+    box-shadow: none !important;
+    margin-top: 80px;
+}
+#top_bar a {
+    font-size: 16px;
+    font-weight: 800;
+    text-shadow: none !important;
+}
+#top_bar a:active {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+#logo img {
+    height: 200px !important;
+    width: 200px !important;
+}
+
+#hero-container {
+    font-weight: 400;
+    text-align: center;
+    color: #fff;
+    display: table;
+    padding-top: 66px;
+}
+#header .hero-header {
+    font-size: 62px;
+    margin-bottom: 30px;
+    line-height: 50px;
+    color: #fff;
+}
+#header .hero-description {
+    font-size: 42px;
+}
+
+#footer {
+    background: #028ea5;
+    font-size: 14px;
+    font-weight: 400;
+    color: #fff;
+}
+#footer a:focus {
+    background: transparent !important;
+}
+
+#las-register {
+    padding-bottom: 40px;
+}
+#las-registration {
+    padding-bottom: 20px;
+}
+#las-admin {
+    padding-bottom: 40px;
+    text-align: center;
+}
+
+.circle-background {
+    color: #018094;
+}
+.circle-text {
+    color: #fff;
+    font-size: 40px !important;
+}
+
+.las-icons-container {
+    text-align: center;
+}
+
+.las-icons-inline {
+    display: inline-block;
+    margin: 0 15px;
+}
+.las-icons-inline h4 {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 25px;
+    text-transform: uppercase;
+}
+.las-icons a,
+.las-icons-inline a {
+    text-decoration: none;
+}
 
 .button {
     display: inline-block;
