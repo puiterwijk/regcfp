@@ -30,23 +30,17 @@
         <script type="text/javascript" src="/javascripts/login.js"></script>
         <link rel="stylesheet" href="/css/style.css" type="text/css" media="all">
         <link rel="stylesheet" href="/css/style-gnome.css" type="text/css" media="all">
+        <link rel="stylesheet" href="/css/font-awesome.css" type="text/css" media="all">
+        <link rel="stylesheet" href="/css/fonts.css" type="text/css" media="all">
     </head>
 
 
 <body>
-<div id="global_domain_bar">
-<div class="maxwidth">
-	<div class="tab">
-	<a class="root" href="https://gnome.org/">GNOME.org</a>
-	</div>
-</div>
-</div>
-
-
 <!-- header -->
-    <div id="header" class="container_12">
+    <div id="header">
+    <div class="container_12">
       <div id="logo" class="grid_3">
-        <a title="Go to home page" href="http://las.gnome.org/"><img style="width: 200px; height: 122px" src="https://www.gnome.org/wp-content/uploads/2016/04/LAS.png" alt="Libre Application Summit" /></a>
+        <a title="Go to home page" href="http://las.gnome.org/"><img src="http://las.gnome.org/wp-content/uploads/sites/8/2016/04/LAS3.png" alt="Libre Application Summit" /></a>
       </div>
 
       <div id="top_bar" class="grid_9">
@@ -63,43 +57,30 @@
                     <a href="/#login" onclick="{{ login_buttons.login.onclick }}">Log in with Persona</a>
                 {{/if}}
               </li>
-
             </ul>
           </div>
         </div>
       </div>
       
+      <div id="hero-container" class="grid_12">
+        <span class="hero-header">Libre Application Summit</span>
+        <span class="hero-description"><p>Registration</p></span>
+      </div>
+
+    </div>
     </div>
 
     <div class="clearfix"></div>
 
 <div class="container_12">
-
-        {{#if development}}
-            <span style="border: 1px solid blue; color:red;" align="center">
-            <h1>DEVELOPMENT INSTANCE</h1>
-            <h2>Data in this instance may be deleted at any time!</h1>
-            </span>
-        {{/if}}
-
 		<div class="crafted_content">
 
         {{{ body }}}
-
-                                    <div id="footer_art" class="grid_12 default">
-                            &nbsp;
-            </div>
 
         </div>
 </div>
 
     <div class="clearfix"></div>
-    
-        <!-- footer grass -->
-    <div id="footer_grass">
-        &nbsp;
-    </div>
-
     <!-- footer -->
     <div id="footer">
         <div class="container_12">
@@ -108,7 +89,6 @@
 <ul class="sub-menu">
 	<li id="menu-item-1049" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1049"><a href="https://www.gnome.org/about/">About Us</a></li>
 	<li id="menu-item-1050" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1050"><a href="https://www.gnome.org/get-involved/">Get Involved</a></li>
-	<li id="menu-item-1051" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1051"><a href="https://www.gnome.org/teams/">Teams</a></li>
 	<li id="menu-item-1053" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1053"><a href="https://www.gnome.org/support-gnome/">Support GNOME</a></li>
 	<li id="menu-item-1054" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1054"><a href="https://www.gnome.org/contact/">Contact Us</a></li>
 	<li id="menu-item-2246" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2246"><a href="https://www.gnome.org/foundation/">The GNOME Foundation</a></li>
@@ -116,6 +96,8 @@
 </li>
 <li class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-has-children"><a href="http://las.gnome.org">Libre Application Summit</a>
 <ul class="sub-menu">
+	<li id="menu-item-1049" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1049"><a href="http://las.gnome.org/about/">About Us</a></li>
+    <li id="menu-item-1054" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1054"><a href="http://las.gnome.org/about/">Contact Us</a></li>
 	<li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="http://las.gnome.org/code-of-conduct/">Code of Conduct</a></li>
 	<li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="http://las.gnome.org/sponsors/">Sponsors</a></li>
 	<li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="http://las.gnome.org/travel/">Travel Information</a></li>
@@ -125,10 +107,7 @@
 	    <!-- footnotes -->
             <div id="footnotes" class="grid_9">
                 Copyright © 2005‒2016 <strong class="gnome_logo">The GNOME Project</strong><br />
-                <small>
-                    Hosted by <a href="http://www.redhat.com/">Red Hat</a>.
-                    Powered by <a href="https://github.com/puiterwijk/regcfp">regcfp</a>.
-                </small>
+                Hosted by <a href="http://www.redhat.com/">Red Hat</a>. Powered by <a href="https://github.com/puiterwijk/regcfp">regcfp</a>.
             </div>
 
             <div class="clear"></div>
