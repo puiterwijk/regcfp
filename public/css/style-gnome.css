@@ -15,8 +15,7 @@ textarea {
 }
 
 #header {
-    background: #028ea5;
-    background: url('http://las.gnome.org/wp-content/uploads/sites/8/2016/05/las-website-skyline.png')  50% 0 no-repeat fixed;
+    background: transparent url('http://las.gnome.org/wp-content/uploads/sites/8/2016/05/las-website-skyline-bridge.png')  50% 100% no-repeat scroll;
     background-size: cover !important;
     height: 650px;
     margin: 0px !important;
@@ -27,8 +26,14 @@ textarea {
     box-shadow: none !important;
     margin-top: 80px;
 }
+#top_bar ul {
+    padding: 0;
+}
+#top_bar ul li {
+    margin: 0 10px;
+}
 #top_bar a {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 800;
     text-shadow: none !important;
 }
@@ -47,7 +52,8 @@ textarea {
     text-align: center;
     color: #fff;
     display: table;
-    padding-top: 66px;
+    /*padding-top: 66px;*/
+    padding-top: 71px;
 }
 #header .hero-header {
     font-size: 62px;
@@ -56,7 +62,19 @@ textarea {
     color: #fff;
 }
 #header .hero-description {
-    font-size: 42px;
+    font-size: 15px;
+    font-weight: 600;
+}
+#header .hero-description p {
+    margin-top: 53px;
+}
+#header .hero-description a{
+    color: #fff;
+    text-decoration: none;
+    border-color: #018094;
+    background: #018094;
+    outline: 0;
+    padding: 1em 1.5em 1em;
 }
 
 #footer {
@@ -64,12 +82,13 @@ textarea {
     font-size: 14px;
     font-weight: 400;
     color: #fff;
+    border-top: 1px solid #dadada;
 }
 #footer a:focus {
     background: transparent !important;
 }
 
-#las-register {
+#las-login {
     padding-bottom: 40px;
 }
 #las-registration {
@@ -105,6 +124,7 @@ textarea {
 .las-icons a,
 .las-icons-inline a {
     text-decoration: none;
+    outline : none;
 }
 
 .button {

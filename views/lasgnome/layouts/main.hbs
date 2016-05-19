@@ -44,7 +44,7 @@
       </div>
 
       <div id="top_bar" class="grid_9">
-        <div class="left">
+        <div class="right">
           <div class="menu-globalnav-container">
             <ul id="menu-globalnav" class="menu">
               <li id="menu-item-1039" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1039">
@@ -64,7 +64,15 @@
       
       <div id="hero-container" class="grid_12">
         <span class="hero-header">Libre Application Summit</span>
-        <span class="hero-description"><p>Registration</p></span>
+        <span class="hero-description">
+        <p>
+        {{#if session.currentUser}}
+            <a href="/#logout" onclick="{{ login_buttons.logout.onclick }}">Log out</a>
+        {{else}}
+            <a href="/#login" onclick="{{ login_buttons.login.onclick }}">Registration</a>
+        {{/if}}
+        </p>
+        </span>
       </div>
 
     </div>
@@ -79,13 +87,12 @@
 
         </div>
 </div>
-
     <div class="clearfix"></div>
     <!-- footer -->
     <div id="footer">
         <div class="container_12">
             <div class="links grid_9">
-                <div class="menu-footer-container"><ul id="menu-footer" class="menu"><li id="menu-item-1048" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-has-children menu-item-1048"><a href="/">The GNOME Project</a>
+                <div class="menu-footer-container"><ul id="menu-footer" class="menu"><li id="menu-item-1048" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-has-children menu-item-1048"><a href="https://www.gnome.org">The GNOME Project</a>
 <ul class="sub-menu">
 	<li id="menu-item-1049" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1049"><a href="https://www.gnome.org/about/">About Us</a></li>
 	<li id="menu-item-1050" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1050"><a href="https://www.gnome.org/get-involved/">Get Involved</a></li>

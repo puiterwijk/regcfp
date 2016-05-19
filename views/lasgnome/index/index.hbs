@@ -1,5 +1,5 @@
 {{#unless session.currentUser}}
-<div id="las-register">
+<div id="las-login">
 <div class="grid_8">
 <h2>Welcome to LAS GNOME registration system</h2>
 
@@ -17,11 +17,13 @@ Persona FAQ</a> for more information).
 </div>
 
 <div class="las-icons-container las-icons grid_4" style="padding-top: 75px;">
+<a href="/#login" onclick="{{ login_buttons.login.onclick }}">
     <span class="fa-stack fa-3x">
       <i class="fa fa-circle fa-stack-2x circle-background"></i>
       <i class="fa fa-sign-in fa-stack-1x circle-text"></i>
     </span>
-    <h4><a href="/#login" onclick="{{ login_buttons.login.onclick }}">LOG IN WITH PERSONA</a></h4>
+    <h4>LOG IN WITH PERSONA</h4>
+</a>
 </div>
 
 <div class="clearfix"></div>
@@ -29,37 +31,43 @@ Persona FAQ</a> for more information).
 
 {{else}}
 
-<h2>Welcome, {{name}} to the  Libre Application Summit registration system</h2><br />
+<h2 style="text-align: center;">Welcome, {{name}} to the  Libre Application Summit registration system</h2>
+<hr class="bottom_shadow"/>
 
 {{#if config.papers.enabled}}
-
+<h2>Papers management</h2>
 <div class="las-icons-container">
-
 {{#has_permission "papers/submit" }}
 <div class="las-icons-inline grid_3">
+<a href="/papers/submit">
     <span class="fa-stack fa-4x">
       <i class="fa fa-circle fa-stack-2x circle-background"></i>
       <i class="fa fa-comment fa-stack-1x circle-text"></i>
     </span>
-    <h4><a href="/papers/submit">Submit a talk</a></h4>
+    <h4>Submit a talk</h4>
+</a>
 </div>
 {{/has_permission}}
 {{#has_permission "papers/list/own" }}
 <div class="las-icons-inline grid_5">
+<a href="/papers/list/own">
     <span class="fa-stack fa-4x">
       <i class="fa fa-circle fa-stack-2x circle-background"></i>
       <i class="fa fa-comments fa-stack-1x circle-text"></i>
     </span>
-    <h4><a href="/papers/list/own">View your submitted talks</a></h4>
+    <h4>View your submitted talks</h4>
+</a>
 </div>
 {{/has_permission}}
 {{#has_permission "papers/list/accepted" }}
 <div class="las-icons-inline grid_3">
+<a href="/papers/list">
     <span class="fa-stack fa-4x">
       <i class="fa fa-circle fa-stack-2x circle-background"></i>
       <i class="fa fa-check-circle fa-stack-1x circle-text"></i>
     </span>
-    <h4><a href="/papers/list">View accepted talks</a></h4>
+    <h4>View accepted talks</h4>
+</a>
 </div>
 {{/has_permission}}
 </div>
@@ -73,38 +81,46 @@ Persona FAQ</a> for more information).
 <div class="las-icons-container">
 {{#has_permission "registration/view_public"}}
 <div class="las-icons-inline grid_3">
+<a href="/registration/list">
     <span class="fa-stack fa-4x">
       <i class="fa fa-circle fa-stack-2x circle-background"></i>
       <i class="fa fa-list-ul fa-stack-1x circle-text"></i>
     </span>
-    <h4><a href="/registration/list">Current registrations</a></h4>
+    <h4>Current registrations</h4>
+</a>
 </div>
 {{/has_permission}}
 {{#has_permission "registration/register" }}
 {{#if registration}}
 <div class="las-icons-inline grid_5">
+<a href="/registration/register">
     <span class="fa-stack fa-4x">
       <i class="fa fa-circle fa-stack-2x circle-background"></i>
       <i class="fa fa-pencil fa-stack-1x circle-text"></i>
     </span>
-    <h4><a href="/registration/register">Update registration</a></h4>
+    <h4>Update registration</h4>
+</a>
 </div>
 {{#has_permission "registration/request_receipt"}}
 <div class="las-icons-inline grid_3">
+<a href="/registration/receipt" target="_blank">
     <span class="fa-stack fa-4x">
       <i class="fa fa-circle fa-stack-2x circle-background"></i>
       <i class="fa fa-ticket fa-stack-1x circle-text"></i>
     </span>
-    <h4><a href="/registration/receipt" target="_blank">Get receipt</a></h4>
+    <h4>Get receipt</h4>
+</a>
 </div>
 {{/has_permission}}
 {{else}}
 <div class="las-icons-inline grid_5">
+<a href="/registration/register">
     <span class="fa-stack fa-4x">
       <i class="fa fa-circle fa-stack-2x circle-background"></i>
       <i class="fa fa-list-ul fa-stack-1x circle-text"></i>
     </span>
-    <h4><a href="/registration/register">Register</a></h4>
+    <h4>Register</h4>
+</a>
 </div>
 {{/if}}
 {{/has_permission}}
@@ -114,6 +130,7 @@ Persona FAQ</a> for more information).
 {{/if}}
 
 {{#has_permission "admin" }}
+<hr class="bottom_shadow"/>
 <h2>Admin</h2>
 
 {{#has_permission "registration/desk"}}
@@ -121,11 +138,13 @@ Persona FAQ</a> for more information).
 <div class="grid_2">
 <h3>Overview</h3>
 <div class="las-icons-container las-icons-inline">
+<a href="/desk">
     <span class="fa-stack fa-4x">
       <i class="fa fa-square fa-stack-2x circle-background"></i>
       <i class="fa fa-sliders fa-stack-1x circle-text"></i>
     </span>
-    <h4><a href="/desk">Desk</a></h4>
+    <h4>Desk</h4>
+</a>
 </div>
 {{/has_permission}}
 </div>
@@ -134,29 +153,35 @@ Persona FAQ</a> for more information).
 <h3>Papers management</h3>
 {{#has_permission "papers/list/all"}}
 <div class="las-icons-inline">
+<a href="/papers/admin/list">
     <span class="fa-stack fa-4x">
       <i class="fa fa-square fa-stack-2x circle-background"></i>
       <i class="fa fa-comments fa-stack-1x circle-text"></i>
     </span>
-    <h4><a href="/papers/admin/list">View all talks</a></h4>
+    <h4>View all talks</h4>
+</a>
 </div>
 {{/has_permission}}
 {{#has_permission "papers/vote"}}
 <div class="las-icons-inline">
+<a href="/papers/admin/vote">
     <span class="fa-stack fa-4x">
       <i class="fa fa-square fa-stack-2x circle-background"></i>
       <i class="fa fa-comments fa-stack-1x circle-text"></i>
     </span>
-    <h4><a href="/papers/admin/vote">Vote on talks</a></h4>
+    <h4>Vote on talks</h4>
+</a>
 </div>
 {{/has_permission}}
 {{#has_permission "papers/showvotes" }}
 <div class="las-icons-inline">
+<a href="/papers/admin/vote/show">
     <span class="fa-stack fa-4x">
       <i class="fa fa-square fa-stack-2x circle-background"></i>
       <i class="fa fa-comments fa-stack-1x circle-text"></i>
     </span>
-    <h4><a href="/papers/admin/vote/show">Show talk votes</a></h4>
+    <h4>Show talk votes</h4>
+</a>
 </div>
 {{/has_permission}}
 </div>
@@ -165,11 +190,13 @@ Persona FAQ</a> for more information).
 {{#has_permission "registration/view_all" }}
 <h3>Registration</h3>
 <div class="las-icons-inline">
+<a href="/registration/admin/list">
     <span class="fa-stack fa-4x">
       <i class="fa fa-square fa-stack-2x circle-background"></i>
       <i class="fa fa-list-ul fa-stack-1x circle-text"></i>
     </span>
-    <h4><a href="/registration/admin/list">List all registrations</a></h4>
+    <h4>List all registrations</h4>
+</a>
 </div>
 {{/has_permission}}
 </div>
