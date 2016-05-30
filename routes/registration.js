@@ -32,7 +32,9 @@ function get_reg_fields(request, registration) {
     fields[field] = extend({}, config['registration']['fields'][field]);
     if(fields[field]['type'] == 'country') {
       fields[field]['type'] = 'select';
-      var options = [];
+      var options = fields[field]['options'];
+      if (options === undefined)
+        options = [];
       for(var country in countries.all) {
         options.push(countries.all[country].name);
       };
