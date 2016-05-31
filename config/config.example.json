@@ -99,6 +99,15 @@
           "private": true,
           "placeholder": "Country of origin"
         },
+        "country_pre": {
+          "display_name": "Prepended Coutntry",
+          "short_display_name": "Ctr Opt",
+          "type": "country",
+          "required": false,
+          "private": true,
+          "options" : ["prepended country"],
+          "placeholder": "Country of origin"
+        },
         "ircnick": {
           "display_name": "IRC Nickname",
           "short_display_name": "IRC",

@@ -33,6 +33,13 @@ describe('registration', function() {
     .end(done);
   });
 
+  it('should show prepended country', function(done) {
+    agent.get('/registration/register')
+    .expect(200)
+    .expect(/<select\s*name="field_country_pre"[^>]*>\s*<option[^>]*>prepended country<\/option>/m)
+    .end(done);
+  });
+
   it('should show form on empty name', function(done) {
     agent.post('/registration/register')
     .send({'name': '  '})
