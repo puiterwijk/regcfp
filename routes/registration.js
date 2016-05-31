@@ -17,7 +17,7 @@ var countries = require('country-data').countries;
 var config = require('../configuration');
 
 var paypal = require('paypal-rest-sdk');
-paypal.configure(config['registration']['paypal']);
+paypal.configure(config['registration']['paypal']['api_credentials']);
 
 function get_min_main() {
   // Get the minimum amount for receipt in local currency
