@@ -44,7 +44,11 @@ selected="selected"
 </select>
 
 {{else }}
-Unknown field type
+{{#ifEqual this.type "documentation" }}
+  {{{this.html}}}
+{{else}}
+  Unknown field type
+{{/ifEqual}}
 {{/ifEqual}}
 {{/ifEqual}}
 

@@ -50,52 +50,56 @@ Free conference t-shirt at registration (≥ 100€)
 
 
 {{#each registration_fields}}
-{{#ifEqual @key "ircnick"}}
-{{else}}
+  {{#ifEqual @key "ircnick"}}
+  {{else}}
 <tr><td><label for="reg-{{@key}}">{{ this.display_name }}</label></td>
 <td>
 
-{{#ifEqual this.type "string"}}
+    {{#ifEqual this.type "string"}}
 <input type="text" id="reg-{{@key}}" name="field_{{@key}}" value="{{ this.value }}" placeholder="{{ this.placeholder }}">
-{{else}}
-{{#ifEqual this.type "select"}}
+    {{else}}
+      {{#ifEqual this.type "select"}}
 
 <select name="field_{{@key}}" id="reg-{{@key}}" >
-{{#ifEqual this.left undefined}}
-{{#each this.options}}
+        {{#ifEqual this.left undefined}}
+          {{#each this.options}}
 <option
-{{#ifEqual ../value this}}
+            {{#ifEqual ../value this}}
 selected="selected"
-{{/ifEqual}}
+            {{/ifEqual}}
 >{{this}}</option>
-{{/each}}
-{{else}}
-{{#each this.left}}
+          {{/each}}
+        {{else}}
+          {{#each this.left}}
 <option value="{{this.option}}"
-{{#ifEqual ../value this.option}}
+            {{#ifEqual ../value this.option}}
 selected="selected"
-{{/ifEqual}}
-{{#ifEqual this.left -1}}
+            {{/ifEqual}}
+            {{#ifEqual this.left -1}}
 >{{this.option}}</option>
-{{else}}
+            {{else}}
 >{{this.option}} - {{ this.left }} left</option>
-{{/ifEqual}}
-{{/each}}
-{{/ifEqual}}
+            {{/ifEqual}}
+          {{/each}}
+        {{/ifEqual}}
 </select>
 
-{{else }}
-Unknown field type
-{{/ifEqual}}
-{{/ifEqual}}
+      {{else }}
+        {{#ifEqual this.type "documentation" }}
+          {{{this.html}}}
+        {{else}}
+          Unknown field type
+        {{/ifEqual}}
+      {{/ifEqual}}
+    {{/ifEqual}}
 
-{{#if this.message}}
+    {{#if this.message}}
 <br/>
 <p class="note">{{this.message}}</p>
-{{/if}}
+    {{/if}}
 </td>
 </tr>
-{{/ifEqual}}
+  {{/ifEqual}}
 {{/each}}
 
 
