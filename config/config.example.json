@@ -116,6 +116,12 @@
           "private": true,
           "placeholder": "IRC Nickname"
         },
+        "doc": {
+          "type": "documentation",
+          "display_name": "docentry",
+          "short_display_name": "docentry",
+          "html": "<h3>Documentation test html</h3>"
+        },
         "shirtsize": {
           "display_name": "T-shirt size",
           "short_display_name": "T-shirt",
