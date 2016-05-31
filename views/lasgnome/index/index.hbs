@@ -112,6 +112,19 @@ Persona FAQ</a> for more information).
 </a>
 </div>
 {{/has_permission}}
+{{#has_permission "registration/pay"}}
+    {{#unless registration.badge_printed}}
+    <div class="las-icons-inline grid_11">
+    <a href="/registration/pay">
+        <span class="fa-stack fa-4x">
+          <i class="fa fa-circle fa-stack-2x circle-background"></i>
+          <i class="fa fa-money fa-stack-1x circle-text"></i>
+        </span>
+        <h4>Pay more</h4>
+    </a>
+    </div>
+    {{/unless}}
+{{/has_permission}}
 {{else}}
 <div class="las-icons-inline grid_5">
 <a href="/registration/register">

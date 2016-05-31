@@ -128,14 +128,109 @@ textarea {
 }
 
 table:not(.submission-form) th, table:not(.submission-form) td {
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom: 1px solid #ddd;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-bottom: 1px solid #ddd;
 }
 
 .paper table th, .paper table td {
-  padding: 0px;
-  padding-right: 5px;
-  border-bottom: none;
-  text-align: left;
+    padding: 0px;
+    padding-right: 5px;
+    border-bottom: none;
+    text-align: left;
+}
+
+/* ----- Custom media queries -----*/
+
+/* Tablet Screen Sizes */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+    #header .hero-header {
+        max-width: 65%;
+    }
+    #las-login h2 {
+        font-size: 1.4em;
+    }
+}
+
+/* Mobile Landscape Screen Sizes */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    h1,h2 {
+        text-align: center;
+    }
+    #top_bar{
+        margin-top: 0px;
+    }
+    #header #logo{
+        text-align: center;
+        display: inline-block;
+        float: none;
+    }
+    #header img {
+        height: 180px !important;
+        width: 180px !important;
+        float: none;
+    }
+    #hero-container {
+        margin-top: 31px;
+        padding-top: 0px;
+    }
+    #header .hero-header {
+        font-size: 160%;
+        line-height: 50px;
+    }
+    #header .hero-description p {
+        margin-top: 42px;
+    }
+    #las-login h2 {
+        font-size: 1.29em;
+        text-align: inherit;
+    }
+    .right{
+        float: none;
+        text-align: center;
+    }
+    .submission-form tr td input[type="text"], .submission-form tr td textarea {
+        width: 100%;
+    }
+}
+
+/* Mobile Portrait Screen Sizes */
+@media only screen and (max-width: 479px) {
+    h1,h2 {
+        text-align: center;
+    }
+    #top_bar {
+        margin-top: 0px;
+    }
+    #header #logo {
+        text-align: center;
+        display: inline-block;
+        float: none;
+    }
+    #header img {
+        height: 180px !important;
+        width: 180px !important;
+        float: none;
+    }
+    #hero-container {
+        margin-top: 31px;
+        padding-top: 0px;
+    }
+    #header .hero-header {
+        font-size: 160%;
+        line-height: 50px;
+    }
+    #header .hero-description p {
+        margin-top: 42px;
+    }
+    #las-login h2 {
+        font-size: 1.3em;
+    }
+    .right{
+        float: none;
+        text-align: center;
+    }
+    .submission-form tr td input[type="text"], .submission-form tr td textarea, .submission-form tr td select {
+        width: 100%;
+    }
 }
