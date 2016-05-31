@@ -32,7 +32,9 @@ function get_reg_fields(request, registration) {
     fields[field] = extend({}, config['registration']['fields'][field]);
     if(fields[field]['type'] == 'country') {
       fields[field]['type'] = 'select';
-      var options = [];
+      var options = fields[field]['options'];
+      if (options === undefined)
+        options = [];
       for(var country in countries.all) {
         options.push(countries.all[country].name);
       };
@@ -75,6 +77,8 @@ function show_list(req, res, next, show_private) {
       var field_display_names = ['Name'];
       var fields = config['registration']['fields'];
       for(var field in fields) {
+        if (fields[field]['type'] == 'documentation')
+          continue;
         if(show_private || !fields[field]['private']) {
           field_ids.push(field);
           field_display_names.push(fields[field]['short_display_name']);
@@ -550,6 +554,9 @@ function update_field_values(req, res, next, is_update, reg, field_values, curre
   var first = keys[0];
   var current = field_values[first];
   delete field_values[first];
+
+  if (current.type == 'documentation')
+    return update_field_values(req, res, next, is_update, reg, field_values, currency, regfee, canpay, allfields);
 
   var updated = false;
   for(var info in reg.RegistrationInfos) {

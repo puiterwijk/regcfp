@@ -7,72 +7,113 @@
 <tr><td><label for="reg-name">Your name</label></td><td><input type="text" id="reg-name" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td></tr>
 <input type="hidden" name="is_public" value="true">
 
+<tr><td><label for="reg-ircnick">IRC nick</label></td>
+<td>
+<input type="text" id="reg-ircnick" name="field_ircnick" value="{{ registration_fields.ircnick.value }}" placeholder="{{ registration_fields.ircnick.placeholder }}">
+</td>
+</tr>
 
 {{#has_permission "registration/pay"}}
 <tr><td><label for="reg-fee">Registration fee</label></td><td>
 {{#unless ask_regfee}}
 Registered
 {{else}}
-{{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="{{config.registration.default_amount}}">
-<p class="note">Feel free to support us by donating as much as you're able to.<br />
-We can only provide receipts for payments over {{currency_symbol config.registration.main_currency}}{{min_amount_main_currency}} or an equivalent value in another currency.
-{{/unless}}</p>
+{{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="40" />
+for GUADEC, Workshops are handled separately if required.
+
+<div id="reg-fee-slider" ></div>
+<!--<p class="note">This is a donation to the GNOME Foundation which will be used for GUADEC and other purposes.<br /> Support GNOME by donating as much as you can: every donation counts!
+</p>-->
+<p class="note">Please support GUADEC and GNOME by choosing to pay a fee that is reasonable for you–we suggest a payment of 15 € for students, 40 € for hobbyist and 150 € for professionals.<br />
+Additionally consider supporting GNOME by becoming a <a href="https://www.gnome.org/friends/">Friend of GNOME</a> or donating <a href="https://www.gnome.org/friends/other-ways-to-donate/">in other ways</a>.
+</p>
+{{/unless}}
 </tr>
+
+{{#unless ask_regfee}}
+{{else}}
+<tr><td>You get</td><td>
+
+<div class="perk perk-enough" data-amount="0">
+Entry to the conference, hackfests and events
+</div>
+
+<div class="perk perk-enough" data-amount="100">
+Free conference t-shirt at registration (≥ 100€)
+</div>
+
+</td>
+</tr>
+{{/unless}}
+
 {{/has_permission}}
 
 
 {{#each registration_fields}}
+  {{#ifEqual @key "ircnick"}}
+  {{else}}
 <tr><td><label for="reg-{{@key}}">{{ this.display_name }}</label></td>
 <td>
 
-{{#ifEqual this.type "string"}}
+    {{#ifEqual this.type "string"}}
 <input type="text" id="reg-{{@key}}" name="field_{{@key}}" value="{{ this.value }}" placeholder="{{ this.placeholder }}">
-{{else}}
-{{#ifEqual this.type "select"}}
+    {{else}}
+      {{#ifEqual this.type "select"}}
 
 <select name="field_{{@key}}" id="reg-{{@key}}" >
-{{#ifEqual this.left undefined}}
-{{#each this.options}}
+        {{#ifEqual this.left undefined}}
+          {{#each this.options}}
 <option
-{{#ifEqual ../value this}}
+            {{#ifEqual ../value this}}
 selected="selected"
-{{/ifEqual}}
+            {{/ifEqual}}
 >{{this}}</option>
-{{/each}}
-{{else}}
-{{#each this.left}}
+          {{/each}}
+        {{else}}
+          {{#each this.left}}
 <option value="{{this.option}}"
-{{#ifEqual ../value this.option}}
+            {{#ifEqual ../value this.option}}
 selected="selected"
-{{/ifEqual}}
-{{#ifEqual this.left -1}}
+            {{/ifEqual}}
+            {{#ifEqual this.left -1}}
 >{{this.option}}</option>
-{{else}}
+            {{else}}
 >{{this.option}} - {{ this.left }} left</option>
-{{/ifEqual}}
-{{/each}}
-{{/ifEqual}}
+            {{/ifEqual}}
+          {{/each}}
+        {{/ifEqual}}
 </select>
 
-{{else }}
-Unknown field type
-{{/ifEqual}}
-{{/ifEqual}}
+      {{else }}
+        {{#ifEqual this.type "documentation" }}
+          {{{this.html}}}
+        {{else}}
+          Unknown field type
+        {{/ifEqual}}
+      {{/ifEqual}}
+    {{/ifEqual}}
 
-{{#if this.message}}
+    {{#if this.message}}
 <br/>
 <p class="note">{{this.message}}</p>
-{{/if}}
+    {{/if}}
 </td>
 </tr>
+  {{/ifEqual}}
 {{/each}}
 
 
-<tr><td>&nbsp;</td><td><label><input type="checkbox" value="false" name="is_public" 
+<tr><td>&nbsp;</td><td><label><input type="checkbox" id="reg-public" value="false" name="is_public" 
 {{#unless registration.is_public}}
 checked
 {{/unless}}
 >Hide my name in the public list of attendees</label></td></tr>
+<tr><td>&nbsp;</td>
+<td>GUADEC 2016 is an event hosted by LinuxTag e.V. on behalf of the GNOME Foundation.</td>
+</tr>
+<tr><td>&nbsp;</td>
+<td>This conference has a <a href="https://2016.guadec.org/code-of-conduct/">Code of Conduct</a> which all attendees are expected to follow at all conference events.</td>
+</tr>
 <tr><td>&nbsp;</td>
 <td><input class="submit-talk" type="submit" value="Submit" /></td>
 </tr>

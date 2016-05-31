@@ -45,7 +45,11 @@ selected="selected"
 </select>
 
 {{else }}
-Unknown field type
+{{#ifEqual this.type "documentation" }}
+  {{{this.html}}}
+{{else}}
+  Unknown field type
+{{/ifEqual}}
 {{/ifEqual}}
 {{/ifEqual}}
 
@@ -68,4 +72,5 @@ checked
 </tr>
 
 </table>
+<p>This conference has a <a href="http://las.gnome.org/code-of-conduct/">Code of Conduct which all attendees are expected to follow at all conference events</a>.</p>
 </form>
