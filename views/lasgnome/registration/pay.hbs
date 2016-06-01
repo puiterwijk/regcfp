@@ -1,5 +1,6 @@
-<form action="/registration/pay" method="post">
+<form action="/registration/pay/do" method="post">
 <table class="submission-form">
+<input type="hidden" name="method" value="paypal">
 <tr><td>Your name:</td><td><input type="text" name="submitter_name" value="{{user.name}}" disabled /></td></tr>
 <tr><td>Amount:</td><td>
     {{#if config.registration.specific_amount}}
