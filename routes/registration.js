@@ -246,12 +246,13 @@ router.post('/pay/do', function(req, res, next) {
   var method = req.body.method;
   req.body.regfee = Math.abs(req.body.regfee);
   var regfee = config.registration.specific_amount || req.body.regfee;
+  var currency = req.body.currency || config.registration.main_currency;
   if(regfee == 0 || regfee == null) {
     method = 'onsite';
   }
   if(method == 'onsite') {
     var info = {
-      currency: req.body.currency,
+      currency: currency,
       amount: regfee,
       paid: false,
       type: 'onsite',
@@ -277,7 +278,7 @@ router.post('/pay/do', function(req, res, next) {
       });
   } else if(method == 'paypal') {
     req.session.regfee = regfee;
-    create_payment(req, res, next, req.body.currency, regfee);
+    create_payment(req, res, next, currency, regfee);
   } else {
     res.status(402).send('Invalid payment method selected');
   }
