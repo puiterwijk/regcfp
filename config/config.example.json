@@ -142,6 +142,7 @@
         }
       },
       "payment_product_name": "My Event Registration Fee",
+      "payment_sku_prefix": "myevent:",
       "currencies": {
         "EUR": {
           "symbol": "€",

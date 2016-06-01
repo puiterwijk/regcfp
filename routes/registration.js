@@ -202,14 +202,14 @@ function create_payment(req, res, next, currency, amount) {
       'payment_method': 'paypal'
     },
     'redirect_urls': {
-      'return_url': config['persona_audience'] + '/registration/pay/paypal/return',
-      'cancel_url': config['persona_audience'] + '/registration/pay'
+      'return_url': config['auth']['persona_audience'] + '/registration/pay/paypal/return',
+      'cancel_url': config['auth']['persona_audience'] + '/registration/pay'
     },
     'transactions': [{
       'item_list': {
         'items': [{
           'name': config['registration']['payment_product_name'],
-          'sku': 'regfee:' + req.user.email,
+          'sku': config['registration']['payment_sku_prefix'] + 'regfee:' + req.user.email,
           'price': amount.toString(),
           'currency': currency,
           'quantity': 1
