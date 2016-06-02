@@ -19,8 +19,8 @@
 Registered
 {{else}}
 {{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="40" />
-for GUADEC, Workshops are handled separately if required.
 
+<div id="reg-fee-slider-label" >Conference registration (excluding workshop):</div>
 <div id="reg-fee-slider" ></div>
 <!--<p class="note">This is a donation to the GNOME Foundation which will be used for GUADEC and other purposes.<br /> Support GNOME by donating as much as you can: every donation counts!
 </p>-->
@@ -45,6 +45,23 @@ Free conference t-shirt at registration (≥ 100€)
 </td>
 </tr>
 {{/unless}}
+
+<div id="workshop-payments" style="display: none">
+<div class="workshop-payment-conf workshop-packagingyourapplicationusingflatpakformerlyxdgapp workshop-gstreamer" data-amount="200" style="display: none;">
+<p>
+The one day workshop you selected requires a payment of 200€ for everyone who is
+not either a student or a GNOME foundation member.
+{{#if ask_regfee}}
+This amount will be added to the amount specified in the slider unless you select the option below.<br/>
+
+<label><input type="checkbox" class="workshop-payment-excluded">I am a student or foundation member you are required to send send proof to <a href="mailto:workshops@guadec.org">workshops@guadec.org</a> within two days.</label>
+{{else}}
+If you have not paid yet, then you can do so by selecting the "Pay additional fees" option and entering an amount of 200€. If you are a student or foundation member you need to send proof to <a href="mailto:workshops@guadec.org">workshops@guadec.org</a> within two days of registering.
+{{/if}}
+</p>
+</div>
+
+</td></tr>
 
 {{/has_permission}}
 
