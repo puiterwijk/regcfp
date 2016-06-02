@@ -3,6 +3,10 @@
 $(function() {
 	$( '#reg-fee' ).change( function() {
 		amount =  parseFloat(this.value);
+		if (isNaN(amount)) {
+			$( "#reg-fee" ).val( 0 );
+			amount = 0;
+		}
 		$( '#reg-fee-slider' ).slider( "option", "value", amount );
 		$( '.perk' ).each(function() {
 			perk_amount = parseFloat($(this).attr('data-amount'));
