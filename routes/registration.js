@@ -133,7 +133,7 @@ router.post('/pay', function(req, res, next) {
 router.all('/pay/paypal/return', utils.require_user);
 router.all('/pay/paypal/return', utils.require_permission('registration/pay'));
 router.get('/pay/paypal/return', function(req, res, next) {
-  res.render('registration/pay_paypal', {regfee: req.session.regfee, payerId: req.query.PayerID, paymentId: req.query.paymentId});
+  res.render('registration/pay_paypal', {currency: req.session.currency, regfee: req.session.regfee, payerId: req.query.PayerID, paymentId: req.query.paymentId});
 });
 
 router.all('/pay/paypal/execute', utils.require_user);
@@ -278,6 +278,7 @@ router.post('/pay/do', function(req, res, next) {
       });
   } else if(method == 'paypal') {
     req.session.regfee = regfee;
+    req.session.currency = currency;
     create_payment(req, res, next, currency, regfee);
   } else {
     res.status(402).send('Invalid payment method selected');
