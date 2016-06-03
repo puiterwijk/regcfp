@@ -116,7 +116,14 @@ router.get('/admin/list', function(req, res, next) {
 router.all('/pay', utils.require_user);
 router.all('/pay', utils.require_permission('registration/pay'));
 router.get('/pay', function(req, res, next) {
-  res.render('registration/pay');
+  req.user.getRegistration({include: [RegistrationPayment]}).then(function(reg) {
+    var can_pay = utils.get_permission_checker("registration/pay")(req.session.currentUser);
+
+    if (reg == null || !can_pay)
+      res.redirect('/');
+    else
+      res.render('registration/pay', { registration: reg });
+  });
 });
 
 router.post('/pay', function(req, res, next) {
@@ -304,7 +311,7 @@ router.get('/receipt', function(req, res, next) {
 router.all('/register', utils.require_permission('registration/register'));
 router.get('/register', function(req, res, next) {
   if(req.user) {
-    req.user.getRegistration({include: [RegistrationInfo]})
+    req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
     .then(function(reg) {
       query_fields_left(reg, get_reg_fields(null, reg))
       .then(function(reg_fields) {
