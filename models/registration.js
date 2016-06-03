@@ -72,6 +72,16 @@ module.exports = function(sequelize, DataTypes) {
           }
         }
         return false;
+      },
+      has_confirmed_payment: function() {
+        for(var payment in this.RegistrationPayments) {
+          console.log('payment:', payment);
+          payment = this.RegistrationPayments[payment];
+          if(payment.paid) {
+            return true;
+          }
+        }
+        return false;
       }
     }
   });

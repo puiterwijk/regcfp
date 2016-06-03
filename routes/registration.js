@@ -293,8 +293,8 @@ router.get('/receipt', function(req, res, next) {
     res.status(500).send('Error retrieving your registration');
   })
   .then(function(reg) {
-    if(!reg.eligible_for_receipt) {
-      res.status(401).send('Not enough paid for receipt');
+    if(reg == null || !reg.has_confirmed_payment) {
+      res.status(401).send('We do not have any confirmed payments for this registration.');
     } else {
       res.render('registration/receipt', { registration: reg , layout:false });
     }
