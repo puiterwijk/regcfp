@@ -16,7 +16,12 @@
 {{#has_permission "registration/pay"}}
 <tr><td><label for="reg-fee">Registration fee</label></td><td>
 {{#unless ask_regfee}}
-Specified
+{{#if registration.has_confirmed_payment }}
+{{registration.paid}} paid{{/if}}{{#if registration.has_outstanding_onsite }}{{#if registration.has_confirmed_payment }}, 
+{{/if}}
+{{registration.outstanding_onsite}} to be paid
+{{/if}}
+
 {{else}}
 {{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="40" />
 
@@ -55,7 +60,7 @@ This amount will be added to the fee specified in the slider, unless you select 
 
 <label><input type="checkbox" class="workshop-payment-excluded">I am a student or Foundation member and I will send send proof to <a href="mailto:workshops@guadec.org">workshops@guadec.org</a> within two days.</label>
 {{else}}
-If you have not paid already, then you can do so by selecting the <a href="pay">"Pay more" from the registration home page</a> and enter an amount of 200€. If you are a student or a Foundation member you need to send proof to <a href="mailto:workshops@guadec.org">workshops@guadec.org</a> within two days of registering.
+If you have not paid already, then you can do so by selecting the <a href="pay">"Pay additional fees" from the registration home page</a> and enter an amount of 200€. If you are a student or a Foundation member you need to send proof to <a href="mailto:workshops@guadec.org">workshops@guadec.org</a> within two days of registering.
 {{/if}}
 </p>
 </div>
