@@ -276,13 +276,14 @@ describe('registration', function() {
     .end(done);
   });
 
-  it('should list all info for admin', function(done) {
+  it('should list all info for admin (except payment)', function(done) {
     agent.get('/registration/admin/list')
     .expect(200)
     .expect(/TestUser A/)
     .expect(/testirc/)
     .expect(/Admin/)
     .expect(/adminnick/)
+    .expect(function (res) { if (res.text.match('Paid')) throw new Error('String "Paid" found!'); })
     .end(done);
   });
 
@@ -408,5 +409,39 @@ describe('registration', function() {
     .expect(/%PDF-1./)
     .end(done);
   });
+
+  it('logout admin user', function(done) {
+    agent.post('/auth/logout')
+    .expect(200)
+    .expect('Logged out')
+    .end(done);
+  });
+
+  it('should login as payment admin', function(done) {
+    agent.post('/auth/login')
+    .send({'email': 'payadm@regcfp'})
+    .expect(200)
+    .expect('Welcome payadm@regcfp')
+    .end(done);
+  });
+
+  it('register payment admin', function(done) {
+    agent.post('/authg/register')
+    .send({'origin': '/papers/submit'})
+    .send({'fullname': 'Payment Admin'})
+    .end(done);
+  });
+
+  it('should list all info for payment admin', function(done) {
+    agent.get('/registration/admin/list')
+    .expect(200)
+    .expect(/TestUser A/)
+    .expect(/testirc/)
+    .expect(/Admin/)
+    .expect(/adminnick/)
+    .expect(/Paid/)
+    .end(done);
+  });
+
 
 });

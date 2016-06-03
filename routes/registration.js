@@ -62,15 +62,19 @@ function get_reg_fields(request, registration) {
 
 router.all('/', utils.require_feature("registration"));
 
-function show_list(req, res, next, show_private) {
+function show_list(req, res, next, show_private, show_payment) {
   var filter = {};
+  var include = [User, RegistrationInfo];
   if(!show_private) {
     filter = { is_public: true };
+  }
+  if (show_payment) {
+    include.push(RegistrationPayment);
   }
   Registration
     .findAll({
       where: filter,
-      include: [User, RegistrationInfo]
+      include: include
     })
     .then(function(registrations) {
       var field_ids = [null];
@@ -84,6 +88,11 @@ function show_list(req, res, next, show_private) {
           field_display_names.push(fields[field]['short_display_name']);
         }
       }
+
+      if(show_payment) {
+        field_display_names.push('Paid');
+      }
+
       var display_regs = [];
       for(var registration in registrations) {
         registration = registrations[registration];
@@ -96,6 +105,13 @@ function show_list(req, res, next, show_private) {
             cur_reg.push(field_values[field].value);
           }
         }
+        if(show_payment) {
+          var str = registration.paid;
+          if (registration.has_outstanding_onsite)
+            str = str + " (" + registration.outstanding_onsite + ")";
+          cur_reg.push(str);
+        }
+
         display_regs.push(cur_reg);
       }
       res.render('registration/list', { fields: field_display_names, registrations: display_regs });
@@ -110,7 +126,8 @@ router.get('/list', function(req, res, next) {
 router.all('/admin/list', utils.require_user);
 router.all('/admin/list', utils.require_permission('registration/view_all'));
 router.get('/admin/list', function(req, res, next) {
-  return show_list(req, res, next, true);
+  var show_payment = utils.get_permission_checker('registration/view_payment')(req.session.currentUser);
+  return show_list(req, res, next, true, show_payment);
 });
 
 router.all('/pay', utils.require_user);
