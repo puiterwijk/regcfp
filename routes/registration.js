@@ -62,15 +62,19 @@ function get_reg_fields(request, registration) {
 
 router.all('/', utils.require_feature("registration"));
 
-function show_list(req, res, next, show_private) {
+function show_list(req, res, next, show_private, show_payment) {
   var filter = {};
+  var include = [User, RegistrationInfo];
   if(!show_private) {
     filter = { is_public: true };
+  }
+  if (show_payment) {
+    include.push(RegistrationPayment);
   }
   Registration
     .findAll({
       where: filter,
-      include: [User, RegistrationInfo]
+      include: include
     })
     .then(function(registrations) {
       var field_ids = [null];
@@ -84,6 +88,11 @@ function show_list(req, res, next, show_private) {
           field_display_names.push(fields[field]['short_display_name']);
         }
       }
+
+      if(show_payment) {
+        field_display_names.push('Paid');
+      }
+
       var display_regs = [];
       for(var registration in registrations) {
         registration = registrations[registration];
@@ -96,6 +105,13 @@ function show_list(req, res, next, show_private) {
             cur_reg.push(field_values[field].value);
           }
         }
+        if(show_payment) {
+          var str = registration.paid;
+          if (registration.has_outstanding_onsite)
+            str = str + " (" + registration.outstanding_onsite + ")";
+          cur_reg.push(str);
+        }
+
         display_regs.push(cur_reg);
       }
       res.render('registration/list', { fields: field_display_names, registrations: display_regs });
@@ -110,13 +126,21 @@ router.get('/list', function(req, res, next) {
 router.all('/admin/list', utils.require_user);
 router.all('/admin/list', utils.require_permission('registration/view_all'));
 router.get('/admin/list', function(req, res, next) {
-  return show_list(req, res, next, true);
+  var show_payment = utils.get_permission_checker('registration/view_payment')(req.session.currentUser);
+  return show_list(req, res, next, true, show_payment);
 });
 
 router.all('/pay', utils.require_user);
 router.all('/pay', utils.require_permission('registration/pay'));
 router.get('/pay', function(req, res, next) {
-  res.render('registration/pay');
+  req.user.getRegistration({include: [RegistrationPayment]}).then(function(reg) {
+    var can_pay = utils.get_permission_checker("registration/pay")(req.session.currentUser);
+
+    if (reg == null || !can_pay)
+      res.redirect('/');
+    else
+      res.render('registration/pay', { registration: reg });
+  });
 });
 
 router.post('/pay', function(req, res, next) {
@@ -293,8 +317,8 @@ router.get('/receipt', function(req, res, next) {
     res.status(500).send('Error retrieving your registration');
   })
   .then(function(reg) {
-    if(!reg.eligible_for_receipt) {
-      res.status(401).send('Not enough paid for receipt');
+    if(reg == null || !reg.has_confirmed_payment) {
+      res.status(401).send('We do not have any confirmed payments for this registration.');
     } else {
       res.render('registration/receipt', { registration: reg , layout:false });
     }
@@ -304,7 +328,7 @@ router.get('/receipt', function(req, res, next) {
 router.all('/register', utils.require_permission('registration/register'));
 router.get('/register', function(req, res, next) {
   if(req.user) {
-    req.user.getRegistration({include: [RegistrationInfo]})
+    req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
     .then(function(reg) {
       query_fields_left(reg, get_reg_fields(null, reg))
       .then(function(reg_fields) {

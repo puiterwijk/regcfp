@@ -1,5 +1,5 @@
 {{#if submission_error}}
-<div class="validation">Something went wrong. Please make sure you have filled all required fields.</div>
+<div class="validation">Something went wrong. Please make sure you have filled all of the required fields.</div>
 {{/if}}
 
 <form action="/registration/register" method="post">
@@ -16,16 +16,21 @@
 {{#has_permission "registration/pay"}}
 <tr><td><label for="reg-fee">Registration fee</label></td><td>
 {{#unless ask_regfee}}
-Registered
+{{#if registration.has_confirmed_payment }}
+{{registration.paid}} paid{{/if}}{{#if registration.has_outstanding_onsite }}{{#if registration.has_confirmed_payment }}, 
+{{/if}}
+{{registration.outstanding_onsite}} to be paid
+{{/if}}
+
 {{else}}
 {{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="40" />
-for GUADEC, Workshops are handled separately if required.
 
+<div id="reg-fee-slider-label" >Conference registration (excluding workshop):</div>
 <div id="reg-fee-slider" ></div>
 <!--<p class="note">This is a donation to the GNOME Foundation which will be used for GUADEC and other purposes.<br /> Support GNOME by donating as much as you can: every donation counts!
 </p>-->
 <p class="note">Please support GUADEC and GNOME by choosing to pay a fee that is reasonable for you–we suggest a payment of 15 € for students, 40 € for hobbyist and 150 € for professionals.<br />
-Additionally consider supporting GNOME by becoming a <a href="https://www.gnome.org/friends/">Friend of GNOME</a> or donating <a href="https://www.gnome.org/friends/other-ways-to-donate/">in other ways</a>.
+You can also support GNOME by becoming a <a href="https://www.gnome.org/friends/">Friend of GNOME</a> or donating <a href="https://www.gnome.org/friends/other-ways-to-donate/">in other ways</a>.
 </p>
 {{/unless}}
 </tr>
@@ -35,7 +40,7 @@ Additionally consider supporting GNOME by becoming a <a href="https://www.gnome.
 <tr><td>You get</td><td>
 
 <div class="perk perk-enough" data-amount="0">
-Entry to the conference, hackfests and events
+Entry to the conference, hackfests and events (excluding workshops)
 </div>
 
 <div class="perk perk-enough" data-amount="100">
@@ -45,6 +50,22 @@ Free conference t-shirt at registration (≥ 100€)
 </td>
 </tr>
 {{/unless}}
+
+<div id="workshop-payments" style="display: none">
+<div class="workshop-payment-conf workshop-packagingyourapplicationusingflatpakformerlyxdgapp workshop-gstreamer" data-amount="200" style="display: none;">
+<p>
+The one day workshop you selected has a cost of 200€ per attendee, with the exception of students and GNOME Foundation members.
+{{#if ask_regfee}}
+This amount will be added to the fee specified in the slider, unless you select the option below.<br/>
+
+<label><input type="checkbox" class="workshop-payment-excluded">I am a student or Foundation member and I will send send proof to <a href="mailto:workshops@guadec.org">workshops@guadec.org</a> within two days.</label>
+{{else}}
+If you have not paid already, then you can do so by selecting the <a href="pay">"Pay additional fees" from the registration home page</a> and enter an amount of 200€. If you are a student or a Foundation member you need to send proof to <a href="mailto:workshops@guadec.org">workshops@guadec.org</a> within two days of registering.
+{{/if}}
+</p>
+</div>
+
+</td></tr>
 
 {{/has_permission}}
 
@@ -112,7 +133,7 @@ checked
 <td>GUADEC 2016 is an event hosted by LinuxTag e.V. on behalf of the GNOME Foundation.</td>
 </tr>
 <tr><td>&nbsp;</td>
-<td>This conference has a <a href="https://2016.guadec.org/code-of-conduct/">Code of Conduct</a> which all attendees are expected to follow at all conference events.</td>
+<td>This conference has a <a href="https://2016.guadec.org/code-of-conduct/">Code of Conduct</a> which all attendees are expected to follow at all conference venues and events.</td>
 </tr>
 <tr><td>&nbsp;</td>
 <td><input class="submit-talk" type="submit" value="Submit" /></td>

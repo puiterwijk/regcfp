@@ -73,7 +73,8 @@
         "pay": ["*authenticated*"],
         "request_receipt": ["*authenticated*"],
         "view_public": ["*authenticated*"],
-        "view_all": ["admin@regcfp"],
+        "view_all": ["admin@regcfp", "payadm@regcfp"],
+        "view_payment": ["payadm@regcfp"],
         "add_payment": ["admin@regcfp", "desk@regcfp"],
         "print_badge": ["admin@regcfp", "desk@regcfp"],
         "desk": ["admin@regcfp", "desk@regcfp"]

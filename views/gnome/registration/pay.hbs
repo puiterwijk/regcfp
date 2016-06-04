@@ -1,7 +1,13 @@
 <form action="/registration/pay" method="post">
 <table class="submission-form">
 <tr><td>Your name:</td><td><input type="text" name="submitter_name" value="{{user.name}}" disabled /></td></tr>
-<tr><td>Amount:</td><td>
+<tr><td><label for="reg-fee">Existing fees:</label></td><td>
+{{#if registration.has_confirmed_payment }}
+{{registration.paid}} paid{{/if}}{{#if registration.has_outstanding_onsite }}{{#if registration.has_confirmed_payment }}, 
+{{/if}}
+{{registration.outstanding_onsite}} to be paid
+{{/if}}
+<tr><td>Additional fees:</td><td>
 {{>currency_selector}} <input type="text" name="regfee" class="reg-fee">
 <p class="note">Feel free to support us by paying as much as you're able to.
 </p>
