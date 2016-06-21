@@ -1,10 +1,8 @@
-<p>Welcome to the event registration system</p>
-
 {{#unless session.currentUser}}
 <h2>Please log in using Persona</h2>
 
 <p>
-To use this registration and CfP system you need to login using Mozilla
+Welcome to the GUADEC registration system. To use this registration and CfP system you need to login using Mozilla
 Persona. Both gnome.org or fedoraproject.org accounts can be used for
 authentication (i.e. account@gnome.org).<br />
 If you do not have such an account then simply enter any email address you
@@ -21,7 +19,7 @@ You will need to authenticate with a third party service to log in. Some privacy
 <div class="button"><a href="/#login" onclick="{{ login_buttons.login.onclick }}">Log in with Persona</a></div>
 
 {{else}}
-Welcome, {{name}}<br />
+Hi, {{name}}! Welcome to the GUADEC registration system.<br />
 
 {{#unless user}}
 
