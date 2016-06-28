@@ -106,6 +106,7 @@ describe('registration', function() {
     agent.get('/registration/list')
     .expect(200)
     .expect(/TestUser A/)
+    .expect(function (res) { if (res.text.match('[^\'"]usera@regcfp[^\'"]')) throw new Error('Mail should not be included!'); })
     .end(done)
   });
 
@@ -281,6 +282,7 @@ describe('registration', function() {
     .expect(200)
     .expect(/TestUser A/)
     .expect(/testirc/)
+    .expect(/usera@regcfp/)
     .expect(/Admin/)
     .expect(/adminnick/)
     .expect(function (res) { if (res.text.match('Paid')) throw new Error('String "Paid" found!'); })
@@ -440,6 +442,7 @@ describe('registration', function() {
     .expect(/Admin/)
     .expect(/adminnick/)
     .expect(/Paid/)
+    .expect(/admin@regcfp/)
     .end(done);
   });
 
