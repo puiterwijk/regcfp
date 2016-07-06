@@ -80,6 +80,11 @@ function show_list(req, res, next, show_private, show_payment) {
       var field_ids = [null];
       var field_display_names = ['Name'];
       var fields = config['registration']['fields'];
+
+      if (show_private) {
+        field_display_names.push('Mail')
+      }
+
       for(var field in fields) {
         if (fields[field]['type'] == 'documentation')
           continue;
@@ -99,6 +104,11 @@ function show_list(req, res, next, show_private, show_payment) {
         var cur_reg = [];
         cur_reg.push(registration['User'].name);
         var field_values = get_reg_fields(null, registration);
+
+        if (show_private) {
+          cur_reg.push(registration['User'].email);
+        }
+
         for(var field in field_ids) {
           field = field_ids[field];
           if(field != null) {
