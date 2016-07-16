@@ -4,15 +4,11 @@ var Promise = require("bluebird");
 
 var utils = require('../utils');
 
-var extend = require('util')._extend;
-
 var models = require('../models');
 var User = models.User;
 var Registration = models.Registration;
 var RegistrationPayment = models.RegistrationPayment;
 var RegistrationInfo = models.RegistrationInfo;
-
-var countries = require('country-data').countries;
 
 var config = require('../configuration');
 
@@ -23,41 +19,6 @@ function get_min_main() {
   // Get the minimum amount for receipt in local currency
   var main_currency = config['registration']['main_currency'];
   return config['registration']['currencies'][main_currency]['min_amount_for_receipt'];
-}
-
-
-function get_reg_fields(request, registration) {
-  var fields = {};
-  for(var field in config['registration']['fields']) {
-    fields[field] = extend({}, config['registration']['fields'][field]);
-    if(fields[field]['type'] == 'country') {
-      fields[field]['type'] = 'select';
-      var options = fields[field]['options'];
-      if (options === undefined)
-        options = [];
-      for(var country in countries.all) {
-        options.push(countries.all[country].name);
-      };
-      fields[field]['options'] = options;
-    }
-  };
-  if(request)
-    console.log(request.body);
-  for(field in fields) {
-    if(request && ('field_' + field) in request.body) {
-      fields[field].value = request.body['field_' + field];
-    } else if(registration != null) {
-      for(var info in registration.RegistrationInfos) {
-        info = registration.RegistrationInfos[info];
-        if(info.field == field) {
-          fields[field].value = info.value;
-        }
-      }
-    } else {
-      fields[field].value = '';
-    }
-  };
-  return fields;
 }
 
 router.all('/', utils.require_feature("registration"));
@@ -103,7 +64,7 @@ function show_list(req, res, next, show_private, show_payment) {
         registration = registrations[registration];
         var cur_reg = [];
         cur_reg.push(registration['User'].name);
-        var field_values = get_reg_fields(null, registration);
+        var field_values = utils.get_reg_fields(null, registration);
 
         if (show_private) {
           cur_reg.push(registration['User'].email);
@@ -340,7 +301,7 @@ router.get('/register', function(req, res, next) {
   if(req.user) {
     req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
     .then(function(reg) {
-      query_fields_left(reg, get_reg_fields(null, reg))
+      query_fields_left(reg, utils.get_reg_fields(null, reg))
       .then(function(reg_fields) {
         console.log(reg_fields);
         res.render('registration/register', { registration: reg,
@@ -350,7 +311,7 @@ router.get('/register', function(req, res, next) {
       });
     });
   } else {
-    query_fields_left(null, get_reg_fields(null, null))
+    query_fields_left(null, utils.get_reg_fields(null, null))
     .then(function(reg_fields) {
       res.render('registration/register', { registration: {is_public: true}, ask_regfee: true,
                                             registration_fields: reg_fields,
@@ -367,7 +328,7 @@ router.post('/register', function(req, res, next) {
     }
 
     if(req.body.name.trim() == '') {
-      query_fields_left(null, get_reg_fields(req, null))
+      query_fields_left(null, utils.get_reg_fields(req, null))
       .then(function(reg_fields) {
         res.render('registration/register', { registration: null, submission_error: true, ask_regfee: true,
                                               registration_fields: reg_fields,
@@ -495,7 +456,7 @@ function check_field_values(req, reg, field_values) {
 function handle_registration(req, res, next) {
   req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
   .then(function(reg) {
-    query_fields_left(reg, get_reg_fields(req, reg))
+    query_fields_left(reg, utils.get_reg_fields(req, reg))
     .then(function (reg_fields) {
       if(req.body.is_public === undefined) {
         req.body.is_public = 'false';

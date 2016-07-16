@@ -7,6 +7,7 @@ var models = require('../models');
 var User = models.User;
 var Registration = models.Registration;
 var RegistrationPayment = models.RegistrationPayment;
+var RegistrationInfo = models.RegistrationInfo;
 
 var config = require('../configuration');
 
@@ -123,9 +124,9 @@ router.all('/badge', utils.require_permission('registration/desk'));
 router.get('/badge', function(req, res, next) {
   var regida = req.query.regida;
   var regidb = req.query.regidb;
-  Registration.findOne({where: {id:regida}, include: [User]})
+  Registration.findOne({where: {id:regida}, include: [User, RegistrationInfo]})
     .then(function(rega) {
-      Registration.findOne({where: {id:regidb}, include: [User]})
+      Registration.findOne({where: {id:regidb}, include: [User, RegistrationInfo]})
         .then(function(regb) {
           var regs = {
             a: rega,
@@ -141,8 +142,14 @@ router.get('/badge', function(req, res, next) {
               longname: ""
             }
           };
+          var fields = {
+            a: {},
+            b: {},
+          }
+
           for(var reg in regs) {
             if(!!regs[reg]) {
+              var regfields = utils.get_reg_fields(null, regs[reg]);
               var name = regs[reg].User.name;
               var longname = "";
               if(name.length > 20) {
@@ -160,10 +167,16 @@ router.get('/badge', function(req, res, next) {
               console.log('Setting reg: ' + reg);
               names[reg]['name'] = name;
               names[reg]['longname'] = longname;
+
+              for (var field in regfields) {
+                fields[reg][field] = regfields[field].value;
+              }
             }
           }
+
           req.app.render('desk/badge_svg', {
               names: names,
+              fields: fields,
               layout: false
           }, function(err, html) {
             if(!!err) {

@@ -6,6 +6,9 @@ var models = require('./models');
 var User = models.User;
 var Email = models.Email;
 
+var extend = require('util')._extend;
+var countries = require('country-data').countries;
+
 function get_permission_checker(permission) {
   var required = permission.split('/');
   var allowed = config.permissions;
@@ -180,5 +183,39 @@ utils.send_email = function(req, res, recipient, template, variables, cb) {
     }
   });
 };
+
+utils.get_reg_fields = function (request, registration) {
+  var fields = {};
+  for(var field in config['registration']['fields']) {
+    fields[field] = extend({}, config['registration']['fields'][field]);
+    if(fields[field]['type'] == 'country') {
+      fields[field]['type'] = 'select';
+      var options = fields[field]['options'];
+      if (options === undefined)
+        options = [];
+      for(var country in countries.all) {
+        options.push(countries.all[country].name);
+      };
+      fields[field]['options'] = options;
+    }
+  };
+  if(request)
+    console.log(request.body);
+  for(field in fields) {
+    if(request && ('field_' + field) in request.body) {
+      fields[field].value = request.body['field_' + field];
+    } else if(registration != null) {
+      for(var info in registration.RegistrationInfos) {
+        info = registration.RegistrationInfos[info];
+        if(info.field == field) {
+          fields[field].value = info.value;
+        }
+      }
+    } else {
+      fields[field].value = '';
+    }
+  };
+  return fields;
+}
 
 module.exports = utils;
