@@ -123,6 +123,13 @@
           "short_display_name": "docentry",
           "html": "<h3>Documentation test html</h3>"
         },
+        "internal": {
+          "type": "string",
+          "display_name": "Internal",
+          "short_display_name": "Internal",
+          "internal": true,
+          "default": "internal"
+        },
         "shirtsize": {
           "display_name": "T-shirt size",
           "short_display_name": "T-shirt",
