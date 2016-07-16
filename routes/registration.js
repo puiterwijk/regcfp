@@ -49,7 +49,7 @@ function show_list(req, res, next, show_private, show_payment) {
       for(var field in fields) {
         if (fields[field]['type'] == 'documentation')
           continue;
-        if(show_private || !fields[field]['private']) {
+        if(show_private || (!fields[field]['private'] && !fields[field]['internal'])) {
           field_ids.push(field);
           field_display_names.push(fields[field]['short_display_name']);
         }
@@ -64,7 +64,7 @@ function show_list(req, res, next, show_private, show_payment) {
         registration = registrations[registration];
         var cur_reg = [];
         cur_reg.push(registration['User'].name);
-        var field_values = utils.get_reg_fields(null, registration);
+        var field_values = utils.get_reg_fields(null, registration, !show_private);
 
         if (show_private) {
           cur_reg.push(registration['User'].email);
@@ -301,7 +301,7 @@ router.get('/register', function(req, res, next) {
   if(req.user) {
     req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
     .then(function(reg) {
-      query_fields_left(reg, utils.get_reg_fields(null, reg))
+      query_fields_left(reg, utils.get_reg_fields(null, reg, true))
       .then(function(reg_fields) {
         console.log(reg_fields);
         res.render('registration/register', { registration: reg,
@@ -311,7 +311,7 @@ router.get('/register', function(req, res, next) {
       });
     });
   } else {
-    query_fields_left(null, utils.get_reg_fields(null, null))
+    query_fields_left(null, utils.get_reg_fields(null, null, true))
     .then(function(reg_fields) {
       res.render('registration/register', { registration: {is_public: true}, ask_regfee: true,
                                             registration_fields: reg_fields,
@@ -328,7 +328,7 @@ router.post('/register', function(req, res, next) {
     }
 
     if(req.body.name.trim() == '') {
-      query_fields_left(null, utils.get_reg_fields(req, null))
+      query_fields_left(null, utils.get_reg_fields(req, null, true))
       .then(function(reg_fields) {
         res.render('registration/register', { registration: null, submission_error: true, ask_regfee: true,
                                               registration_fields: reg_fields,
@@ -456,7 +456,7 @@ function check_field_values(req, reg, field_values) {
 function handle_registration(req, res, next) {
   req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
   .then(function(reg) {
-    query_fields_left(reg, utils.get_reg_fields(req, reg))
+    query_fields_left(reg, utils.get_reg_fields(req, reg, true))
     .then(function (reg_fields) {
       if(req.body.is_public === undefined) {
         req.body.is_public = 'false';

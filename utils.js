@@ -184,9 +184,12 @@ utils.send_email = function(req, res, recipient, template, variables, cb) {
   });
 };
 
-utils.get_reg_fields = function (request, registration) {
+utils.get_reg_fields = function (request, registration, skip_internal) {
   var fields = {};
   for(var field in config['registration']['fields']) {
+    if (skip_internal && config['registration']['fields'][field]['internal'])
+      continue;
+
     fields[field] = extend({}, config['registration']['fields'][field]);
     if(fields[field]['type'] == 'country') {
       fields[field]['type'] = 'select';
