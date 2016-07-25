@@ -49,6 +49,13 @@ describe('registration', function() {
     .end(done);
   });
 
+  it('should not show internal fields', function(done) {
+    agent.get('/registration/register')
+    .expect(200)
+    .expect(function (res) { if (res.text.match('Internal')) throw new Error('Contains string "Internal".'); })
+    .end(done);
+  });
+
   it('should show form on empty name', function(done) {
     agent.post('/registration/register')
     .send({'name': '  '})
@@ -107,6 +114,7 @@ describe('registration', function() {
     .expect(200)
     .expect(/TestUser A/)
     .expect(function (res) { if (res.text.match('[^\'"]usera@regcfp[^\'"]')) throw new Error('Mail should not be included!'); })
+    .expect(function (res) { if (res.text.match('Internal')) throw new Error('Internal fields should not be included!'); })
     .end(done)
   });
 
@@ -285,6 +293,7 @@ describe('registration', function() {
     .expect(/usera@regcfp/)
     .expect(/Admin/)
     .expect(/adminnick/)
+    .expect(/Internal/)
     .expect(function (res) { if (res.text.match('Paid')) throw new Error('String "Paid" found!'); })
     .end(done);
   });
@@ -441,6 +450,7 @@ describe('registration', function() {
     .expect(/testirc/)
     .expect(/Admin/)
     .expect(/adminnick/)
+    .expect(/Internal/)
     .expect(/Paid/)
     .expect(/admin@regcfp/)
     .end(done);
