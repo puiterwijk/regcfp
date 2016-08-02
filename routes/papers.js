@@ -278,7 +278,7 @@ router.get('/admin/vote/show', function(req, res, next) {
         }
       });
       res.render('papers/showvotes', { papers: paper_info,
-                                       acceptOptions: ['none', 'yes', 'no', 'confirmed']});
+                                       acceptOptions: ['none', 'yes', 'no', 'confirmed', 'cancelled']});
     });
 });
 
