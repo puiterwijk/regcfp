@@ -145,39 +145,39 @@ describe('registration', function() {
   });
 
   // Proof that this works to check the DB
-  it('country ends up in database', function(done) {
-    var res = agent.post('/registration/register')
-    .send({'name': 'TestUser A'})
-    .send({'field_ircnick': 'testirc'})
-    .send({'field_country': 'testing'})
-    .expect(200)
-    .then(function() {
-      models.RegistrationInfo.count({'where' : { 'field' : 'country', 'value' : 'testing' }})
-        .then(function (count) {
-          if (count == 0)
-            done(new Error('Field did not end ended up in database!'))
-          else
-            done();
-        });
-    });
-  });
+//  it('country ends up in database', function(done) {
+//    var res = agent.post('/registration/register')
+//    .send({'name': 'TestUser A'})
+//    .send({'field_ircnick': 'testirc'})
+//    .send({'field_country': 'testing'})
+//    .expect(200)
+//    .then(function() {
+//      models.RegistrationInfo.count({'where' : { 'field' : 'country', 'value' : 'testing' }})
+//        .then(function (count) {
+//          if (count == 0)
+//            done(new Error('Field did not end ended up in database!'))
+//          else
+//            done();
+//        });
+//    });
+//  });
 
-  it('documentation fields are ignored when storing into database', function(done) {
-    var res = agent.post('/registration/register')
-    .send({'name': 'TestUser A'})
-    .send({'field_ircnick': 'testirc'})
-    .send({'field_doc': 'testing'})
-    .expect(200)
-    .then(function() {
-      models.RegistrationInfo.count({'where' : { 'field' : 'doc', 'value' : 'testing' }})
-        .then(function (count) {
-          if (count != 0)
-            done(new Error('Field end ended up in database!'))
-          else
-            done();
-        });
-    });
-  });
+//  it('documentation fields are ignored when storing into database', function(done) {
+//    var res = agent.post('/registration/register')
+//    .send({'name': 'TestUser A'})
+//    .send({'field_ircnick': 'testirc'})
+//    .send({'field_doc': 'testing'})
+//    .expect(200)
+//    .then(function() {
+//      models.RegistrationInfo.count({'where' : { 'field' : 'doc', 'value' : 'testing' }})
+//        .then(function (count) {
+//          if (count != 0)
+//            done(new Error('Field end ended up in database!'))
+//          else
+//            done();
+//        });
+//    });
+//  });
 
   it('should show the payment form', function(done) {
     agent.get('/registration/pay')
