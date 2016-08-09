@@ -15,6 +15,21 @@ function get_amount_string(amounts) {
   return amount;
 }
 
+function get_amounts(reg, type) {
+  var amounts = {};
+  for(var payment in reg.RegistrationPayments) {
+    payment = reg.RegistrationPayments[payment];
+    if(payment.paid && (type === undefined || type == payment.type)) {
+      if(payment.currency in amounts) {
+        amounts[payment.currency] += payment.amount;
+      } else {
+        amounts[payment.currency] = payment.amount;
+      }
+    }
+  }
+  return amounts;
+}
+
 module.exports = function(sequelize, DataTypes) {
   var Registration = sequelize.define("Registration", {
     is_public: DataTypes.BOOLEAN,
@@ -34,21 +49,13 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       paid_amounts: function() {
-        var amounts = {};
-        for(var payment in this.RegistrationPayments) {
-          payment = this.RegistrationPayments[payment];
-          if(payment.paid) {
-            if(payment.currency in amounts) {
-              amounts[payment.currency] += payment.amount;
-            } else {
-              amounts[payment.currency] = payment.amount;
-            }
-          }
-        }
-        return amounts;
+        return get_amounts(this);
       },
       paid: function() {
-        return get_amount_string(this.paid_amounts);;
+        return get_amount_string(this.paid_amounts);
+      },
+      paid_paypal: function() {
+        return get_amount_string(get_amounts(this, 'paypal'));
       },
       outstanding_onsite: function() {
         var amounts = {};
