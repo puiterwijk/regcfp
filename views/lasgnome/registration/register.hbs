@@ -16,9 +16,12 @@ Registered
     {{#if config.registration.specific_amount}}
         {{currency_symbol config.registration.main_currency}}{{config.registration.specific_amount}}
     {{else }}
-        {{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="{{config.registration.default_amount}}">
-        <p class="note">Feel free to support us by donating as much as you're able to.<br />
-        We can only provide receipts for payments over {{currency_symbol config.registration.main_currency}}{{min_amount_main_currency}} or an equivalent value in another currency.
+        <p>Please support LAS and GNOME by choosing to pay a fee that is reasonable for you–we suggest a payment of $ 15 for students, $ 40 for hobbyist and $ 150 for professionals.<br />
+        You can also support GNOME by becoming a <a href="https://www.gnome.org/friends/" target="_blank">Friend of GNOME</a> or donating <a href="https://www.gnome.org/friends/other-ways-to-donate/" target="_blank">in other ways</a>.</p>
+        
+        <div id="reg-fee-slider" ></div>
+        
+        {{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="40">
     {{/if}}
 {{/unless}}</p>
 </tr>
