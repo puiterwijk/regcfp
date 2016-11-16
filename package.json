@@ -16,7 +16,7 @@
     "morgan": "*",
     "serve-favicon": "*",
     "bluebird": "*",
-    "sequelize": "2.*",
+    "sequelize": "3.*",
     "sqlite3": "*",
     "pg": "*",
     "pg-hstore": "*",
