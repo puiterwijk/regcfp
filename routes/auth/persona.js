@@ -61,6 +61,7 @@ router.buttons = {
 };
 
 router.middleware = function(req, res, next) {
+  res.locals.extra_js.push('/javascripts/login-persona.js');
   res.locals.extra_js.push('https://login.persona.org/include.js');
   next();
 };
