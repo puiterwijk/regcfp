@@ -29,14 +29,15 @@ router.post('/logout', function(req, res, next) {
 
 router.buttons = {
   login: {
-    onclick: '',
+    onclick: 'javascript: login_prompt_test()',
   },
   logout: {
-    onclick: '',
+    onclick: 'javascript: logout_test()',
   }
 };
 
 router.middleware = function(req, res, next) {
+  res.locals.extra_js.push('/javascripts/login-test.js');
   next();
 };
 
