@@ -130,37 +130,76 @@
           "internal": true,
           "default": "internal"
         },
-        "shirtsize": {
-          "display_name": "T-shirt size",
+        "t_shirt": {
+          "display_name": "T-shirt",
           "short_display_name": "T-shirt",
-          "type": "select",
+          "type": "purchase",
           "message": "This will be kept private",
           "required": false,
           "private": true,
-          "placeholder": "",
-          "options": [
-            "XS",
-            "S",
-            "M",
-            "L",
-            "XL",
-            "baby"
-          ],
-          "limits" : [ 2, 4, 15, 5, -1, 0]
+          "options": {
+            "XS": {
+                "limit": 2,
+                "cost": 20
+            },
+            "S": {
+                "limit": 4,
+                "cost": 20
+            },
+            "M": {
+                "limit": 15,
+                "cost": 20
+            },
+            "L": {
+                "limit": 5,
+                "cost": 20
+            },
+            "XL": {
+                "limit": -1,
+                "cost": 20
+            },
+            "baby": {
+                "limit": 0,
+                "cost": 20
+            }
+          }
+        },
+        "room": {
+          "display_name": "Accommodation booking",
+          "short_display_name": "Accommodation",
+          "type": "purchase",
+          "required": false,
+          "private": true,
+          "options": {
+            "1 night": {
+                "limit": 2,
+                "cost": 20
+            },
+            "2 nights": {
+                "limit": 4,
+                "cost": 40
+            }
+          }
         }
       },
+
       "payment_product_name": "My Event Registration Fee",
-      "payment_sku_prefix": "myevent:",
+      "payment_sku_prefix": "myevent",
       "currencies": {
+        "GBP": {
+          "symbol": "£",
+          "default_amount": 30,
+          "conversion_rate": 1
+        },
         "EUR": {
           "symbol": "€",
           "default_amount": 40,
-          "conversion_rate": 1
+          "conversion_rate": 1.17
         }
       },
       "allow_onsite_regfee_payment": true,
       "specific_amount": null,
-      "main_currency": "EUR",
+      "main_currency": "GBP",
       "min_amount_for_receipt": 20,
       "paypal_experience_profile": "",
       "desk_word": "something",

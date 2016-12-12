@@ -1,5 +1,11 @@
-<select name="currency">
+<select name="currency" id="reg-currency" {{#if disabled}}disabled="disabled"{{/if}}>
     {{#each config.registration.currencies}}
-        <option value="{{@key}}">{{this.symbol}}</option>
+        <option value="{{@key}}" data-symbol="{{this.symbol}}" data-conversion-rate="{{this.conversion_rate}}"
+          {{#ifEqual @key ../selected}}
+            selected="selected"
+          {{/ifEqual}}
+        >
+          {{this.symbol}}
+        </option>
     {{/each}}
 </select>

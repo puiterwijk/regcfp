@@ -19,6 +19,17 @@ var check_for_inkscape = function() {
   });
 }
 
+function set_user(agent, email, done) {
+   agent.post('/auth/logout')
+   .expect(200)
+   .end(function() {
+     agent.post('/auth/login')
+     .send({'email': email})
+     .expect(200)
+     .end(done);
+   });
+};
+
 describe('registration', function() {
   var agent = request.agent(app);
 
@@ -118,20 +129,6 @@ describe('registration', function() {
     .end(done);
   });
 
-  // FIXME: the code currently does allow tshirt selection to change
-  // after registration. This will be fixed as part of issue #157.
-  //
-  // it('should prevent t-shirt selection change', function(done) {
-  //   agent.post('/registration/register')
-  //   .send({'name': 'TestUser A'})
-  //   .send({'field_ircnick': 'testirc'})
-  //   .send({'field_shirtsize': 'L'})
-  //   .send({'is_public': 'true'})
-  //   .expect(200)
-  //   .expect(/Please make sure you have filled all required fields./)
-  //   .end(done);
-  // });
-
   // Listing all registrations
   it('should list registrations', function(done) {
     agent.get('/registration/list')
@@ -154,6 +151,8 @@ describe('registration', function() {
     agent.get('/registration/register')
     .expect(200)
     .expect(/name="name" value="TestUser A"/)
+    .expect(/name="regfee" class="reg-fee" value="1"/)
+    .expect(/option value="EUR"[^>]*selected="selected"/)
     .expect(/Hide my name/)
     .end(done);
   });
@@ -205,6 +204,8 @@ describe('registration', function() {
 //  });
 
   // Payment
+  // FIXME: payment for purchases should be required up front;
+  // needs a separate test
   it('should show the payment form', function(done) {
     agent.get('/registration/pay')
     .expect(200)
@@ -215,7 +216,7 @@ describe('registration', function() {
   it('should show payment form on blank', function(done) {
     agent.post('/registration/pay')
     .expect(200)
-    .expect(/Amount/)
+    .expect(/<form[^>]+action="\/registration\/pay\/do"/)
     .end(done);
   });
 
@@ -487,5 +488,94 @@ describe('registration', function() {
     .expect(/Paid/)
     .expect(/admin@regcfp/)
     .end(done);
+  });
+
+  describe('inventory', function() {
+    var agent = request.agent(app);
+
+    before('Login', function(done) {
+      set_user(agent, 'inventory-test@regcfp', done);
+    });
+
+    it('shows items for purchase', function(done) {
+      agent.get('/registration/register')
+      .expect(200)
+      .expect(/<input type="radio" class="purchase-option" name="field_room" value="1 night" data-cost="20" data-left="2"/)
+      .expect(/<input type="radio" class="purchase-option" name="field_room" value="2 nights" data-cost="40" data-left="4"/)
+      .end(done);
+    });
+
+    it('allows purchasing items', function(done) {
+     agent.post('/registration/register')
+      .send({'name': 'Purchaser 1'})
+      .send({'field_ircnick': 'p1'})
+      .send({'is_public': 'true'})
+      .send({'currency': 'EUR'})
+      .send({'field_room': '1 night'})
+      .send({'regfee': '1'})
+      .expect(200)
+      .expect(/Thanks for registering/)
+      .end(done);
+    });
+
+    it('updates inventory after purchase', function(done) {
+      // We change users for this test, because users don't see the room they
+      // bought themselves as taken.
+      set_user(agent, 'inventory-test-2@regcfp', function() {
+        agent.get('/registration/register')
+        .expect(200)
+        .expect(/<input type="radio" class="purchase-option" name="field_room" value="1 night" data-cost="20" data-left="1"/)
+        .expect(/<input type="radio" class="purchase-option" name="field_room" value="2 nights" data-cost="40" data-left="4"/)
+        .end(done);
+      });
+    });
+
+    it('allows second purchase', function(done) {
+     agent.post('/registration/register')
+      .send({'name': 'Purchaser 2'})
+      .send({'field_ircnick': 'p2'})
+      .send({'is_public': 'true'})
+      .send({'currency': 'EUR'})
+      .send({'field_room': '1 night'})
+      .send({'regfee': '1'})
+      .expect(200)
+      .expect(/Thanks for registering/)
+      .end(done);
+    });
+
+    it('prevents purchase changes after registration', function(done) {
+      agent.post('/registration/register')
+      .send({'field_room': 'None'})
+      .expect(200)
+      .expect(/You cannot change purchase choice after registration for field: Accommodation booking/)
+      .end(done);
+    });
+
+    it('updates inventory again after purchase', function(done) {
+      // We change users for this test, because users don't see the room they
+      // bought themselves as taken.
+      set_user(agent, 'inventory-test-3@regcfp', function() {
+        agent.get('/registration/register')
+        .expect(200)
+        .expect(/<input type="radio" class="purchase-option" name="field_room" value="1 night" data-cost="20" data-left="0"/)
+        .expect(/<input type="radio" class="purchase-option" name="field_room" value="2 nights" data-cost="40" data-left="4"/)
+        .end(done);
+      });
+    });
+
+    it('does not allow purchase after items are sold out', function(done) {
+      set_user(agent, 'inventory-test-3@regcfp', function() {
+       agent.post('/registration/register')
+        .send({'name': 'Purchaser 3'})
+        .send({'field_ircnick': 'p3'})
+        .send({'is_public': 'true'})
+        .send({'currency': 'EUR'})
+        .send({'field_room': '1 night'})
+        .send({'regfee': '1'})
+        .expect(200)
+        .expect(/Something went wrong: No more &#x27;1 night&#x27; purchases available for field: Accommodation booking./)
+        .end(done);
+      });
+    });
   });
 });
