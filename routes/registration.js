@@ -23,6 +23,10 @@ function get_min_main() {
 
 router.all('/', utils.require_feature("registration"));
 
+// Show all registrations.
+//
+// This function is used both for the public list (which shows the names only)
+// and admin views (which show all info).
 function show_list(req, res, next, show_private, show_payment) {
   var filter = {};
   var include = [User, RegistrationInfo];
@@ -298,6 +302,8 @@ router.get('/receipt', function(req, res, next) {
 
 router.all('/register', utils.require_permission('registration/register'));
 router.get('/register', function(req, res, next) {
+  // Show the registration form; used both for initial registration and
+  // updating existing registration info.
   if(req.user) {
     req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
     .then(function(reg) {
@@ -321,6 +327,7 @@ router.get('/register', function(req, res, next) {
 });
 
 router.post('/register', function(req, res, next) {
+  // Create or update a registration.
   if(!req.user) {
     // Create user object and set as req.user
     if(req.body.name === undefined) {
@@ -356,6 +363,9 @@ router.post('/register', function(req, res, next) {
   }
 });
 
+// Fills in an 'amount left' attribute for each registration field that has a
+// configured limit. For example, a 'tshirt_size' field would have a limit on
+// how many T-shirts of each size are available.
 function query_fields_left(reg, field_values, keys, result) {
   if (result === undefined)
     result = {};
