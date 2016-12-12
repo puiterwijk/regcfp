@@ -191,6 +191,17 @@ utils.send_email = function(req, res, recipient, template, variables, cb) {
   });
 };
 
+// Given a price in one currency, generate text showing the prices in all
+// configured currencies.
+var render_cost_in_currencies = function(cost, main_currency, currencies) {
+  var list = [currencies[main_currency].symbol + cost];
+  Object.keys(currencies).forEach(function(id) {
+    if (id != main_currency)
+      list.push(currencies[id].symbol + (cost * currencies[id].conversion_rate).toFixed(2));
+  });
+  return list.join(' / ');
+}
+
 // List all registration fields that are defined in the configuration file.
 //
 // Returns an array of objects representing the fields.
@@ -198,32 +209,60 @@ utils.send_email = function(req, res, recipient, template, variables, cb) {
 // The keys of the array are the field names from the config file.
 //
 // Each field object carries the properties that were defined in the
-// config file. See README.md for documentation of those. In addition,
-// `country` fields have an 'options' property containing the list of
-// countries.
+// config file. See README.md for documentation of those.
 //
-// All fields have 'value' property, which can be set from the optional
-// `request` parameter (which should be an appropriate HTTP POST request) or
-// `registration` parameter (which should be a models.Registration object).
+// Additional properties that are set by this function:
+//
+//   - `value`: set from the optional `request` parameter (which should be an
+//     appropriate HTTP POST request) or `registration` parameter (which should
+//     be a models.Registration object).
+//   - `payment_state`: for purchase fields, can be one of "unpaid", "pending"
+//     or "paid". Only set if the `registation` parameter was set.
+//   - `can_change`: true if the field can be changed. We don't allow changing
+//     purchase fields if a payment has already been made.
+//
+// NOTE: you must ensure the associations are queried for the Registration
+// object, or payments will silently be ignored. Use the following code:
+//
+//    user.getRegistration({include: [RegistrationPayment, { model: RegistrationInfo, include: RegistrationPayment }]})
+//
 utils.get_reg_fields = function (request, registration, skip_internal) {
   var fields = {};
-  for(var field in config['registration']['fields']) {
-    if (skip_internal && config['registration']['fields'][field]['internal'])
+  for(var field_name in config['registration']['fields']) {
+    if (skip_internal && config['registration']['fields'][field_name]['internal'])
       continue;
 
-    fields[field] = extend({}, config['registration']['fields'][field]);
-    if(fields[field]['type'] == 'country') {
-      fields[field]['type'] = 'select';
-      var options = extend([], fields[field]['options']);
-      for (var country in countries.all_assigned) {
-        options.push(countries.all_assigned[country].name);
+    fields[field_name] = extend({}, config['registration']['fields'][field_name]);
+
+    var field = fields[field_name];
+
+    field.can_change = true;
+
+    if(field['type'] == 'country') {
+      field['type'] = 'select';
+      var options = extend([], field['options']);
+      for(var country in countries.all) {
+        options.push(countries.all[country].name);
       };
-      fields[field]['options'] = options;
+      field['options'] = options;
     }
+    else
+    if (field['type'] == 'purchase') {
+      field['payment_state'] = 'unpaid';
+      Object.keys(field['options']).forEach(function (option_name) {
+        var option = field['options'][option_name];
+        option['cost_all_currencies'] = render_cost_in_currencies(
+                option['cost'], config.registration.main_currency,
+                config.registration.currencies);
+      });
+    }
+
   };
+
   if(request)
     console.log(request.body);
-  for(field in fields) {
+
+  for(var field in fields) {
     if(request && ('field_' + field) in request.body) {
       fields[field].value = request.body['field_' + field];
     } else if(registration != null) {
@@ -231,6 +270,16 @@ utils.get_reg_fields = function (request, registration, skip_internal) {
         info = registration.RegistrationInfos[info];
         if(info.field == field) {
           fields[field].value = info.value;
+
+          if (fields[field].type == 'purchase' && info.RegistrationPayment != null) {
+            if (info.RegistrationPayment.paid == false) {
+              fields[field].payment_state = 'pending';
+              fields[field].can_change = false;
+            } else {
+              fields[field].payment_state = 'paid';
+              fields[field].can_change = false;
+            }
+          }
         }
       }
     } else {
@@ -239,5 +288,40 @@ utils.get_reg_fields = function (request, registration, skip_internal) {
   };
   return fields;
 }
+
+// Get information about the new purchase choices from a given registration.
+//
+// Returns an array of objects, which for each purchase lists the name of
+// the field, the name of the chosen option, and the cost of that option (in
+// `currency`).
+utils.get_unpaid_purchase_choices = function(reg, fields, currency_id) {
+  var currency = config.registration.currencies[currency_id]
+  var conversion_rate = currency.conversion_rate;
+  var result = [];
+  Object.keys(fields).forEach(function(field_name) {
+    var field = fields[field_name];
+    if (field.type == 'purchase' && reg.get_payment_for_purchase(field_name) == null) {
+      var option = field['options'][field['value']];
+      if (option) {
+        result.push({
+          'field_name': field_name,
+          'field_display_name': field['display_name'],
+          'option_name': field['value'],
+          'option_display_name': field['value'],
+          'cost': option.cost * conversion_rate,
+          'cost_display': currency.symbol + (option.cost * conversion_rate).toFixed(2)
+        });
+      };
+    };
+  });
+  return result;
+};
+
+utils.make_paypal_sku_for_purchase = function(field_name, option_name) {
+  return [ config.registration.payment_sku_prefix, field_name, option_name ]
+  .map(function (str) { return str.replace(':', '_'); })
+  .join(':')
+  .substring(0, 127);
+};
 
 module.exports = utils;

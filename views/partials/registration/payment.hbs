@@ -1,12 +1,66 @@
 <form class="submission-form" action="/registration/pay/do" method="POST">
-  {{#if config.registration.allow_onsite_regfee_payment}}
-    To complete your registration, choose a payment for {{currency_symbol currency}}{{regfee}} below:<br/><br/>
-    <label><input type="radio" name="method" value="paypal" style="vertical-align: top;" checked="checked"> <div style="display: inline-block;">Pay using PayPal<p class="note">No PayPal account required</p></div></label><br/>
-    <label><input type="radio" name="method" value="onsite" style="vertical-align: top;"> <div style="display: inline-block;">Pay at the conference<p class="note">If you select this option, you can pay at the registration desk</p></div></label><br/><br/>
-  {{else}}
-    To complete your registration, pay {{currency_symbol currency}}{{regfee}} below:<br/><br/>
-    <input type="hidden" name="method" value="paypal">
-  {{/if}}
 
-  <input class="submit-talk" type="submit" value="Complete registration" style="float: right;">
+{{#if new_purchase_choices}}
+  <p>
+  You have chosen the following purchases, which must be paid for now using PayPal:
+  <ul>
+    {{#each new_purchase_choices}}
+      <li>{{field_display_name}}: {{option_display_name}} ({{cost_display}})</li>
+    {{/each}}
+  </ul>
+  </p>
+{{/if}}
+
+{{#unless regfee_paid}}
+  <p>
+  You chose a registration fee of {{currency_symbol currency}}{{regfee}}:
+  </p>
+
+  <div>
+    <input type="radio" class="regfee-method" name="regfee-method" value="paypal" style="vertical-align: top;" checked="checked">
+      <div style="display: inline-block;">
+        Pay registration fee now using PayPal
+        <p class="note">No PayPal account required</p>
+      </div>
+    </input>
+    <br/>
+    <input type="radio" class="regfee-method" name="regfee-method" value="onsite" style="vertical-align: top;">
+      <div style="display: inline-block;">
+        Pay registration fee at the conference
+        <p class="note">If you select this option, you can pay at the registration desk</p>
+      </div>
+    </input>
+    <br/><br/>
+  </div>
+{{/unless}}
+
+The total to be paid now is {{currency_symbol currency}}<span id="total-payment">[JavaScript required to calculate]</span>.
+
+<input class="submit-talk" type="submit" value="Complete registration" style="float: right;">
 </form>
+
+
+<script type="text/javascript">
+  // Update the "total to pay now" field based on the above selection.
+  // This is just for user information, we calculate it separately server-side.
+
+  function update_total() {
+    var method = $( 'input.regfee-method:checked' ).val();
+    var value = null;
+    var purchases_to_pay = 0 {{#each new_purchase_choices}} + {{ cost }} {{/each}} ;
+    var regfee_to_pay = {{#if regfee_paid}} 0 {{else}} {{regfee}} {{/if}} ;
+    if (method == 'onsite') {
+      value = purchases_to_pay;
+    } else {
+      value = purchases_to_pay + regfee_to_pay;
+    }
+    if (value != null) {
+      $( 'span#total-payment' ).text(value.toFixed(2));
+    };
+  };
+
+  $(function() {
+    $( 'input.regfee-method' ).change(update_total);
+    update_total();
+  } );
+</script>
