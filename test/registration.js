@@ -29,6 +29,7 @@ describe('registration', function() {
     });
   });
 
+  // Initial login
   it('should refuse access to registration', function(done) {
     agent.get('/registration/register')
     .expect(401)
@@ -43,6 +44,7 @@ describe('registration', function() {
     .end(done);
   });
 
+  // Displaying registration form
   it('should show registration form', function(done) {
     agent.get('/registration/register')
     .expect(200)
@@ -90,6 +92,7 @@ describe('registration', function() {
     .end(done);
   });
 
+  // Submission
   it('should ask amount', function(done) {
     agent.post('/registration/register')
     .send({'name': 'TestUser A'})
@@ -129,6 +132,7 @@ describe('registration', function() {
   //   .end(done);
   // });
 
+  // Listing all registrations
   it('should list registrations', function(done) {
     agent.get('/registration/list')
     .expect(200)
@@ -145,6 +149,7 @@ describe('registration', function() {
     .end(done)
   });
 
+  // Editing existing registration
   it('should show filled in registration form', function(done) {
     agent.get('/registration/register')
     .expect(200)
@@ -199,6 +204,7 @@ describe('registration', function() {
 //    });
 //  });
 
+  // Payment
   it('should show the payment form', function(done) {
     agent.get('/registration/pay')
     .expect(200)
