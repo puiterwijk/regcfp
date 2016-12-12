@@ -1,4 +1,4 @@
-<form action="/registration/pay" method="post">
+<form action="/registration/pay/do" method="post">
 <table class="submission-form">
 <tr><td>Your name:</td><td><input type="text" name="submitter_name" value="{{user.name}}" disabled /></td></tr>
 <tr><td><label for="reg-fee">Existing fees:</label></td><td>
@@ -8,7 +8,7 @@
 {{registration.outstanding_onsite}} to be paid
 {{/if}}
 <tr><td>Additional fees:</td><td>
-{{>currency_selector}} <input type="text" name="regfee" class="reg-fee">
+{{>currency_selector}} <input type="text" name="donation" class="reg-fee">
 <p class="note">Feel free to support us by paying as much as you're able to.
 We can only provide receipts for payments over {{currency_symbol config.registration.main_currency}}{{min_amount_main_currency}} or an equivalent value in another currency.
 </p>

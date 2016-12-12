@@ -57,8 +57,32 @@ The following types of fields are supported:
   * `select`: a list of options, to be used with a [select element]
   * `country`: like a `select` field, but the `options` property will be
     populated with a list of all of the world's countries
+  * `purchase`: a choice of items that can be purchased. To be used with a
+    [select element].
   * `documentation`: this type of field is inserted directly as HTML, it's
     used to show extra text to the user rather than to hold a value.
+
+A `purchase` field can contain a list of options, each with a price and a
+maximum available amount. For example, you could offer T-shirts for purchase
+at registration and allow attendees to choose from a list of sizes:
+
+    options: {
+        "S": {
+            "limit": 4,
+            "cost": 20
+        },
+        "M": {
+            "limit": 15,
+            "cost": 20
+        },
+        "L": {
+            "limit": 5,
+            "cost": 20
+        }
+    }
+
+If `required` is false for a `purchase` field, a "None" option will be added to
+the list provided.
 
 See `config/config.example.json` for a full example.
 

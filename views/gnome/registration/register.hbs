@@ -26,23 +26,25 @@ nick will printed on your badge.
 
 {{#has_permission "registration/pay"}}
 <tr><td><label for="reg-fee">Registration fee</label></td><td>
-{{#unless ask_regfee}}
-{{#if registration.has_confirmed_payment }}
-{{registration.paid}} paid{{/if}}{{#if registration.has_outstanding_onsite }}{{#if registration.has_confirmed_payment }}, 
-{{/if}}
-{{registration.outstanding_onsite}} to be paid
-{{/if}}
+{{#unless registration.paid}}
+  Please support GUADEC and GNOME by choosing to pay a fee that is reasonable for you–we suggest a payment of € 15 for students, € 40 for hobbyist and € 150 for professionals. Pay over 100 € and receive a free conference t-shirt.<br />
+  You can also support GNOME by becoming a <a href="https://www.gnome.org/friends/" target="_blank">Friend of GNOME</a> or donating <a href="https://www.gnome.org/friends/other-ways-to-donate/" target="_blank">in other ways</a>.
 
+  <p>
+  {{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="40" />
+  </p>
+  <div id="reg-fee-slider-label" style="display: none">Conference registration (excluding workshop):</div>
+  <div id="reg-fee-slider" ></div>
 {{else}}
-Please support GUADEC and GNOME by choosing to pay a fee that is reasonable for you–we suggest a payment of € 15 for students, € 40 for hobbyist and € 150 for professionals. Pay over 100 € and receive a free conference t-shirt.<br />
-You can also support GNOME by becoming a <a href="https://www.gnome.org/friends/" target="_blank">Friend of GNOME</a> or donating <a href="https://www.gnome.org/friends/other-ways-to-donate/" target="_blank">in other ways</a>.
+  {{>currency_selector selected=registration.currency disabled="disabled"}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="{{registration.regfee}}" disabled="disabled">
 
-<p>
-{{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="40" />
-</p>
-<div id="reg-fee-slider-label" style="display: none">Conference registration (excluding workshop):</div>
-<div id="reg-fee-slider" ></div>
+  {{#if registration.has_confirmed_payment }} {{registration.paid}} paid {{/if}}
+  {{#if registration.has_outstanding_onsite }}
+    {{#if registration.has_confirmed_payment }}, {{/if}}
+    {{registration.outstanding_onsite}} to be paid
+  {{/if}}
 {{/unless}}
+
 <p class="note">A 50% refund will be given on registration fees if you cancel before 24th July 2016. Refunds will not be issued on cancellations after the 24th of July. Please mail <a href="mailto:guadec-organization@gnome.org">guadec-organization@gnome.org</a> for any cancelation.
 </p>
 </tr>
@@ -51,13 +53,13 @@ You can also support GNOME by becoming a <a href="https://www.gnome.org/friends/
 <div class="workshop-payment-conf workshop-packagingyourapplicationusingflatpakformerlyxdgapp workshop-gstreamer" data-amount="200" style="display: none;">
 <p>
 The one day workshop you selected has a cost of € 200 per attendee, with the exception of students and GNOME Foundation members.
-{{#if ask_regfee}}
+{{#unless registration.paid}}
 This amount will be added to the fee specified in the slider, unless you select the option below.<br/>
 
 <label><input type="checkbox" class="workshop-payment-excluded">I am a student or Foundation member and I will send send proof to <a href="mailto:workshops@guadec.org">workshops@guadec.org</a> within two days.</label>
 {{else}}
 If you have not paid already, then you can do so by selecting the <a href="pay">"Pay additional fees" from the registration home page</a> and enter an amount of € 200. If you are a student or a Foundation member you need to send proof to <a href="mailto:workshops@guadec.org">workshops@guadec.org</a> within two days of registering.
-{{/if}}
+{{/unless}}
 </p>
 </div>
 
@@ -71,7 +73,7 @@ If you have not paid already, then you can do so by selecting the <a href="pay">
   {{else}}
 <tr><td><label for="reg-{{@key}}">{{ this.display_name }}</label></td>
 <td>
-    {{field_entry id=@key field=this}}
+    {{>field_entry id=@key field=this currency=../config.registration.main_currency}}
 
     {{#if this.message}}
 <br/>
@@ -94,6 +96,10 @@ checked
 <tr><td>&nbsp;</td>
 <td>This conference has a <a href="https://2016.guadec.org/code-of-conduct/" target="_blank">Code of Conduct</a> which all attendees are expected to follow at all conference venues and events.</td>
 </tr>
+<tr><td>&nbsp;</td>
+
+<tr><td>Total to pay</td><td id="reg-total">[JavaScript required to calculate]</td></tr>
+
 <tr><td>&nbsp;</td>
 <td><input class="submit-talk" type="submit" value="Submit" /></td>
 </tr>

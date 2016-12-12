@@ -10,20 +10,20 @@
 
 {{#has_permission "registration/pay"}}
 <tr><td><label for="reg-fee">Registration fee</label></td><td>
-{{#unless ask_regfee}}
-Registered
+{{#unless registration.unless}}
+  {{#if config.registration.specific_amount}}
+    {{currency_symbol config.registration.main_currency}}{{config.registration.specific_amount}}
+  {{else}}
+    <p>Please support LAS and GNOME by choosing to pay a fee that is reasonable for you–we suggest a payment of $ 15 for students, $ 40 for hobbyist and $ 150 for professionals.<br />
+       You can also support GNOME by becoming a <a href="https://www.gnome.org/friends/" target="_blank">Friend of GNOME</a> or donating <a href="https://www.gnome.org/friends/other-ways-to-donate/" target="_blank">in other ways</a>.</p>
+
+    <div id="reg-fee-slider" ></div>
+
+    {{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="40">
+  {{/if}}
 {{else}}
-    {{#if config.registration.specific_amount}}
-        {{currency_symbol config.registration.main_currency}}{{config.registration.specific_amount}}
-    {{else }}
-        <p>Please support LAS and GNOME by choosing to pay a fee that is reasonable for you–we suggest a payment of $ 15 for students, $ 40 for hobbyist and $ 150 for professionals.<br />
-        You can also support GNOME by becoming a <a href="https://www.gnome.org/friends/" target="_blank">Friend of GNOME</a> or donating <a href="https://www.gnome.org/friends/other-ways-to-donate/" target="_blank">in other ways</a>.</p>
-        
-        <div id="reg-fee-slider" ></div>
-        
-        {{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="40">
-    {{/if}}
-{{/unless}}</p>
+  {{>currency_selector selected=registration.currency disabled="disabled"}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="{{registration.regfee}}" disabled="disabled">
+{{/unless}}
 </tr>
 {{/has_permission}}
 
@@ -32,7 +32,7 @@ Registered
 <tr><td><label for="reg-{{@key}}">{{ this.display_name }}</label></td>
 <td>
 
-{{< field_entry id=@key field=this}}
+{{> field_entry id=@key field=this currency=../config.registration.main_currency}}
 
 {{#if this.message}}
 <br/>
@@ -48,6 +48,10 @@ Registered
 checked
 {{/unless}}
 >Hide my name in the public list of attendees</label></td></tr>
+<tr><td>&nbsp;</td>
+
+<tr><td>Total to pay</td><td id="reg-total">[JavaScript required to calculate]</td></tr>
+
 <tr><td>&nbsp;</td>
 <td><input class="submit-talk" type="submit" value="Submit" /></td>
 </tr>
