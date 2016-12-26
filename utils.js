@@ -184,6 +184,20 @@ utils.send_email = function(req, res, recipient, template, variables, cb) {
   });
 };
 
+// List all registration fields that are defined in the configuration file.
+//
+// Returns an array of objects representing the fields.
+//
+// The keys of the array are the field names from the config file.
+//
+// Each field object carries the properties that were defined in the
+// config file. See README.md for documentation of those. In addition,
+// `country` fields have an 'options' property containing the list of
+// countries.
+//
+// All fields have 'value' property, which can be set from the optional
+// `request` parameter (which should be an appropriate HTTP POST request) or
+// `registration` parameter (which should be a models.Registration object).
 utils.get_reg_fields = function (request, registration, skip_internal) {
   var fields = {};
   for(var field in config['registration']['fields']) {
