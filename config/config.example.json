@@ -42,7 +42,7 @@
     },
 
     "auth": {
-      "module": "persona",
+      "module": "test",
       "persona_audience": "http://localhost:3000"
     },
 
