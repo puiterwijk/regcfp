@@ -1,6 +1,23 @@
 var request = require('supertest');
+var Promise = require('bluebird')
 var app = require('../app');
 var models = require('../models');
+
+var child_process = require('child_process');
+
+var check_for_inkscape = function() {
+  // We can't just use execSync here, because we want to support Node 0.10
+  return new Promise(function(resolve, reject) {
+    child_process.exec('inkscape --version', function(err, stdout, stderr) {
+      if (err) {
+        console.warn("Skipping tests that require Inkscape: " + err);
+        resolve(false);
+      } else {
+        resolve(true);
+      };
+    });
+  });
+}
 
 describe('registration', function() {
   var agent = request.agent(app);
@@ -415,10 +432,17 @@ describe('registration', function() {
   });
 
   it('should print badge', function(done) {
-    agent.get('/desk/badge?regida=1&regidb=2')
-    .expect(200)
-    .expect(/%PDF-1./)
-    .end(done);
+    var test = this;
+    check_for_inkscape().then(function(inkscape_found) {
+      if (!inkscape_found) {
+        test.skip();
+      } else {
+        agent.get('/desk/badge?regida=1&regidb=2')
+        .expect(200)
+        .expect(/%PDF-1./)
+        .end(done);
+      };
+    });
   });
 
   it('logout admin user', function(done) {
@@ -455,6 +479,4 @@ describe('registration', function() {
     .expect(/admin@regcfp/)
     .end(done);
   });
-
-
 });
