@@ -21,3 +21,44 @@ To run the code:
 - cp config/config.example.json config/config.json
 - npm install
 - npm start
+
+
+Customising the registration form
+---------------------------------
+
+The registration fields are defined in the `config.json` file, in the
+`registration.fields` section.
+
+The registration form itself is defined by the theme, in a Handlebars template
+named `registration/register.hbs`. Each field object from the configuration is
+passed to this template, as `field_XXX` where XXX is the key used in the config
+file. You can set arbitrary properties on the field object and use them in this
+template.
+
+There are also some special properties for field objects:
+
+  * `type`: see below for list of types
+  * `display_name`: name shown to the user
+  * `short_display_name`: name used when listing all registrations
+  * `required`: if this true and the field has empty value when the
+    registration form is submitted, the user will see an error asking
+    them to fill in the field.
+  * `private`: if this is false, the field will be shown to anyone viewing
+    the list of all registrations. If true, only admins will see the value
+    of this field when listing all registrations.
+  * `options`: a list of allowed options, to be used with `select` and
+    `purchase` type fields
+
+The following types of fields are supported:
+
+  * `string`: a text field, to be used with an [input element]
+  * `select`: a list of options, to be used with a [select element]
+  * `country`: like a `select` field, but the `options` property will be
+    populated with a list of all of the world's countries
+  * `documentation`: this type of field is inserted directly as HTML, it's
+    used to show extra text to the user rather than to hold a value.
+
+See `config/config.example.json` for a full example.
+
+[input element]: https://developer.mozilla.org/en/docs/Web/HTML/Element/input
+[select element]: https://developer.mozilla.org/en/docs/Web/HTML/Element/select
