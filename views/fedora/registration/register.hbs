@@ -2,7 +2,7 @@
 <div class="row">
 <div class="col-xs-12 bottom-margin">
 {{#if submission_error}}
-<div class="validation">Something went wrong. Please make sure you have filled all required fields.</div>
+<div class="validation">Something went wrong: {{submission_error}}.</div>
 {{/if}}
 
 <form action="/registration/register" method="post">
