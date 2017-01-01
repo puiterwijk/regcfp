@@ -92,7 +92,7 @@ describe('registration', function() {
     .send({'is_public': 'true'})
     .send({'currency': 'EUR'})
     .send({'field_shirtsize': 'M'})
-    .send({'regfee': '0'})
+    .send({'regfee': '1'})
     .expect(200)
     .expect(/Thanks for registering/)
     .end(done);
@@ -279,7 +279,7 @@ describe('registration', function() {
     .send({'field_shirtsize': 'M'})
     .send({'is_public': 'true'})
     .send({'currency': 'EUR'})
-    .send({'regfee': '0'})
+    .send({'regfee': '1'})
     .expect(200)
     .expect(/Thanks for registering/)
     .end(done);
