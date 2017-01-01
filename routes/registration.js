@@ -330,8 +330,10 @@ router.post('/register', function(req, res, next) {
     if(req.body.name.trim() == '') {
       query_fields_left(null, utils.get_reg_fields(req, null, true))
       .then(function(reg_fields) {
-        res.render('registration/register', { registration: null, submission_error: true, ask_regfee: true,
-                                              registration_fields: reg_fields,
+        var error = "No name was given";
+        console.log("Submission error: " + error);
+        res.render('registration/register', { registration: null, submission_error: error,
+                                              ask_regfee: true, registration_fields: reg_fields,
                                               min_amount_main_currency: get_min_main()} );
       });
     } else {
@@ -426,31 +428,35 @@ function query_fields_left(reg, field_values, keys, result) {
   });
 }
 
+// Check if registration submission is valid.
+//
+// Returns null if there is no error, or a string describing the problem
+// if an error is found.
 function check_field_values(req, reg, field_values) {
   for (var fieldname in field_values) {
     var field = field_values[fieldname];
     if (field['type'] == 'string') {
       if (field['required'] && field['value'].trim() == '')
-        return false;
+        return "Required field '" + field['display_name'] + "' was not set";
     } else if (field['type'] == 'select') {
       if (field['required']) {
         /* Check whether the option exists. */
         if (field['options'].indexOf(field['value']) == -1) {
-          return false;
+          return "Invalid choice '" + field['value'] + "' for field '" + field['display_name'] + "'";
         }
       }
 
       if (field['left'] !== undefined) {
         var idx = field['options'].indexOf(field['value']);
         if (idx == -1)
-          return false;
+          return "Invalid choice '" + field['value'] + "' for field '" + field['display_name'] + "'";
         var left = field['left'][idx]['left'];
         if (left == 0)
-          return false;
+          return "No more '" + field['value'] + "' purchases available for field " + field['display_name'];
       }
     }
   }
-  return true;
+  return null;
 }
 
 function handle_registration(req, res, next) {
@@ -475,15 +481,16 @@ function handle_registration(req, res, next) {
       var can_pay = utils.get_permission_checker("registration/pay")(req.session.currentUser);
 
       if(reg == null && (regfee == null || regfee <= 0) && can_pay) {
+        var error = "Please choose a registration fee";
+      } else {
+        var error = check_field_values(req, reg, reg_fields);
+      }
+
+      if (error != null) {
+        console.log("Bad submission: " + error);
         res.render('registration/register', { registration: reg_info,
                                               registration_fields: reg_fields,
-                                              submission_error: true, ask_regfee: reg == null,
-                                              min_amount_main_currency: get_min_main()});
-      } else if (!check_field_values(req, reg, reg_fields)) {
-        console.log('bad submit');
-        res.render('registration/register', { registration: reg_info,
-                                              registration_fields: reg_fields,
-                                              submission_error: true, ask_regfee: reg == null,
+                                              submission_error: error, ask_regfee: reg == null,
                                               min_amount_main_currency: get_min_main()});
       } else {
         // Form OK

@@ -81,7 +81,7 @@ describe('registration', function() {
     .send({'field_shirtsize': 'M'})
     .expect(200)
     .expect(/name="name" value=""/)
-    .expect(/Please make sure you have filled all required fields./)
+    .expect(/Please choose a registration fee/)
     .end(done);
   });
 
