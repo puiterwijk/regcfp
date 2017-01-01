@@ -474,7 +474,7 @@ function handle_registration(req, res, next) {
 
       var can_pay = utils.get_permission_checker("registration/pay")(req.session.currentUser);
 
-      if(reg == null && regfee == null && can_pay) {
+      if(reg == null && (regfee == null || regfee <= 0) && can_pay) {
         res.render('registration/register', { registration: reg_info,
                                               registration_fields: reg_fields,
                                               submission_error: true, ask_regfee: reg == null,
