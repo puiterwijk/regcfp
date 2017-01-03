@@ -46,6 +46,8 @@ There are also some special properties for field objects:
   * `private`: if this is false, the field will be shown to anyone viewing
     the list of all registrations. If true, only admins will see the value
     of this field when listing all registrations.
+  * `placeholder`: text to be shown when there's no value set. For use with
+    `string` type fields.
   * `options`: a list of allowed options, to be used with `select` and
     `purchase` type fields
 
