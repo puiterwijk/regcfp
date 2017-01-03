@@ -30,7 +30,10 @@ var hbs = handlebars.create({
   defaultLayout: 'main',
   extname: '.hbs',
   layoutsDir: path.join(__dirname, 'views', config['theming']['theme'], 'layouts'),
-  partialsDir: path.join(__dirname, 'views', config['theming']['theme'], 'partials'),
+  partialsDir: [
+     path.join(__dirname, 'views', 'partials'),
+     path.join(__dirname, 'views', config['theming']['theme'], 'partials')
+  ],
   helpers: {
     breaklines: function(text) {
       return text
