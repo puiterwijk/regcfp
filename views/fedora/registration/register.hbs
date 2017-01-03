@@ -27,30 +27,7 @@ We can only provide receipts for payments over {{currency_symbol config.registra
 {{#each registration_fields}}
 <tr><td>{{ this.display_name }}</td>
 <td>
-
-{{#ifEqual this.type "string"}}
-<input type="text" name="field_{{@key}}" value="{{ this.value }}" placeholder="{{ this.placeholder }}">
-{{else}}
-{{#ifEqual this.type "select"}}
-
-<select name="field_{{@key}}">
-{{#each this.options}}
-<option
-{{#ifEqual ../value this}}
-selected="selected"
-{{/ifEqual}}
->{{this}}</option>
-{{/each}}
-</select>
-
-{{else }}
-{{#ifEqual this.type "documentation" }}
-  {{{this.html}}}
-{{else}}
-  Unknown field type
-{{/ifEqual}}
-{{/ifEqual}}
-{{/ifEqual}}
+{{>field_entry id=@key field=this}}
 
 {{#if this.message}}
 <br/>

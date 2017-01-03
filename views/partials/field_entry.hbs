@@ -1,0 +1,54 @@
+{{!
+  Partial to generate a form element for a field in the registration form.
+
+  Parameters:
+
+    - id: identifier of the field, same as the key used in the config file's
+          registration.fields object
+    - field: field information, same as in the config file but with extra
+             'value' and 'left' fields also permitted.
+}}
+
+
+{{#ifEqual field.type "string"}}
+
+  <input type="text" id="reg-{{id}}" name="field_{{id}}" value="{{ field.value }}" placeholder="{{ field.placeholder }}">
+
+{{else}}{{#ifEqual field.type "select"}}
+
+  <select name="field_{{id}}" id="reg-{{id}}">
+
+    {{#ifEqual field.left undefined}}
+      {{#each field.options}}
+      <option
+        {{#ifEqual ../value this}}
+          selected="selected"
+        {{/ifEqual}}
+      >{{this}}</option>
+
+      {{/each}}
+      {{else}}
+        {{#each field.left}}
+          <option value="{{this.option}}"
+            {{#ifEqual ../value this.option}}
+              selected="selected"
+            {{/ifEqual}}
+            {{#ifEqual this.left -1}}
+          >{{this.option}}</option>
+            {{else}}
+          >{{this.option}} - {{ this.left }} left</option>
+            {{/ifEqual}}
+          {{/each}}
+        {{/ifEqual}}
+
+  </select>
+
+{{else }}{{#ifEqual field.type "documentation" }}
+
+  {{{field.html}}}
+
+{{else}}
+
+  Unknown field type
+
+{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}
