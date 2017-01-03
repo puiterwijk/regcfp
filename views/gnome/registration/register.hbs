@@ -20,7 +20,7 @@ nick will printed on your badge.
 
 <tr><td><label for="reg-ircnick">IRC nick</label></td>
 <td>
-<input type="text" id="reg-ircnick" name="field_ircnick" value="{{ registration_fields.ircnick.value }}" placeholder="{{ registration_fields.ircnick.placeholder }}">
+{{> field_entry id="ircnick" field=registration_fields.ircnick}}
 </td>
 </tr>
 
@@ -71,44 +71,7 @@ If you have not paid already, then you can do so by selecting the <a href="pay">
   {{else}}
 <tr><td><label for="reg-{{@key}}">{{ this.display_name }}</label></td>
 <td>
-
-    {{#ifEqual this.type "string"}}
-<input type="text" id="reg-{{@key}}" name="field_{{@key}}" value="{{ this.value }}" placeholder="{{ this.placeholder }}">
-    {{else}}
-      {{#ifEqual this.type "select"}}
-
-<select name="field_{{@key}}" id="reg-{{@key}}" >
-        {{#ifEqual this.left undefined}}
-          {{#each this.options}}
-<option
-            {{#ifEqual ../value this}}
-selected="selected"
-            {{/ifEqual}}
->{{this}}</option>
-          {{/each}}
-        {{else}}
-          {{#each this.left}}
-<option value="{{this.option}}"
-            {{#ifEqual ../value this.option}}
-selected="selected"
-            {{/ifEqual}}
-            {{#ifEqual this.left -1}}
->{{this.option}}</option>
-            {{else}}
->{{this.option}} - {{ this.left }} left</option>
-            {{/ifEqual}}
-          {{/each}}
-        {{/ifEqual}}
-</select>
-
-      {{else }}
-        {{#ifEqual this.type "documentation" }}
-          {{{this.html}}}
-        {{else}}
-          Unknown field type
-        {{/ifEqual}}
-      {{/ifEqual}}
-    {{/ifEqual}}
+    {{field_entry id=@key field=this}}
 
     {{#if this.message}}
 <br/>
