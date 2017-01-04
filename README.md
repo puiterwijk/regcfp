@@ -64,3 +64,10 @@ See `config/config.example.json` for a full example.
 
 [input element]: https://developer.mozilla.org/en/docs/Web/HTML/Element/input
 [select element]: https://developer.mozilla.org/en/docs/Web/HTML/Element/select
+
+
+Development tips
+----------------
+
+To disable logging of every SQL statement on the console, set
+`database.logging` to `false` in your config.json file.
