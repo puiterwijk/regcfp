@@ -504,9 +504,10 @@ function handle_registration(req, res, next) {
                                               min_amount_main_currency: get_min_main()});
       } else {
         // Form OK
-        if(reg == null) {
+        var is_new_registration = (reg == null);
+        if(is_new_registration) {
           // Create new registration
-          Registration.create(reg_info)
+          var update_promise = Registration.create(reg_info)
             .catch(function(err) {
               console.log('Error saving reg: ' + err);
               res.status(500).send('Error saving registration');
@@ -517,96 +518,79 @@ function handle_registration(req, res, next) {
                   console.log('Error adding reg to user: ' + err);
                   res.status(500).send('Error attaching registration to your user');
                 })
-                .then(function() {
-                  return update_field_values(req, res, next,
-                                             false,
-                                             reg, reg_fields,
-                                             currency, regfee, can_pay, reg_fields);
-              });
+              return reg;
           });
         } else {
           // Update
           reg.is_public = reg_info.is_public;
-          reg.save()
+          var update_promise = reg.save()
             .catch(function(err) {
               res.render('registration/register', { registration: reg_info,
                                                     registration_fields: reg_fields,
                                                     save_error: true,
                                                     min_amount_main_currency: get_min_main() });
             })
-            .then(function (reg){
-              return update_field_values(req, res, next, true, reg,
-                                         reg_fields, null, null, null, reg_fields);
-          });
         }
+
+        update_promise
+          .then(function(reg) {
+            return update_field_values(req, res, next, reg, reg_fields);
+          })
+          .then(function() {
+            var template, email_template;
+            if(is_new_registration) {
+              template = "registration/registration_success";
+              email_template = "registration/registered";
+            } else {
+              template = "registration/update_success";
+              email_template = "registration/updated";
+            }
+
+            utils.send_email(req, res, null, email_template, {
+              registration: reg,
+              reg_fields: reg_fields,
+            }, function() {
+              res.render(template, {currency: currency, regfee: regfee,
+                                   needpay: can_pay && regfee != '0'});
+            });
+        });
       }
     });
   });
 };
 
-function update_field_values(req, res, next, is_update, reg, field_values, currency, regfee, canpay, allfields) {
-  var template, email_template, subject;
-  if(is_update) {
-    template = "registration/update_success";
-    email_template = "registration/updated";
-  } else {
-    template = "registration/registration_success";
-    email_template = "registration/registered";
-  }
-  var keys = Object.keys(field_values);
-  if(keys.length == 0) {
-    utils.send_email(req, res, null, email_template, {
-      registration: reg,
-      reg_fields: allfields
-    }, function() {
-      return res.render(template, {currency: currency, regfee: regfee,
-                                   needpay: canpay && regfee != '0'});
+// Create or update stored registration info
+function update_field_values(req, res, next, reg, fields) {
+  var update_promises = Object.keys(fields)
+    .filter(function(field) { return fields[field].type != 'documentation' })
+    .map(function(field_name) {
+      var field = fields[field_name];
+
+      // Look for existing record to update
+      for(var info in reg.RegistrationInfos) {
+        info = reg.RegistrationInfos[info];
+        if(info.field == field_name) {
+          info.value = field.value;
+          return info.save()
+        }
+      }
+
+      // If not found, create a new one
+      var info = {
+        RegistrationId: reg.id,
+        field: field_name,
+        value: field.value
+      };
+
+      return RegistrationInfo.create(info)
     });
-    return;
-  }
 
-  var first = keys[0];
-  var current = field_values[first];
-  delete field_values[first];
-
-  if (current.type == 'documentation')
-    return update_field_values(req, res, next, is_update, reg, field_values, currency, regfee, canpay, allfields);
-
-  var updated = false;
-  for(var info in reg.RegistrationInfos) {
-    info = reg.RegistrationInfos[info];
-    if(!updated && info.field == first) {
-      // Update this one
-      updated = true;
-      info.value = current.value;
-      info.save()
-        .catch(function(err) {
-          console.log('Error saving reg: ' + err);
-          res.status(500).send('Error saving registration info');
-          return null;
-        })
-        .then(function(err, info) {
-          return update_field_values(req, res, next, is_update, reg, field_values, currency, regfee, canpay, allfields);
-      });
-    }
-  }
-  if(!updated) {
-    // We did not store this info before, create new object
-    var info = {
-      RegistrationId: reg.id,
-      field: first,
-      value: current.value
-    };
-
-    RegistrationInfo.create(info)
-      .catch(function(err) {
-        console.log('Error saving reg: ' + err);
-        res.status(500).send('Error saving registration info');
-      })
-      .then(function() {
-        return update_field_values(req, res, next, is_update, reg, field_values, currency, regfee, canpay, allfields);
-      });
-  }
+  return Promise.all(update_promises)
+    .catch(function(err) {
+      console.log('Error saving reg: ' + err);
+      res.status(500).send('Error saving registration info');
+      return null;
+    });
 };
 
 module.exports = router;
