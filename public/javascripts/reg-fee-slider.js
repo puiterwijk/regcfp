@@ -1,3 +1,13 @@
+// registration-fee-slider: a visual control for the `reg-fee` field
+//
+// To use this in your registration form, you need to add this to your
+// layouts/main.hbs template inside the <head> block:
+//
+//   <script type="text/javascript" src="/javascripts/reg-fee-slider.js"></script>
+//
+// Then you add the slider element near the reg-fee <input> element like this:
+//
+//   <div id="reg-fee-slider" ></div>
 
 
 $(function() {
@@ -54,20 +64,4 @@ $(function() {
 	tick_professional.css('width', (150 - 40.0) / 250.0 * 100 +'%');
 	tick_professional.find('span').mousedown(function (e) {$('#reg-fee').val(150); $('#reg-fee').change(); e.stopPropagation();});
 	$('#reg-fee-slider').append(tick_professional);
-
-	/* Accomodation contact information hiding */
-	$('#reg-roommate').change(function () {
-		if (this.value == 'No') {
-			$('#reg-contact').attr('disabled', true);
-			$('#reg-contact').val('');
-		} else {
-			$('#reg-contact').attr('disabled', false);
-			$('#reg-public').attr('checked', false);
-		}
-	});
-	$('#reg-roommate').change();
-
-
 } );
-
-
