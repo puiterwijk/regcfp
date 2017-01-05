@@ -507,32 +507,18 @@ function handle_registration(req, res, next) {
         var is_new_registration = (reg == null);
         if(is_new_registration) {
           // Create new registration
-          var update_promise = Registration.create(reg_info)
-            .catch(function(err) {
-              console.log('Error saving reg: ' + err);
-              res.status(500).send('Error saving registration');
-            })
+          var reg_promise = Registration.create(reg_info)
             .then(function(reg) {
               req.user.setRegistration(reg)
-                .catch(function(err) {
-                  console.log('Error adding reg to user: ' + err);
-                  res.status(500).send('Error attaching registration to your user');
-                })
               return reg;
           });
         } else {
           // Update
           reg.is_public = reg_info.is_public;
-          var update_promise = reg.save()
-            .catch(function(err) {
-              res.render('registration/register', { registration: reg_info,
-                                                    registration_fields: reg_fields,
-                                                    save_error: true,
-                                                    min_amount_main_currency: get_min_main() });
-            })
+          var reg_promise = reg.save()
         }
 
-        update_promise
+        reg_promise
           .then(function(reg) {
             return update_field_values(req, res, next, reg, reg_fields);
           })
@@ -553,7 +539,11 @@ function handle_registration(req, res, next) {
               res.render(template, {currency: currency, regfee: regfee,
                                    needpay: can_pay && regfee != '0'});
             });
-        });
+          })
+          .catch(function(err) {
+            console.log('Error in handle_registration: ' + err);
+            res.status(500).send('Error updating your registration');
+          });
       }
     });
   });
