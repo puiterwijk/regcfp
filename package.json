@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "supertest": "*",
+    "supertest-as-promised": "*",
     "istanbul": "*"
   },
   "scripts": {
