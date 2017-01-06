@@ -8,6 +8,9 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         RegistrationInfo.belongsTo(models.Registration);
+        // Purchase fields get associated with the payment that covered the
+        // purchase.
+        RegistrationInfo.belongsTo(models.RegistrationPayment);
       }
     }
   });
