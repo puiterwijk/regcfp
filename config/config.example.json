@@ -158,6 +158,7 @@
           "conversion_rate": 1
         }
       },
+      "allow_onsite_regfee_payment": true,
       "specific_amount": null,
       "main_currency": "EUR",
       "min_amount_for_receipt": 20,
