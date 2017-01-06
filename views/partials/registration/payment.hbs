@@ -1,0 +1,12 @@
+<form class="submission-form" action="/registration/pay/do" method="POST">
+  {{#if config.registration.allow_onsite_regfee_payment}}
+    To complete your registration, choose a payment for {{currency_symbol currency}}{{regfee}} below:<br/><br/>
+    <label><input type="radio" name="method" value="paypal" style="vertical-align: top;" checked="checked"> <div style="display: inline-block;">Pay using PayPal<p class="note">No PayPal account required</p></div></label><br/>
+    <label><input type="radio" name="method" value="onsite" style="vertical-align: top;"> <div style="display: inline-block;">Pay at the conference<p class="note">If you select this option, you can pay at the registration desk</p></div></label><br/><br/>
+  {{else}}
+    To complete your registration, pay {{currency_symbol currency}}{{regfee}} below:<br/><br/>
+    <input type="hidden" name="method" value="paypal">
+  {{/if}}
+
+  <input class="submit-talk" type="submit" value="Complete registration" style="float: right;">
+</form>
