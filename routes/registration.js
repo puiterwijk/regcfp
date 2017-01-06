@@ -157,6 +157,7 @@ router.post('/pay/paypal/execute', function(req, res, next) {
     } else {
       console.log('Response: ');
       console.log(JSON.stringify(payment));
+
       var info = {
         currency: payment.transactions[0]['amount']['currency'],
         amount: payment.transactions[0]['amount']['total'],
@@ -166,29 +167,22 @@ router.post('/pay/paypal/execute', function(req, res, next) {
       };
       console.log('Storing');
       console.log(info);
-      RegistrationPayment
-        .create(info)
-        .catch(function(err) {
-          console.log('Error saving payment: ' + err);
-          res.status(500).send('ERROR saving payment');
-        })
-        .then(function(payment) {
-          req.user.getRegistration({include: [RegistrationInfo]})
-            .then(function(reg) {
-              reg.addRegistrationPayment(payment)
-                .catch(function(err) {
-                  console.log('Error attaching payment to reg: ' + err);
-                  res.status(500).send('error');
-                })
-                .then(function() {
-                  if(info.paid) {
-                    res.status(200).send('approved');
-                  } else {
-                    res.status(200).send('executed');
-                  }
-                });
-            });
-        });
+
+      RegistrationPayment.create(info)
+      .then(function(payment) {
+        req.user.getRegistration({include: [RegistrationInfo]})
+        .then(addRegistrationPayment, payment)
+        .then(function() {
+          if(info.paid) {
+            res.status(200).send('approved');
+          } else {
+            res.status(200).send('executed');
+          }
+      })
+      .catch(function(err) {
+        console.log('Error saving payment: ' + err);
+        res.status(500).send('ERROR saving payment');
+      })
     }
   });
 });
