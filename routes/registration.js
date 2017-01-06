@@ -93,6 +93,8 @@ function show_list(req, res, next, show_private, show_payment) {
     });
 };
 
+router.get('/', function(req, res, next) { res.redirect('/') });
+
 router.all('/list', utils.require_permission('registration/view_public'));
 router.get('/list', function(req, res, next) {
   return show_list(req, res, next, false);
