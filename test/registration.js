@@ -104,18 +104,6 @@ describe('registration', function() {
   });
 
   // Submission
-  it('should ask amount', function(done) {
-    agent.post('/registration/register')
-    .send({'name': 'TestUser A'})
-    .send({'field_ircnick': 'testirc'})
-    .send({'is_public': 'true'})
-    .send({'field_shirtsize': 'M'})
-    .expect(200)
-    .expect(/name="name" value=""/)
-    .expect(/Please choose a registration fee/)
-    .end(done);
-  });
-
   it('should allow registration', function(done) {
     agent.post('/registration/register')
     .send({'name': 'TestUser A'})
@@ -144,6 +132,12 @@ describe('registration', function() {
     .expect(200)
     .expect(function (res) { if (res.text.match('docentry')) throw new Error('String found!'); })
     .end(done)
+  });
+
+  it('should not allow access to full registration view', function(done) {
+    agent.get('/registration/admin/list')
+    .expect(401) // Unauthorized
+    .end(done);
   });
 
   // Editing existing registration
@@ -203,13 +197,18 @@ describe('registration', function() {
 //    });
 //  });
 
-  // Payment
-  // FIXME: payment for purchases should be required up front;
-  // needs a separate test
   it('should show the payment form', function(done) {
     agent.get('/registration/pay')
     .expect(200)
-    .expect(/Amount/)
+    .expect(/<form[^>]+action="\/registration\/pay\/do\"/)
+    .end(done);
+  });
+
+  it('should show payment choice', function(done) {
+    agent.post('/registration/pay')
+    .expect(200)
+    .expect(/paypal/)
+    .expect(/onsite/)
     .end(done);
   });
 
@@ -218,62 +217,6 @@ describe('registration', function() {
     .expect(200)
     .expect(/<form[^>]+action="\/registration\/pay\/do"/)
     .end(done);
-  });
-
-  it('should show payment choice', function(done) {
-    agent.post('/registration/pay')
-    .send({'currency': 'EUR'})
-    .send({'regfee': '10'})
-    .expect(200)
-    .expect(/paypal/)
-    .expect(/onsite/)
-    .end(done);
-  });
-
-  it('should mark zero as onsite payment', function(done) {
-    agent.post('/registration/pay/do')
-    .send({'currency': 'EUR'})
-    .send({'regfee': '0'})
-    // Default is onsite, let's test that default
-    //.send({'method': 'onsite'})
-    .expect(200)
-    .expect(/asked to pay for your registration/)
-    .end(done);
-  });
-
-  it('should refuse non-zero payment', function(done) {
-    agent.post('/registration/pay/do')
-    .send({'currency': 'EUR'})
-    .send({'regfee': '10'})
-    .expect(402)
-    .end(done);
-  });
-
-  it('should accept non-zero onsite payment', function(done) {
-    agent.post('/registration/pay/do')
-    .send({'currency': 'EUR'})
-    .send({'regfee': '10'})
-    .send({'method': 'onsite'})
-    .expect(200)
-    .expect(/asked to pay for your registration/)
-    .end(done);
-  });
-
-  it('should accept second non-zero onsite payment', function(done) {
-    agent.post('/registration/pay/do')
-    .send({'currency': 'EUR'})
-    .send({'regfee': '10'})
-    .send({'method': 'onsite'})
-    .expect(200)
-    .expect(/asked to pay for your registration/)
-    .end(done);
-  });
-
-  it('should no longer list user', function(done) {
-    agent.get('/registration/list')
-    .expect(200)
-    .expect(/<\/tr>\n<\/table>/)
-    .end(done)
   });
 
   // Test admin stuff
@@ -490,9 +433,32 @@ describe('registration', function() {
     .end(done);
   });
 
-  describe('inventory', function() {
-    var agent = request.agent(app);
+  describe('validation', function() {
+    before('Login', function(done) {
+      set_user(agent, 'validation-test@regcfp', done);
+    });
 
+    it('should ensure non-zero regfee', function(done) {
+      agent.post('/registration/register')
+      .send({'name': 'TestUser A'})
+      .send({'field_ircnick': 'testirc'})
+      .expect(200)
+      .expect(/Please choose a registration fee/)
+      .end(done)
+    })
+
+    it('should preserve field values when redisplaying the form', function(done) {
+      agent.post('/registration/register')
+      .send({'name': 'TestUser A'})
+      .send({'field_ircnick': 'testirc'})
+      .expect(200)
+      .expect(/Please choose a registration fee/)
+      .expect(/name="name" value="TestUser A"/)
+      .end(done);
+    });
+  });
+
+  describe('inventory', function() {
     before('Login', function(done) {
       set_user(agent, 'inventory-test@regcfp', done);
     });
@@ -540,14 +506,6 @@ describe('registration', function() {
       .send({'regfee': '1'})
       .expect(200)
       .expect(/Thanks for registering/)
-      .end(done);
-    });
-
-    it('prevents purchase changes after registration', function(done) {
-      agent.post('/registration/register')
-      .send({'field_room': 'None'})
-      .expect(200)
-      .expect(/You cannot change purchase choice after registration for field: Accommodation booking/)
       .end(done);
     });
 
