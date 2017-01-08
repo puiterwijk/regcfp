@@ -121,14 +121,13 @@ router.get('/pay', function(req, res, next) {
 });
 
 router.post('/pay', function(req, res, next) {
-  var currency = req.body.currency;
-  var regfee = config.registration.specific_amount || req.body.regfee;
-  
-  if(regfee == null) {
-    res.render('registration/pay');
-  } else {
-    res.render('registration/pay_do', {currency: currency, regfee: regfee.trim()});
-  }
+  req.user.getRegistration({include: [RegistrationPayment]}).then(function(reg) {
+    if(reg.regfee == null) {
+      res.render('registration/pay');
+    } else {
+      res.render('registration/pay_do', {currency: reg.currency, regfee: reg.regfee});
+    }
+  });
 });
 
 router.all('/pay/paypal/return', utils.require_user);
@@ -474,22 +473,33 @@ function handle_registration(req, res, next) {
         req.body.is_public = 'false';
       }
 
+      if (reg) {
+        var currency = reg.currency;
+        var regfee = reg.regfee;
+      } else {
+        var currency = req.body.currency;
+        var regfee = config.registration.specific_amount || req.body.regfee;
+      };
+
       var reg_info = {
         is_public: req.body.is_public.indexOf('false') == -1,
         badge_printed: false,
         receipt_sent: false,
+        regfee: regfee,
+        currency: currency,
         UserId: req.user.Id
       };
-      var currency = req.body.currency;
-      var regfee = config.registration.specific_amount || req.body.regfee;
       reg_info.UserId = req.user.Id;
 
       var can_pay = utils.get_permission_checker("registration/pay")(req.session.currentUser);
 
+      var error = null;
       if(reg == null && (regfee == null || regfee <= 0) && can_pay) {
-        var error = "Please choose a registration fee";
+        error = "Please choose a registration fee";
+      } else if (reg == null && config.registration.currencies[currency] == undefined && can_pay) {
+        error = "Please choose a valid currency";
       } else {
-        var error = check_field_values(req, reg, reg_fields);
+        error = check_field_values(req, reg, reg_fields);
       }
 
       if (error != null) {
