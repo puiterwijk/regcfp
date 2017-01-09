@@ -47,8 +47,9 @@ router.post('/logout', function(req, res, next) {
   req.session.currentUser = null;
   req.session.currentUserAssertion = null;
   req.session.currentUserDetails = null;
-  req.session.destroy(function(err) {});
-  res.send('Logged out');
+  req.session.destroy(function(err) {
+    res.send('Logged out');
+  });
 });
 
 router.buttons = {
