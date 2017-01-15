@@ -136,7 +136,6 @@
           "display_name": "Room booking",
           "short_display_name": "Room",
           "type": "purchase",
-          "message": "We have a limited number of rooms available at the MMU Birley Campus, right opposite the confernece venue. These are in 12-bedroom houses reserved for GUADEC attendees. There are some accessible rooms available but please get in touch first if you need staircase-free access.",
           "required": false,
           "private": true,
           "options": {

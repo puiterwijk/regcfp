@@ -49,27 +49,13 @@ nick will printed on your badge.
 </p>
 </tr>
 
-<div id="workshop-payments" style="display: none">
-<div class="workshop-payment-conf workshop-packagingyourapplicationusingflatpakformerlyxdgapp workshop-gstreamer" data-amount="200" style="display: none;">
-<p>
-The one day workshop you selected has a cost of € 200 per attendee, with the exception of students and GNOME Foundation members.
-{{#unless registration.paid}}
-This amount will be added to the fee specified in the slider, unless you select the option below.<br/>
-
-<label><input type="checkbox" class="workshop-payment-excluded">I am a student or Foundation member and I will send send proof to <a href="mailto:workshops@guadec.org">workshops@guadec.org</a> within two days.</label>
-{{else}}
-If you have not paid already, then you can do so by selecting the <a href="pay">"Pay additional fees" from the registration home page</a> and enter an amount of € 200. If you are a student or a Foundation member you need to send proof to <a href="mailto:workshops@guadec.org">workshops@guadec.org</a> within two days of registering.
-{{/unless}}
-</p>
-</div>
-
 </td></tr>
 
 {{/has_permission}}
 
 
 {{#each registration_fields}}
-  {{#ifEqual @key "ircnick"}}
+  {{#ifEqual @key "ircnick"}} {{else}} {{#ifEqual @key "accommodation"}}
   {{else}}
 <tr><td><label for="reg-{{@key}}">{{ this.display_name }}</label></td>
 <td>
@@ -81,17 +67,38 @@ If you have not paid already, then you can do so by selecting the <a href="pay">
     {{/if}}
 </td>
 </tr>
-  {{/ifEqual}}
+  {{/ifEqual}}{{/ifEqual}}
 {{/each}}
 
+<tr><td><label for="reg-accommodation">Accommodation</label></td>
+<td>
+<p>
+We have a limited number of rooms available at the MMU Birley Campus, right
+opposite the conference venue. These are in 12-bedroom houses reserved for
+GUADEC attendees.
+</p><p>
+You can book and pay for a room now, or you can book one later on by visiting
+this website again and choosing to edit your registration.
+</p><p>
+There are some accessible rooms available, please get in touch at
+guadec-organization@gnome.org after booking to let us know if you need a room
+with staircase-free access.
+</p>
+<p>
+Alternatively we recommend booking a hotel room through the <a
+href="https://aws.passkey.com/go/GUADEC2017">Visit Manchester booking service</a>.
+We have rooms reserved for GUADEC attendees in various hotels around the city
+at fixed prices. There's no commission cost for this service.
+</p>
+
+{{>field_entry id='accommodation' field=registration_fields.accommodation}}
+</td></tr>
 
 <tr><td>&nbsp;</td><td><label><input type="checkbox" id="reg-public" value="false" name="is_public" 
 {{#unless registration.is_public}}
 checked
 {{/unless}}
 >Hide my name in the public list of attendees</label></td></tr>
-<tr><td>&nbsp;</td>
-<td>GUADEC 2016 is an event hosted by LinuxTag e.V. on behalf of the GNOME Foundation.</td>
 </tr>
 <tr><td>&nbsp;</td>
 <td>This conference has a <a href="https://2016.guadec.org/code-of-conduct/" target="_blank">Code of Conduct</a> which all attendees are expected to follow at all conference venues and events.</td>
