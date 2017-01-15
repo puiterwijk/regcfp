@@ -50,17 +50,17 @@ $(function() {
 	$('#reg-fee-slider').append(bg_normal);
 
 
-	var tick_student = $('<div class="slider-tick"><span>15 $</span></div>');
+	var tick_student = $('<div class="slider-tick"><span>15</span></div>');
 	tick_student.css('width', 15.0 / 250.0 * 100 +'%');
 	tick_student.find('span').mousedown(function (e) {$('#reg-fee').val(15); $('#reg-fee').change(); e.stopPropagation();});
 	$('#reg-fee-slider').append(tick_student);
 
-	var tick_casual = $('<div class="slider-tick"><span>40 $</span></div>');
+	var tick_casual = $('<div class="slider-tick"><span>40</span></div>');
 	tick_casual.css('width', (40 - 15.0) / 250.0 * 100 +'%');
 	tick_casual.find('span').mousedown(function (e) {$('#reg-fee').val(40); $('#reg-fee').change(); e.stopPropagation();});
 	$('#reg-fee-slider').append(tick_casual);
 
-	var tick_professional = $('<div class="slider-tick"><span>150 $</span></div>');
+	var tick_professional = $('<div class="slider-tick"><span>150</span></div>');
 	tick_professional.css('width', (150 - 40.0) / 250.0 * 100 +'%');
 	tick_professional.find('span').mousedown(function (e) {$('#reg-fee').val(150); $('#reg-fee').change(); e.stopPropagation();});
 	$('#reg-fee-slider').append(tick_professional);
