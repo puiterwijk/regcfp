@@ -66,7 +66,7 @@ describe('payment-paypal', function() {
       assert.equal(items.length, 2);
       assert.equal(items[0].price, 39);
       assert.equal(items[0].currency, 'EUR');
-      assert.equal(items[1].price, 40 * config.registration.currencies['EUR'].conversion_rate);
+      assert.equal(items[1].price, Math.ceil(40 * config.registration.currencies['EUR'].conversion_rate));
       assert.equal(items[1].currency, 'EUR');
       callback(null, paypal_payment_response());
     };

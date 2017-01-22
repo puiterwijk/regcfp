@@ -21,7 +21,7 @@ var calculate_total_string = function() {
 
 	$( 'input.purchase-option:checked ').each(function() {
 		if ($(this).data('payment-state') == 'unpaid')
-			amount += $(this).data('cost') * currency_conversion_rate;
+			amount += Math.ceil($(this).data('cost') * currency_conversion_rate);
 	});
 
 	return currency_symbol + amount.toFixed(2);

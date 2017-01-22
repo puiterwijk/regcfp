@@ -194,10 +194,10 @@ utils.send_email = function(req, res, recipient, template, variables, cb) {
 // Given a price in one currency, generate text showing the prices in all
 // configured currencies.
 var render_cost_in_currencies = function(cost, main_currency, currencies) {
-  var list = [currencies[main_currency].symbol + cost];
+  var list = [currencies[main_currency].symbol + Math.ceil(cost)];
   Object.keys(currencies).forEach(function(id) {
     if (id != main_currency)
-      list.push(currencies[id].symbol + (cost * currencies[id].conversion_rate).toFixed(2));
+      list.push(currencies[id].symbol + Math.ceil(cost * currencies[id].conversion_rate));
   });
   return list.join(' / ');
 }
@@ -308,8 +308,8 @@ utils.get_unpaid_purchase_choices = function(reg, fields, currency_id) {
           'field_display_name': field['display_name'],
           'option_name': field['value'],
           'option_display_name': field['value'],
-          'cost': option.cost * conversion_rate,
-          'cost_display': currency.symbol + (option.cost * conversion_rate).toFixed(2)
+          'cost': Math.ceil(option.cost * conversion_rate),
+          'cost_display': currency.symbol + Math.ceil(option.cost * conversion_rate)
         });
       };
     };
