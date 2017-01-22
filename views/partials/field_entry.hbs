@@ -31,34 +31,36 @@
   <table class="purchase-option-list" id="reg-{{id}}">
     <tr><td>
       {{#ifEqual field.required false}}
-        <input type="radio" class="purchase-option" name="field_{{id}}" value="None" data-cost="0"
-          {{#ifEqual ../value None}}
-            checked
-          {{/ifEqual}}
-          {{#unless can_change}}
-            disabled="disabled"
-          {{/unless}}
-        >
+        <label>
+          <input type="radio" class="purchase-option" name="field_{{id}}" value="None" data-cost="0"
+            {{#ifEqual ../value None}}
+              checked
+            {{/ifEqual}}
+            {{#unless can_change}}
+              disabled="disabled"
+            {{/unless}}
+          />
           None
-        </option>
+        </label>
       {{/ifEqual}}
     </td></tr>
 
     {{#each field.options}}
         <td class="purchase-option-name">
-          <input type="radio" class="purchase-option" name="field_{{../id}}" value="{{@key}}" data-cost="{{cost}}" data-left="{{left}}" data-payment-state="{{../payment_state}}"
-            {{#ifEqual ../value @key}}
-              checked
-            {{/ifEqual}}
-            {{#ifEqual left 0}}
-              disabled="disabled"
-            {{/ifEqual}}
-            {{#unless ../can_change}}
-              disabled="disabled"
-            {{/unless}}
-            >
+          <label>
+            <input type="radio" class="purchase-option" name="field_{{../id}}" value="{{@key}}" data-cost="{{cost}}" data-left="{{left}}" data-payment-state="{{../payment_state}}"
+              {{#ifEqual ../value @key}}
+                checked
+              {{/ifEqual}}
+              {{#ifEqual left 0}}
+                disabled="disabled"
+              {{/ifEqual}}
+              {{#unless ../can_change}}
+                disabled="disabled"
+              {{/unless}}
+            />
             {{@key}}
-          </input>
+          </label>
         </td>
         <td class="purchase-option-price">
           {{cost_all_currencies}}
