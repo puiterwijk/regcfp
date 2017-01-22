@@ -73,13 +73,13 @@
   {{#ifEqual field.value "None"}}
   {{else}}
     {{#ifEqual field.payment_state 'unpaid'}}
-      <div class="note">You have not yet made payment for this purchase, and can still change it.</div>
+      <p class="note">You have not yet made payment for this purchase, and can still change it.</p>
     {{/ifEqual}}
     {{#ifEqual field.payment_state 'pending'}}
-      <div class="note">You have already paid for this purchase. The payment is pending authorization.</div>
+      <p class="note">You have already paid for this purchase. The payment is pending authorization.</p>
     {{/ifEqual}}
     {{#ifEqual field.payment_state 'paid'}}
-      <div class="note">You have already paid for this purchase.</div>
+      <p class="note">You have already paid for this purchase.</p>
     {{/ifEqual}}
   {{/ifEqual}}
 
