@@ -90,11 +90,11 @@ body {
   margin-top: 10px;
 }
 
-.submission-form > tbody > p.note {
-  font-size: 11px;
+.submission-form p.note {
+  font-size: 12px;
   font-style: italic;
   margin-top: 4px;
-  margin-bottom: 0;
+  margin-bottom: 0px;
 }
 
 .submission-form > tbody > tr > td input[type="text"].reg-fee {
