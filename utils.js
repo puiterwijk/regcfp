@@ -307,7 +307,7 @@ utils.get_unpaid_purchase_choices = function(reg, fields, currency_id) {
           'field_name': field_name,
           'field_display_name': field['display_name'],
           'option_name': field['value'],
-          'option_display_name': field['value'],
+          'option_display_name': option['display_name'] || field['value'],
           'cost': Math.ceil(option.cost * conversion_rate),
           'cost_display': currency.symbol + Math.ceil(option.cost * conversion_rate)
         });
