@@ -8,9 +8,9 @@
 <h2>GUADEC registration information</h2>
 
 <p>
-Fill in your details to register for GUADEC, and optionally for workshops.
-All fields except your name and payment information are optional. The IRC
-nick will printed on your badge.
+Fill in your details to register for GUADEC 2017.  All fields except your name
+and payment information are optional.  You can also book and pay for
+accommodation at the University using this form.
 </p>
 
 </td></tr>
@@ -18,17 +18,17 @@ nick will printed on your badge.
 <tr><td><label for="reg-name">Your name</label></td><td><input type="text" id="reg-name" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td></tr>
 <input type="hidden" name="is_public" value="true">
 
-<tr><td><label for="reg-ircnick">IRC nick</label></td>
-<td>
-{{> field_entry id="ircnick" field=registration_fields.ircnick}}
-</td>
-</tr>
-
 {{#has_permission "registration/pay"}}
 <tr><td><label for="reg-fee">Registration fee</label></td><td>
 {{#unless registration.paid}}
-  Please support GUADEC and GNOME by choosing to pay a fee that is reasonable for you–we suggest a payment of € 15 for students, € 40 for hobbyist and € 150 for professionals. Pay over 100 € and receive a free conference t-shirt.<br />
-  You can also support GNOME by becoming a <a href="https://www.gnome.org/friends/" target="_blank">Friend of GNOME</a> or donating <a href="https://www.gnome.org/friends/other-ways-to-donate/" target="_blank">in other ways</a>.
+  Please support GUADEC and GNOME by choosing to pay a fee that is reasonable
+  for you–we suggest a payment of £15 for students, £40 for hobbyist and £150
+  for professionals. Pay over £100 and receive a free conference t-shirt.<br />
+
+  You can also support GNOME by becoming a <a
+  href="https://www.gnome.org/friends/" target="_blank">Friend of GNOME</a> or
+  donating <a href="https://www.gnome.org/friends/other-ways-to-donate/"
+  target="_blank">in other ways</a>.
 
   <p>
   {{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="40" />
@@ -45,7 +45,11 @@ nick will printed on your badge.
   {{/if}}
 {{/unless}}
 
-<p class="note">A 50% refund will be given on registration fees if you cancel before 24th July 2016. Refunds will not be issued on cancellations after the 24th of July. Please mail <a href="mailto:guadec-organization@gnome.org">guadec-organization@gnome.org</a> for any cancelation.
+<p class="note">We can issue refunds on registration fees until 30th June 2017.
+€10 will be deducted to cover payment processing fees. Refunds will not be
+issued for cancellations after the 30th of June. Please mail <a
+href="mailto:guadec-organization@gnome.org">guadec-organization@gnome.org</a>
+for any cancelation.
 </p>
 </tr>
 
@@ -55,8 +59,6 @@ nick will printed on your badge.
 
 
 {{#each registration_fields}}
-  {{#ifEqual @key "ircnick"}} {{else}} {{#ifEqual @key "accommodation"}}
-  {{else}}
 <tr><td><label for="reg-{{@key}}">{{ this.display_name }}</label></td>
 <td>
     {{>field_entry id=@key field=this currency=../config.registration.main_currency}}
@@ -67,32 +69,7 @@ nick will printed on your badge.
     {{/if}}
 </td>
 </tr>
-  {{/ifEqual}}{{/ifEqual}}
 {{/each}}
-
-<tr><td><label for="reg-accommodation">Accommodation</label></td>
-<td>
-<p>
-We have a limited number of rooms available at the MMU Birley Campus, right
-opposite the conference venue. These are in 12-bedroom houses reserved for
-GUADEC attendees.
-</p><p>
-You can book and pay for a room now, or you can book one later on by visiting
-this website again and choosing to edit your registration.
-</p><p>
-There are some accessible rooms available, please get in touch at
-guadec-organization@gnome.org after booking to let us know if you need a room
-with staircase-free access.
-</p>
-<p>
-Alternatively we recommend booking a hotel room through the <a
-href="https://aws.passkey.com/go/GUADEC2017">Visit Manchester booking service</a>.
-We have rooms reserved for GUADEC attendees in various hotels around the city
-at fixed prices. There's no commission cost for this service.
-</p>
-
-{{>field_entry id='accommodation' field=registration_fields.accommodation}}
-</td></tr>
 
 <tr><td>&nbsp;</td><td><label><input type="checkbox" id="reg-public" value="false" name="is_public" 
 {{#unless registration.is_public}}
