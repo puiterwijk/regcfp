@@ -111,7 +111,7 @@ describe('registration', function() {
     .send({'is_public': 'true'})
     .send({'currency': 'EUR'})
     .send({'field_shirtsize': 'M'})
-    .send({'regfee': '1'})
+    .send({'regfee': '0'})
     .expect(200)
     .expect(/Thanks for registering/)
     .end(done);
@@ -145,7 +145,7 @@ describe('registration', function() {
     agent.get('/registration/register')
     .expect(200)
     .expect(/name="name" value="TestUser A"/)
-    .expect(/name="regfee" class="reg-fee" value="1"/)
+    .expect(/name="regfee" class="reg-fee" value="0"/)
     .expect(/option value="EUR"[^>]*selected="selected"/)
     .expect(/Hide my name/)
     .end(done);
@@ -249,7 +249,7 @@ describe('registration', function() {
     .send({'field_shirtsize': 'M'})
     .send({'is_public': 'true'})
     .send({'currency': 'EUR'})
-    .send({'regfee': '1'})
+    .send({'regfee': '0'})
     .expect(200)
     .expect(/Thanks for registering/)
     .end(done);
@@ -438,12 +438,13 @@ describe('registration', function() {
       set_user(agent, 'validation-test@regcfp', done);
     });
 
-    it('should ensure non-zero regfee', function(done) {
+    it('should ensure valid regfee', function(done) {
       agent.post('/registration/register')
       .send({'name': 'TestUser A'})
       .send({'field_ircnick': 'testirc'})
+      .send({'regfee': '-10'})
       .expect(200)
-      .expect(/Please choose a registration fee/)
+      .expect(/Please choose a valid registration fee/)
       .end(done)
     })
 
@@ -452,7 +453,7 @@ describe('registration', function() {
       .send({'name': 'TestUser A'})
       .send({'field_ircnick': 'testirc'})
       .expect(200)
-      .expect(/Please choose a registration fee/)
+      .expect(/Please choose a valid registration fee/)
       .expect(/name="name" value="TestUser A"/)
       .end(done);
     });
