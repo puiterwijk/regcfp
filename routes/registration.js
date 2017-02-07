@@ -598,8 +598,8 @@ function handle_registration(req, res, next) {
       var can_pay = utils.get_permission_checker("registration/pay")(req.session.currentUser);
 
       var error = null;
-      if((regfee == null || regfee <= 0) && can_pay) {
-        error = "Please choose a registration fee";
+      if((regfee == null || regfee < 0) && can_pay) {
+        error = "Please choose a valid registration fee";
       } else if (config.registration.currencies[currency] == undefined && can_pay) {
         error = "Please choose a valid currency";
       } else if(reg != null && regfee != reg.regfee && reg.paid) {
