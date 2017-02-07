@@ -54,6 +54,7 @@ There are also some special properties for field objects:
 The following types of fields are supported:
 
   * `string`: a text field, to be used with an [input element]
+  * `radio`: a list of options, to be shown as radio buttons
   * `select`: a list of options, to be used with a [select element]
   * `country`: like a `select` field, but the `options` property will be
     populated with a list of all of the world's countries
