@@ -14,6 +14,19 @@
 
   <input type="text" id="reg-{{id}}" name="field_{{id}}" value="{{ field.value }}" placeholder="{{ field.placeholder }}">
 
+{{else}}{{#ifEqual field.type "radio"}}
+
+  {{#each field.options}}
+    <label>
+      <input type="radio" name="field_{{../id}}" id="reg-{{../id}}" value="{{ this }}"
+        {{#ifEqual ../field.value this}}
+          checked
+        {{/ifEqual}}
+      >{{this}}</option>
+    </label>
+    {{#unless @last}} </br /> {{/unless}}
+  {{/each}}
+
 {{else}}{{#ifEqual field.type "select"}}
 
   <select name="field_{{id}}" id="reg-{{id}}">
@@ -93,4 +106,4 @@
 
   Unknown field type
 
-{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}
+{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}
