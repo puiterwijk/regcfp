@@ -195,7 +195,7 @@
         "EUR": {
           "symbol": "€",
           "default_amount": 40,
-          "conversion_rate": 1.17
+          "conversion_rate": 1.16
         }
       },
       "allow_onsite_regfee_payment": true,
