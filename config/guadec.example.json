@@ -1,0 +1,273 @@
+{
+  "development": {
+    "theming": {
+      "theme": "gnome",
+      "site_name": "TEST GUADEC 2017 registration",
+      "event_name": "GUADEC 2017",
+      "logo": ""
+    },
+    "secret": "development",
+    "database": {
+      "database": "database.sqlite",
+      "dialect": "sqlite",
+      "storage": "database.sqlite",
+      "define": {
+        "paranoid": true
+      }
+    },
+
+    "email": {
+      "from": "test-guadec-2017@example.com",
+      "transport": {
+        "host": "localhost"
+      }
+    },
+
+    "listen": {
+      "http": {
+        "enabled": true,
+        "listenip": "127.0.0.1",
+        "port": 3000
+      },
+      "https": {
+        "enabled": false,
+        "only": true,
+        "url": "https://localhost:3001",
+        "listenip": "127.0.0.1",
+        "port": 3001,
+        "cert": "certificate.crt",
+        "ca": "intermediate.crt",
+        "key": "certificate.key"
+      }
+    },
+
+    "auth": {
+      "module": "test",
+      "persona_audience": "http://test-guadec2017-regcfp.herokuapp.com"
+    },
+
+    "permissions": {
+      "admin": ["admin@regcfp"],
+      "papers": {
+        "submit": ["*authenticated*"],
+        "list": {
+          "accepted": ["*anonymous*"],
+          "own": ["*authenticated*"],
+          "all": ["admin@regcfp", "voter@regcfp"]
+        },
+        "edit": {
+          "own": ["*authenticated*"],
+          "all": ["admin@regcfp"]
+        },
+        "delete": {
+          "own": ["*authenticated*"],
+          "all": ["admin@regcfp"]
+        },
+        "tag": ["*authenticated*"],
+        "vote": ["admin@regcfp", "voter@regcfp"],
+        "showvotes": ["admin@regcfp"],
+        "accept": ["admin@regcfp"]
+      },
+      "registration": {
+        "register": ["*authenticated*"],
+        "pay": ["*authenticated*"],
+        "request_receipt": ["*authenticated*"],
+        "view_public": ["*authenticated*"],
+        "view_all": ["admin@regcfp", "payadm@regcfp"],
+        "view_payment": ["payadm@regcfp"],
+        "add_payment": ["admin@regcfp", "desk@regcfp"],
+        "print_badge": ["admin@regcfp", "desk@regcfp"],
+        "desk": ["admin@regcfp", "desk@regcfp"]
+      }
+    },
+
+    "papers": {
+      "enabled": true,
+      "tracks": [
+        "30 minutes",
+        "45 minutes"
+      ]
+    },
+
+    "registration": {
+      "enabled": true,
+      "fields": {
+        "ircnick": {
+          "display_name": "Chat Nickname",
+          "short_display_name": "Nick",
+          "type": "string",
+          "required": false,
+          "private": true,
+          "placeholder": "Chat Nickname",
+          "message": "Nickname used in online chat networks like IRC. It will be printed on your badge beneath your name."
+        },
+        "volunteer": {
+          "display_name": "Help us at GUADEC",
+          "short_display_name": "Volunteer",
+          "type": "radio",
+          "required": false,
+          "options": [ "Not interested", "Keep me informed" ],
+          "message" : [
+            "If you are interested in volunteering at GUADEC, we'll email you ",
+            "with details nearer to the conference. You can also subscribe to ",
+            "guadec-list@gnome.org and join us in #guadec on irc.gnome.org if ",
+            "you want to get more involved."
+          ],
+          "private": true
+        },
+        "header-accommodation": {
+          "type": "documentation",
+          "display_name": "",
+          "html" : [
+            "<h3>Accommodation</h3>",
+            "<p>We have prebooked rooms available on the same site as the ",
+            "conference venue at the Manchester Metropolitan University's ",
+            "Birley Campus. These are in 12-bedroom houses which are ",
+            "reserved for GUADEC attendees. See ",
+            "<a href=\"http://www.guadec.org/accommodation/\">the GUADEC website</a> ",
+           "for more details.</p>",
+           "<p>",
+           "You can book and pay for a room now, or you can book one later on ",
+           "by visiting this website again and choosing to edit your ",
+           "registration.</p>"
+         ]
+        },
+        "accommodation": {
+          "display_name": "Room booking",
+          "short_display_name": "Room",
+          "type": "purchase",
+          "message": "We have a limited number of rooms available at the MMU Birley Campus, right opposite the confernece venue. These are in 12-bedroom houses reserved for GUADEC attendees. There are some accessible rooms available but please get in touch first if you need staircase-free access.",
+          "required": false,
+          "private": true,
+          "options": {
+            "thu27-sun30": {
+              "display_name": "Thu 27th Jul - Sun 30th Jul (4 nights)",
+              "cost": 172,
+              "limit": 12
+            },
+            "thu27-tue1": {
+              "display_name": "Thu 27th Jul - Tue 1st Aug (6 nights)",
+              "cost": 258,
+              "limit": 12
+            },
+            "thu27-wed2": {
+              "display_name": "Thu 27th Jul - Wed 2nd Aug (7 nights)",
+              "cost": 301,
+              "limit": 12
+            },
+            "fri28-sun30": {
+              "display_name": "Fri 28th Jul - Sun 30th Jul (3 nights)",
+              "cost": 129,
+              "limit": 12
+            },
+            "fri28-wed2": {
+              "display_name": "Fri 28th Jul - Wed 2nd Aug (6 nights)",
+              "cost": 258,
+              "limit": 36
+            }
+          },
+          "message": [
+            "We can issue refunds for accommodation if someone else can be ",
+            "found to take your room, minus a €10 processing charge. Contact ",
+            "guadec-organization@gnome.org if you need to discuss this."
+          ]
+        },
+        "header-statistics": {
+          "type": "documentation",
+          "display_name": "",
+          "html" : [
+            "<h3>About you</h3>",
+            "Your answers to the following questions will only be used for ",
+            "statistics. These questions are all optional and will help us ",
+            "gain a better understanding of the GUADEC community. All ",
+            "answers will only be used anonymously and will not be ",
+            "associated with you."
+          ]
+        },
+        "country": {
+          "display_name": "Country",
+          "short_display_name": "Country",
+          "type": "string",
+          "required": false,
+          "default": "Unspecified",
+          "placeholder": "",
+          "private": true
+        },
+        "occupation": {
+          "display_name": "Occupation",
+          "short_display_name": "Occupation",
+          "type": "string",
+          "required": false,
+          "placeholder": "",
+          "private": true
+        },
+        "age": {
+          "display_name": "Age group",
+          "type": "radio",
+          "required": false,
+          "default": "Unspecified",
+          "options" : ["Unspecified", "< 20", "20–29", "30–39", "40–49", "≥ 50" ],
+          "private": true
+        },
+        "gender": {
+          "display_name": "Gender identity",
+          "short_display_name": "Gender",
+          "type": "string",
+          "required": false,
+          "placeholder": "",
+          "private": true
+        },
+        "doc2": {
+          "type": "documentation",
+          "display_name": "",
+          "html" : "<hr style=\"margin: 0px 0px;\"/>"
+        }
+      },
+      "payment_product_name": "GUADEC Registration Fee",
+      "payment_sku_prefix": "guadec:",
+      "currencies": {
+        "GBP": {
+          "symbol": "£",
+          "default_amount": 30,
+          "conversion_rate": 1
+        },
+        "EUR": {
+          "symbol": "€",
+          "default_amount": 40,
+          "conversion_rate": 1.16
+        }
+      },
+      "specific_amount": null,
+      "main_currency": "GBP",
+      "min_amount_for_receipt": 20,
+      "paypal_experience_profile": "",
+      "desk_word": "something",
+
+      "paypal": {
+        "api_credentials": {
+          "mode": "live",
+          "client_id": "",
+          "client_secret": ""
+        },
+
+        "profile": {
+          "name": "Event Registration Profile",
+          "presentation": {
+            "brand_name": "Event Foundation",
+            "logo_image": "https://www.guadec.org/wp-content/uploads/2014/10/guadec-logo-white.png",
+            "locale_code": "US"
+          },
+          "input_fields": {
+            "allow_note": true,
+            "no_shipping": 1,
+            "address_override": 0
+          },
+          "flow_config": {
+            "landing_page_type": "billing",
+            "bank_txn_pending_url": "http://www.guadec.org"
+          }
+        }
+      }
+    }
+  }
+}
