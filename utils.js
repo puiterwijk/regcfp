@@ -257,6 +257,12 @@ utils.get_reg_fields = function (request, registration, skip_internal) {
       });
     }
 
+    // Some properties can be given as a list of strings. This is a
+    // workaround because JSON syntax doesn't support multiline strings.
+    ['html', 'message', 'text'].forEach(function(field_name) {
+      if (field[field_name] instanceof Array)
+        field[field_name] = field[field_name].join('');
+    })
   };
 
   if(request)
