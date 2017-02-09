@@ -1,8 +1,8 @@
-<strong>Thanks for registering for GUADEC 2017!</strong><br/>
+<strong>Thanks for registering for {{event_name}}!</strong><br/>
 
 {{#has_permission "registration/pay"}}
 {{>registration/payment}}
 {{else}}
-See you in Manchester, England!<br />
+See you in {{event_location}}!<br />
 <a href="/">Return</a>
 {{/has_permission}}

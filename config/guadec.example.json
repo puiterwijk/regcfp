@@ -4,6 +4,7 @@
       "theme": "gnome",
       "site_name": "TEST GUADEC 2017 registration",
       "event_name": "GUADEC 2017",
+      "event_location": "Manchester, England",
       "logo": ""
     },
     "secret": "development",
