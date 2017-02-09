@@ -292,30 +292,42 @@ utils.get_reg_fields = function (request, registration, skip_internal) {
 // Get information about the new purchase choices from a given registration.
 //
 // Returns an array of objects, which for each purchase lists the name of
-// the field, the name of the chosen option, and the cost of that option (in
-// `currency`).
-utils.get_unpaid_purchase_choices = function(reg, fields, currency_id) {
+// the field, the name of the chosen option, the cost of that option (in
+// `currency`), and whether payment was made yet.
+utils.get_reg_purchase_choices = function(reg, fields, currency_id) {
   var currency = config.registration.currencies[currency_id]
   var conversion_rate = currency.conversion_rate;
   var result = [];
   Object.keys(fields).forEach(function(field_name) {
     var field = fields[field_name];
-    if (field.type == 'purchase' && reg.get_payment_for_purchase(field_name) == null) {
+    if (field.type == 'purchase') {
       var option = field['options'][field['value']];
       if (option) {
+        var payment = reg.get_payment_for_purchase(field_name);
         result.push({
           'field_name': field_name,
           'field_display_name': field['display_name'],
           'option_name': field['value'],
           'option_display_name': option['display_name'] || field['value'],
           'cost': Math.ceil(option.cost * conversion_rate),
-          'cost_display': currency.symbol + Math.ceil(option.cost * conversion_rate)
+          'cost_display': currency.symbol + Math.ceil(option.cost * conversion_rate),
+          'paid': payment != null && payment.paid
         });
       };
     };
   });
   return result;
 };
+
+utils.get_reg_purchase_choices_unpaid = function(reg, fields, currency_id) {
+  var purchase_choices = utils.get_reg_purchase_choices(reg, fields, currency_id);
+  return purchase_choices.filter(function(purchase) { return (purchase.paid == false) });
+}
+
+utils.get_reg_purchase_choices_paid = function(reg, fields, currency_id) {
+  var purchase_choices = utils.get_reg_purchase_choices(reg, fields, currency_id);
+  return purchase_choices.filter(function(purchase) { return (purchase.paid == true) });
+}
 
 utils.make_paypal_sku_for_purchase = function(field_name, option_name) {
   return [ config.registration.payment_sku_prefix, field_name, option_name ]

@@ -122,7 +122,7 @@ router.get('/pay', function(req, res, next) {
     if (reg == null || !can_pay)
       res.redirect('/');
     else {
-      var new_purchase_choices = utils.get_unpaid_purchase_choices(reg, utils.get_reg_fields(null, reg, true), reg.currency);
+      var new_purchase_choices = utils.get_reg_purchase_choices_unpaid(reg, utils.get_reg_fields(null, reg, true), reg.currency);
       var needpay = !reg.paid || new_purchase_choices.length > 0;
 
       res.render('registration/pay', { registration: reg, needpay: needpay,
@@ -334,7 +334,7 @@ router.post('/pay/do', function(req, res, next) {
       regfee = reg.regfee;
     };
 
-    var purchase_choices = utils.get_unpaid_purchase_choices(reg, utils.get_reg_fields(req, reg, true), currency);
+    var purchase_choices = utils.get_reg_purchase_choices_unpaid(reg, utils.get_reg_fields(req, reg, true), currency);
     var purchase_choices_total = 0;
     purchase_choices.forEach(function(choice) { purchase_choices_total += choice.cost });
 
@@ -374,7 +374,7 @@ router.post('/pay/do', function(req, res, next) {
 router.all('/receipt', utils.require_user);
 router.all('/receipt', utils.require_permission('registration/request_receipt'));
 router.get('/receipt', function(req, res, next) {
-  req.user.getRegistration({include: [RegistrationPayment, RegistrationInfo]})
+  req.user.getRegistration({include: [RegistrationPayment, { model: RegistrationInfo, include: RegistrationPayment }]})
   .catch(function(err) {
     res.status(500).send('Error retrieving your registration');
   })
@@ -382,7 +382,10 @@ router.get('/receipt', function(req, res, next) {
     if(reg == null || !reg.has_confirmed_payment) {
       res.status(401).send('We do not have any confirmed payments for this registration.');
     } else {
-      res.render('registration/receipt', { registration: reg , layout:false });
+      var paid_purchase_choices = utils.get_reg_purchase_choices_paid(reg, utils.get_reg_fields(null, reg, true), reg.currency);
+      res.render('registration/receipt', { registration: reg,
+                                           paid_purchase_choices: paid_purchase_choices,
+                                           layout: false });
     }
   });
 });
@@ -652,7 +655,7 @@ function handle_registration(req, res, next) {
               reg_fields: reg_fields,
             }, function() {
               console.log("Reg: " + reg);
-              var new_purchase_choices = utils.get_unpaid_purchase_choices(reg, reg_fields, currency);
+              var new_purchase_choices = utils.get_reg_purchase_choices_unpaid(reg, reg_fields, currency);
               var needpay = !reg.paid || new_purchase_choices.length > 0;
 
               if (needpay && !can_pay) {
