@@ -13,13 +13,8 @@ email address.
 </div>
 
 {{else}}
+
 Hi, {{name}}! Welcome to the GUADEC registration system.<br />
-
-{{#unless user}}
-
-    <div class="button"><a href="/authg/register">Complete login</a></div>
-
-{{ else }}
 
     {{#has_permission "registration/desk"}}
     <div class="button"><a href="/desk">Desk</a></div>
@@ -98,5 +93,4 @@ Hi, {{name}}! Welcome to the GUADEC registration system.<br />
     </div>
 
     {{/has_permission}}
-{{/unless}}
 {{/unless}}
