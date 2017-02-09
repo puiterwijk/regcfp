@@ -1,4 +1,7 @@
 var request = require('supertest');
+
+var assert = require('assert')
+
 var app = require('../app');
 
 describe('papers', function() {
@@ -403,7 +406,7 @@ describe('papers', function() {
     .send({'comment_vote_3': 'Second Comment'})
     .expect(200)
     .expect(/Votes saved/)
-    .expect(/Errors: \n<\/div>/)
+    .expect(function(res) { assert(res.text.search(/Errors:/) == -1);})
     .end(done);
   });
 
@@ -440,7 +443,7 @@ describe('papers', function() {
     .send({'comment_vote_3': 'Second Comment'})
     .expect(200)
     .expect(/Votes saved/)
-    .expect(/Errors: \n<\/div>/)
+    .expect(function(res) { assert(res.text.search(/Errors:/) == -1);})
     .end(done);
   });
 
