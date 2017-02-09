@@ -1,119 +1,111 @@
 {{#unless session.currentUser}}
-<div class="container">
-<div class="row">
-<div class="col-xs-12 bottom-margin">
 
-<h2 class="thin bottom-margin">Hello, please login!</h2>
-<h4>You will need to authenticate with a third party service to log in. Some
-privacy extensions for browsers do not allow this. If you make use of these
-types of extensions and are experiences issues logging in, you may need to
-allow a temporary exception or to temporarily disable the extension.</h4>
-<h4>Thank you.</h4>
-</div>
-</div>
-</div>
+    <div class="container">
+    <div class="row">
+    <div class="col-xs-12 bottom-margin">
+
+    <h2 class="thin bottom-margin">Hello, please login!</h2>
+    <h4>You will need to authenticate with a third party service to log in. Some
+    privacy extensions for browsers do not allow this. If you make use of these
+    types of extensions and are experiences issues logging in, you may need to
+    allow a temporary exception or to temporarily disable the extension.</h4>
+    <h4>Thank you.</h4>
+    </div>
+    </div>
+    </div>
 
 {{else}}
 
-<div class="container">
-<div class="row">
-<div class="col-xs-12">
-<h2 class="thin">Welcome, {{name}}</h2>
-</div>
+    <div class="container">
+    <div class="row">
+    <div class="col-xs-12">
+    <h2 class="thin">Welcome, {{name}}</h2>
+    </div>
 
-<div class="col-xs-12 col-sm-6 bottom-margin">
+    <div class="col-xs-12 col-sm-6 bottom-margin">
 
-{{#has_permission "registration/desk"}}
-<div class="button"><a href="/desk">Desk</a></div>
-{{/has_permission}}
+    {{#has_permission "registration/desk"}}
+    <div class="button"><a href="/desk">Desk</a></div>
+    {{/has_permission}}
 
-{{#if config.papers.enabled}}
+    {{#if config.papers.enabled}}
+        <h2 class="thin">Papers management</h2>
+        <div class="buttons">
+        {{#has_permission "papers/submit" }}
+        <div class="button"><a href="/papers/submit">Submit a talk</a></div><br />
+        {{/has_permission}}
+        </div>
+        <div class="buttons">
+        {{#has_permission "papers/list/own" }}
+        <div class="button"><a href="/papers/list/own">View your submitted talks</a></div><br />
+        {{/has_permission}}
+        </div>
+        <div class="buttons">
+        {{#has_permission "papers/list/accepted" }}
+        <div class="button"><a href="/papers/list">View accepted talks</a></div>
+        {{/has_permission}}
+        </div>
+        </div>
+    {{/if}}
 
-<h2 class="thin">Papers management</h2>
-<div class="buttons">
-{{#has_permission "papers/submit" }}
-<div class="button"><a href="/papers/submit">Submit a talk</a></div><br />
-{{/has_permission}}
-</div>
-<div class="buttons">
-{{#has_permission "papers/list/own" }}
-<div class="button"><a href="/papers/list/own">View your submitted talks</a></div><br />
-{{/has_permission}}
-</div>
-<div class="buttons">
-{{#has_permission "papers/list/accepted" }}
-<div class="button"><a href="/papers/list">View accepted talks</a></div>
-{{/has_permission}}
-</div>
-</div>
+    {{#if config.registration.enabled}}
+        <div class="col-xs-12 col-sm-6 bottom-margin">
+        <h2 class="thin">Registration</h2>
+        {{#has_permission "registration/view_public"}}
+        <div class="button"><a href="/registration/list">Current registrations</a></div><br />
+        {{/has_permission}}
+        <div class="buttons">
+        {{#has_permission "registration/register" }}
+        {{#if registration}}
+        <h3>Registration ID: {{registration.display_id}}</h3>
+        <div class="button"><a href="/registration/register">Update registration</a></div><br/><br />
+        {{#has_permission "registration/request_receipt"}}
+        <div class="button"><a href="/registration/receipt" target="_blank">Get receipt</a></div><br />
+        {{/has_permission}}
+        {{#has_permission "registration/pay"}}
+        {{#unless registration.badge_printed}}
+        <div class="button"><a href="/registration/pay">Pay more</a></div><br />
+        {{/unless}}
+        {{/has_permission}}
+        {{else}}
+        <div class="button"><a href="/registration/register">Register</a></div>
+        {{/if}}
+        {{/has_permission}}
+        </div>
+        </div>
+        </div>
+        </div>
+    {{/if}}
 
-{{/if}}
+    {{#has_permission "admin"}}
+         <div class="darkgrey-pattern-box top-margin">
+         <div class="container">
+         <div class="row">
+         <div class="col-xs-12 bottom-margin">
+         <h2 class="thin">Admin Area</h2>
 
+         <h3>Papers management</h3>
+         <div class="buttons">
+         {{#has_permission "papers/list/all"}}
+         <div class="button"><a href="/papers/admin/list">View all talks</a></div>
+         {{/has_permission}}
+         {{#has_permission "papers/vote"}}
+         <div class="button"><a href="/papers/admin/vote">Vote on talks</a></div>
+         {{/has_permission}}
+         {{#has_permission "papers/showvotes" }}
+         <div class="button"><a href="/papers/admin/vote/show">Show talk votes</a></div>
+         {{/has_permission}}
+         </div>
 
-
-{{#if config.registration.enabled}}
-
-<div class="col-xs-12 col-sm-6 bottom-margin">
-<h2 class="thin">Registration</h2>
-{{#has_permission "registration/view_public"}}
-<div class="button"><a href="/registration/list">Current registrations</a></div><br />
-{{/has_permission}}
-<div class="buttons">
-{{#has_permission "registration/register" }}
-{{#if registration}}
-<h3>Registration ID: {{registration.display_id}}</h3>
-<div class="button"><a href="/registration/register">Update registration</a></div><br/><br />
-
-{{#has_permission "registration/request_receipt"}}
-<div class="button"><a href="/registration/receipt" target="_blank">Get receipt</a></div><br />
-{{/has_permission}}
-
-{{#has_permission "registration/pay"}}
-{{#unless registration.badge_printed}}
-<div class="button"><a href="/registration/pay">Pay more</a></div><br />
-{{/unless}}
-{{/has_permission}}
-{{else}}
-<div class="button"><a href="/registration/register">Register</a></div>
-{{/if}}
-{{/has_permission}}
-</div>
-</div>
-</div>
-</div>
-{{/if}}
-
-{{#has_permission "admin" }}
-
-<div class="darkgrey-pattern-box top-margin">
-<div class="container">
-<div class="row">
-<div class="col-xs-12 bottom-margin">
-<h2 class="thin">Admin Area</h2>
-
-<h3>Papers management</h3>
-<div class="buttons">
-{{#has_permission "papers/list/all"}}
-<div class="button"><a href="/papers/admin/list">View all talks</a></div>
-{{/has_permission}}
-{{#has_permission "papers/vote"}}
-<div class="button"><a href="/papers/admin/vote">Vote on talks</a></div>
-{{/has_permission}}
-{{#has_permission "papers/showvotes" }}
-<div class="button"><a href="/papers/admin/vote/show">Show talk votes</a></div>
-{{/has_permission}}
-</div>
-
-<h3>Registration</h3>
-<div class="buttons">
-{{#has_permission "registration/view_all" }}
-<div class="button"><a href="/registration/admin/list">List all registrations</a></div>
-{{/has_permission}}
-</div>
-</div>
-</div>
-</div>
-</div>
-
-{{/has_permission}}
+         <h3>Registration</h3>
+         <div class="buttons">
+         {{#has_permission "registration/view_all" }}
+         <div class="button"><a href="/registration/admin/list">List all registrations</a></div>
+         {{/has_permission}}
+         </div>
+         </div>
+         </div>
+         </div>
+         </div>
+    {{/has_permission}}
 {{/unless}}
