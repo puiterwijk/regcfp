@@ -53,6 +53,24 @@
         <td>{{ this.track }}</td>
       </tr>
       <tr>
+        <th>Status:</th>
+        <td>
+          {{#ifEqual this.accepted "yes" }}
+          accepted
+          {{else}}
+            {{#ifEqual this.accepted "no" }}
+              rejected
+            {{else}}
+              {{#ifEqual this.accepted "confirmed" }}
+                accepted, attendance confirmed
+              {{else}}
+                in progress
+              {{/ifEqual}}
+            {{/ifEqual}}
+          {{/ifEqual}}
+        </td>
+      </tr>
+      <tr>
         <th>Tags:</th>
         <td>
           {{#each this.PaperTags}}
