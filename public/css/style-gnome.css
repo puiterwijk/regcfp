@@ -1,42 +1,228 @@
-.button {
-    display: inline-block;
-    padding: 0 14px;
-    border: 1px solid #ccc;
-    margin-left:20px;
-    margin-right:20px;
-    background: #ececec url(//static.gnome.org/img/action_button-bg.png) center repeat-x;
-    -moz-border-radius: 15px;
-    -webkit-border-radius: 15px;
-    border-radius: 15px;
-    color: #2e3436;
-    text-shadow: 0 1px 0 #fff;
-    text-decoration: none;
-    line-height: 1.8;
-    -webkit-transition: background-position 100ms linear;
-    -moz-transition: background-position 100ms linear;
-    transition: background-position 100ms linear;
-    -moz-box-shadow: inset 0 1px 0 #fff;
-    -webkit-box-shadow: inset 0 1px 0 #fff;
-    box-shadow: inset 0 1px 0 #fff;
-    outline: none;
-}
-.button a {
-    color: #000;
-}
-.button:hover, .button a:hover {
-    background-position: top;
-    color: #000;
-}
-.button:visited, .button a:visited {
-    color: inherit;
-}
-.button:active, .button a:active {
-    -moz-box-shadow: inset 0 2px 3px rgba(0,0,0,0.4);
-    -webkit-box-shadow: inset 0 2px 3px rgba(0,0,0,0.4);
-    box-shadow: inset 0 2px 3px rgba(0,0,0,0.4);
-    background-position: bottom;
+/* GUADEC style for regcfp.
+ *
+ * This stylesheet depends on the GUADEC 2017 Wordpress theme:
+ *
+ *    <link rel="stylesheet" href="https://2017.guadec.org/wp-content/themes/sensible-wp/style.css?ver=4.7.2" type="text/css" media="all" />
+ *    <link rel="stylesheet" href="https://2017.guadec.org/?sccss=1&ver=4.7.2" type="text/css" media="all" />
+ *
+ * And also the main regcfp stylesheet (style.css).
+ */
+
+/* This overrides the "hide menu for small screens" business that the Wordpress
+ * theme does.
+ */
+@media screen and (max-width: 900px) {
+	.main-navigation ul {
+		display: inline;
+	}
 }
 
+/* This removes needless blue space in header */
+.entry-header {
+	padding: 50px 0 40px;
+}
+
+/* This means horizontal scrollbars are visible when needed */
+body, .grid {
+  overflow: visible;
+}
+
+/* Fixes weird issue where links flash red */
+a, a:visited !.main-navigation { color: #4a86cf; }
+
+a:hover { color: #53cfe8; }
+
+/* Override default regcfp style.css to give us <input> boxes that
+ * can shrink when small screens are used.
+ */
+.submission-form > tbody > tr > td > input[type=text],
+.submission-form > tbody > tr > td > textarea {
+  max-width: 60%;
+}
+
+/* Button design based on GNOME Grass theme (we can't reuse that directly though,
+ * it requires bootstrap.js).
+ */
+
+.button {
+  text-decoration: none;
+  border-radius: 6px;
+  padding: 6px 30px;
+  background-color: #fff;
+  border: 1px solid;
+  border-color: #ccc;
+  color: #204a87;
+  font-size: 14px;
+}
+
+.button:hover {
+  background-color: #ccc;
+  color: #3465a4;
+}
+
+.button:visited {
+  color: #204a87;
+}
+
+
+/* Footer taken from the GNOME Grass theme:
+ * https://www.gnome.org/wp-content/themes/gnome-grass/style.css?ver=4.7.2
+ */
+
+#footer {
+    clear: left;
+    background: #000;
+    color: #919191;
+    padding: 20px 20px;
+    padding-top: 40px;
+    margin-top: 80px;
+}
+#footer div.links > div > ul > li {
+    float: left;
+    margin: 0 40px 10px 0;
+}
+#footer div.links div a, #footer div.links div strong {
+    display: block;
+    text-decoration: none;
+}
+#footer div.links div a:hover, #footer div.links div a:focus {
+    text-decoration: underline;
+}
+#footer div.language {
+    float: right;
+}
+#footer div.language a {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 220px;
+    height: 110px;
+    background: url(images/footer-map.png) center center no-repeat;
+    outline: none;
+    text-decoration: none;
+}
+#footer div.language a span {
+    background: #f4f4f4;
+    background: -moz-linear-gradient(bottom, #ececec, #fff);
+    background: -webkit-linear-gradient(bottom, #ececec, #fff);
+    background: linear-gradient(bottom, #ececec, #fff);
+    padding: 4px 12px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    color: #333;
+}
+
+#footer div.language a span.loading {
+    display: none;
+}
+#footer div.language a.loading {
+    cursor: wait !important;
+}
+#footer div.language a.loading span.switch {
+    display: none;
+}
+#footer div.language a.loading span.loading {
+    display: inline-block;
+}
+#footer div.language a:hover span.switch {
+    background: #fff;
+    background: -moz-linear-gradient(bottom, #fff, #fff);
+}
+
+
+#footer ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+#footer ul li {
+    margin: 0;
+    padding: 0;
+}
+#footer ul.menu > li > a {
+    font-weight: bold;
+}
+#footer .links a {
+    color: inherit;
+    outline: 0;
+    -webkit-transition: all .35s;
+    -moz-transition: all .35s;
+    transition: all .35s;
+    margin: 6px 0;
+    font-size: 14px; /* 14px */
+}
+#footer .links a:hover {
+    color: #c4c4c4;
+}
+#footer .links a:active,
+#footer .links a:focus {
+    color: #fff;
+}
+#footer #footnotes {
+    margin-top: 20px;
+}
+#footer #footnotes small {
+    font-size: 88%;
+}
+#footer #footnotes a {
+    color: inherit;
+}
+
+/* These are taken from the CSS generated by the Wordpress Sensible theme
+ * customizer and inserted into every page in 2017.guadec.org. It'll need to be
+ * manually kept in sync.
+ */
+
+body { border-color: #4a86cf; }
+
+a { color: #4a86cf; }
+
+.main-navigation li:hover > a, a:hover { color: #53cfe8; }
+
+.member .fa:hover { background: #4a86cf; } 
+
+#sequence .slide-arrow { background: #4a86cf; } 
+
+.social-media-icons .fa { color: #1e73be; } 
+
+.social-media-icons .fa:hover { color: #8224e3; }
+
+.home-services .fa, .service .fa  { background: #4a86cf; }
+ 
+.entry-header { background: #4a86cf; }
+
+.home-entry-title:after, .member-entry-title:after, .works-entry-title:after, .client-entry-title:after, .home-news h5:after, .home-team h5:after, .home-cta h6:after, .footer-contact h5:after, .member h5:after { border-color: #4a86cf; } 
+
+.main-navigation ul ul li { border-color: #4a86cf; }
+
+button, input[type="button"], input[type="reset"], input[type="submit"] { background: #4a86cf; }  
+
+button, input[type="button"], input[type="reset"], input[type="submit"] { border-color: #4a86cf; }  
+
+.home-blog .entry-footer:hover, button:hover, input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover { border-color: #4a86cf; }  
+
+.nav-previous, .paging-navigation .nav-previous, .post-navigation .nav-previous, .nav-next, .paging-navigation .nav-next, .post-navigation .nav-next { background: #4a86cf; }  
+
+#site-navigation button:hover { background: none; }
+
+h1.site-title a { color: #4a86cf; } 
+
+body, button, input, select, textarea, p { color: #1e2628; }
+
+blockquote { border-color:#4a86cf; }
+
+.site-footer { background: #4a86cf; }
+
+.footer-contact h5 { color: #4a86cf; }
+
+.footer-contact h5:after { border-color: #4a86cf; }
+
+
+/* The custom CSS for GUADEC theme */
 
 table:not(.submission-form) th, table:not(.submission-form) td {
   padding-left: 5px;
@@ -127,4 +313,5 @@ table:not(.submission-form) th, table:not(.submission-form) td {
     font-size: 80%;
     font-weight: normal;
 }
+
 
