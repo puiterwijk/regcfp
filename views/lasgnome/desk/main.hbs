@@ -63,8 +63,8 @@
                 </form>
                 <form class="finish_reg_form" method="post" action="/desk/finish"
                  data-message="Really finish registration for '{{this.User.name}}' and print badge?">
-                    {{#if ../../../printed}}
-                        <input type="hidden" name="printed" value="{{../../../../printed}}">
+                    {{#if ../printed}}
+                        <input type="hidden" name="printed" value="{{../printed}}">
                     {{/if}}
                     <input type="hidden" name="regid" value="{{this.id}}">
                     <input type="submit" value="Print badge">
