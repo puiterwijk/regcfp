@@ -190,6 +190,7 @@ describe('payment-paypal', function() {
     set_user(agent, 'payment-test-2@regcfp').then(function() {
       agent.get('/registration/receipt')
       .expect(/We received your payment of £49/)
+      .expect(/1 night/)
       .end(done)
     })
   })
@@ -229,6 +230,16 @@ describe('payment-paypal', function() {
     .end(done)
   })
 
+  it('should not include the unpaid item in the receipt yet', function(done) {
+    set_user(agent, 'payment-test-2@regcfp').then(function() {
+      agent.get('/registration/receipt')
+      .expect(/We received your payment of £49/)
+      .expect(/1 night/)
+      .expect(function(res) {
+        assert(res.text.search(/T-shirt/) == -1);
+      }).end(done)
+    })
+  })
   it('should take a payment for the new purchase', function(done) {
     var saved_transactions = null;
 
@@ -269,10 +280,12 @@ describe('payment-paypal', function() {
     })
   })
 
-  it('should give a receipt for all payments', function(done) {
+  it('should give a receipt for all payments and purchases', function(done) {
     set_user(agent, 'payment-test-2@regcfp').then(function() {
       agent.get('/registration/receipt')
       .expect(/We received your payment of £69/)
+      .expect(/1 night/)
+      .expect(/T-shirt/)
       .end(done)
     })
   })
@@ -311,10 +324,12 @@ describe('payment-paypal', function() {
     })
   })
 
-  it('should give a receipt for all payments', function(done) {
+  it('should still give a receipt for all payments and purchases', function(done) {
     set_user(agent, 'payment-test-2@regcfp').then(function() {
       agent.get('/registration/receipt')
       .expect(/We received your payment of £69, €21/)
+      .expect(/1 night/)
+      .expect(/T-shirt/)
       .end(done)
     })
   })

@@ -39,8 +39,19 @@ body {
  
 <p>We received your payment of {{registration.paid_paypal}} to the GNOME Foundation, as a registration fee for GUADEC 2016.</p>
  
+{{#if paid_purchase_choices}}
+  <p>
+  You purchased the following:
+  <ul>
+    {{#each paid_purchase_choices}}
+      <li>{{field_display_name}}: {{option_display_name}} ({{cost_display}})</li>
+    {{/each}}
+  </ul>
+  </p>
+{{/if}}
+ 
 <p>See you in Karlsruhe, Germany!</p>
 </div>
- 
+
 </body>
 </html>
