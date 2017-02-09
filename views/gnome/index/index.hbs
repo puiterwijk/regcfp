@@ -11,16 +11,14 @@
     email address.
     </p>
 
-    <div class="button">
-      <form><button {{{ login_buttons.login }}}>Log in</button>
-    </div>
+    <form><button {{{ login_buttons.login }}}>Log in</button>
 
 {{else}}
 
     Hi, {{name}}! Welcome to the GUADEC registration system.<br />
 
     {{#has_permission "registration/desk"}}
-    <div class="button"><a href="/desk">Desk</a></div>
+    <a class="button" href="/desk">Desk</a>
     {{/has_permission}}
 
 
@@ -28,13 +26,13 @@
         <h2>Papers management</h2>
         <div class="buttons">
         {{#has_permission "papers/submit" }}
-        <div class="button"><a href="/papers/submit">Submit a talk</a></div>
+        <a class="button" href="/papers/submit">Submit a talk</a>
         {{/has_permission}}
         {{#has_permission "papers/list/own" }}
-        <div class="button"><a href="/papers/list/own">View your submitted talks</a></div>
+        <a class="button" href="/papers/list/own">View your submitted talks</a>
         {{/has_permission}}
         {{#has_permission "papers/list/accepted" }}
-        <div class="button"><a href="/papers/list">View accepted talks</a></div>
+        <a class="button" href="/papers/list">View accepted talks</a>
         {{/has_permission}}
     </div>
 
@@ -44,23 +42,23 @@
     {{#if config.registration.enabled}}
         <h2>Registration</h2>
         {{#has_permission "registration/view_public"}}
-        <div class="button"><a href="/registration/list">Current registrations</a></div>
+        <a class="button" href="/registration/list">Current registrations</a>
         {{/has_permission}}
         <div class="buttons">
         {{#has_permission "registration/register" }}
         {{#if registration}}
         <h3>Registration ID: {{registration.display_id}}</h3>
-        <div class="button"><a href="/registration/register">Update registration</a></div><br/>
+        <a class="button" href="/registration/register">Update registration</a></div>
         {{#has_permission "registration/request_receipt"}}
-        <div class="button"><a href="/registration/receipt" target="_blank">Get receipt</a></div>
+        <a class="button" href="/registration/receipt" target="_blank">Get receipt</a>
         {{/has_permission}}
         {{#has_permission "registration/pay"}}
         {{#unless registration.badge_printed}}
-        <div class="button"><a href="/registration/pay">Pay additional fees</a></div>
+        <a class="button" href="/registration/pay">Pay additional fees</a>
         {{/unless}}
         {{/has_permission}}
         {{else}}
-        <div class="button"><a href="/registration/register">Register</a></div>
+        <a class="button" href="/registration/register">Register</a>
         {{/if}}
         {{/has_permission}}
         </div>
@@ -73,20 +71,20 @@
         <h3>Papers management</h3>
         <div class="buttons">
         {{#has_permission "papers/list/all"}}
-        <div class="button"><a href="/papers/admin/list">View all talks</a></div>
+        <a class="button" href="/papers/admin/list">View all talks</a>
         {{/has_permission}}
         {{#has_permission "papers/vote"}}
-        <div class="button"><a href="/papers/admin/vote">Vote on talks</a></div>
+        <a class="button" href="/papers/admin/vote">Vote on talks</a>
         {{/has_permission}}
         {{#has_permission "papers/showvotes" }}
-        <div class="button"><a href="/papers/admin/vote/show">Show talk votes</a></div>
+        <a class="button" href="/papers/admin/vote/show">Show talk votes</a>
         {{/has_permission}}
         </div>
 
         <h3>Registration</h3>
         <div class="buttons">
         {{#has_permission "registration/view_all" }}
-        <div class="button"><a href="/registration/admin/list">List all registrations</a></div>
+        <a class="button" href="/registration/admin/list">List all registrations</a>
         {{/has_permission}}
         </div>
     {{/has_permission}}

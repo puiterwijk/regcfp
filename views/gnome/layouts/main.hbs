@@ -1,11 +1,11 @@
 <!doctype HTML>
 <html>
-    <head >
+    <head>
         <title>{{ config.theming.site_name }}</title>
-        <link rel='stylesheet' type='text/css' href='https://static.gnome.org/css/grass-theme-style.css'/>
         <link rel='shortcut icon' href='https://static.gnome.org/img/logo/foot-16.png'/>
 
         <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.min.css" rel="stylesheet">
         <script type="text/javascript" src="/javascripts/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" src="/javascripts/jquery-ui.min.js"></script>
@@ -29,34 +29,35 @@
         </script>
         <script type="text/javascript" src="/javascripts/reg-fee-slider.js"></script>
         <script type="text/javascript" src="/javascripts/reg-total.js"></script>
-        <link rel="stylesheet" href="/css/style.css" type="text/css" media="all">
-        <link rel="stylesheet" href="/css/style-gnome.css" type="text/css" media="all">
+
+        <link rel='stylesheet' id='sensiblewp-open-sans-css'  href='//fonts.googleapis.com/css?family=Open+Sans%3A400%2C300%2C400italic%2C600%2C700&#038;ver=4.7.2' type='text/css' media='all' />
+        <link rel='stylesheet' id='sensiblewp-open-body-css'  href='//fonts.googleapis.com/css?family=Open+Sans%3A400%2C300%2C400italic%2C600%2C700&#038;ver=4.7.2' type='text/css' media='all' />
+        <link rel='stylesheet' id='sensiblewp-font-awesome-css'  href='https://2017.guadec.org/wp-content/themes/sensible-wp/fonts/font-awesome.css?ver=4.7.2' type='text/css' media='all' />
+
+        <link rel="stylesheet" href="https://2017.guadec.org/wp-content/themes/sensible-wp/style.css?ver=4.7.2" type="text/css" media="all" />
+        <link rel="stylesheet" href="https://2017.guadec.org/?sccss=1&ver=4.7.2" type="text/css" media="all" />
+        <link rel="stylesheet" href="/css/style.css" type="text/css" media="all" />
+        <link rel="stylesheet" href="/css/style-gnome.css" type="text/css" media="all" />
+        <link rel="stylesheet" href="/css/960.css" type="text/css" media="all" />
+        <link rel="stylesheet" href="/css/960-responsive.css" type="text/css" media="all" />
     </head>
 
-
 <body>
-    <div id="global_domain_bar">
-    <div class="maxwidth">
-        <div class="tab">
-        <a class="root" href="https://gnome.org/">GNOME.org</a>
-        </div>
-    </div>
-    </div>
+  <header id="masthead" class="site-header" role="banner">
+    <div class="grid grid-pad head-overflow">
+      <div class="navigation-container">
+        <nav id="site-navigation" class="main-navigation" role="navigation">
+          <div class="menu-main-container">
+            <ul id="menu-main" class="menu">
+              <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home">
+                <a href="https://2017.guadec.org/">GUADEC</a>
+              </li>
 
-    <!-- header -->
-    <div id="header" class="container_12">
-      <div id="logo" class="grid_3">
-        <a title="Go to home page" href="https://guadec.org/"><img style="width: 176px; height: 53px;" src="https://2016.guadec.org/wp-content/uploads/2016/03/guadec-logo-black-1.png" alt="GUADEC: The GNOME Conference" /></a>
-      </div>
+              <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home">
+                <a href="/">Registration Home</a>
+              </li>
 
-      <div id="top_bar" class="grid_9">
-        <div class="left">
-          <div class="menu-globalnav-container">
-            <ul id="menu-globalnav" class="menu">
-              <li id="menu-item-1039" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1039">
-              <a href="/">Registration Home</a></li>
-
-              <li class="menu-item menu-item-type-post_type menu-item-object-page">
+              <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home">
                 <form>
                   {{#if session.currentUser}}
                     <button {{{ login_buttons.logout }}}>Log out</a>
@@ -65,23 +66,28 @@
                    {{/if}}
                 </form>
               </li>
-
             </ul>
           </div>
-        </div>
+        </nav>
       </div>
-      
     </div>
+  </header>
 
-    <div class="clearfix"></div>
+  <section id="content" class="site-content">
 
-<div class="container_12">
+    <header class="entry-header">
+      <div class="grid grid-pad">
+        <div class="col-1-1">
+          <h1 class="entry-title">Registration</h1>
+      </div>
+    </div>
+   </header>
+   <div class="grid grid-pad">
+
+     <div class="container_12">
 
         {{#if development}}
-            <span style="border: 1px solid blue; color:red;" align="center">
-            <h1>DEVELOPMENT INSTANCE</h1>
-            <h2>Data in this instance may be deleted at any time!</h1>
-            </span>
+          <h3 style="color: red;">DEVELOPMENT INSTANCE!</h3>
         {{/if}}
 
 		<div class="crafted_content">
@@ -100,19 +106,10 @@
 
         {{{ body }}}
 
-                                    <div id="footer_art" class="grid_12 default">
-                            &nbsp;
-            </div>
-
         </div>
-</div>
-
-    <div class="clearfix"></div>
-    
-        <!-- footer grass -->
-    <div id="footer_grass">
-        &nbsp;
+      </div>
     </div>
+  </section>
 
     <!-- footer -->
     <div id="footer">
