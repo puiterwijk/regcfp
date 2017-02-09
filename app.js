@@ -91,6 +91,10 @@ app.use(function(req, res, next) {
   res.locals.login_buttons = routes_auth.buttons;
   res.locals.extra_js = [];
 
+  res.locals.event_name = config.theming.event_name;
+  res.locals.event_location = config.theming.event_location;
+  res.locals.app_url = config.auth.persona_audience;
+
   req.app = app;
   next();
 });
