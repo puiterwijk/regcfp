@@ -17,35 +17,6 @@
 
     Hi, {{name}}! Welcome to the GUADEC registration system.<br />
 
-    {{#if config.papers.enabled}}
-      <h2 style="padding-top: 20px;">Papers management</h2>
-      <div class="buttons">
-        {{#has_permission "papers/submit" }}
-        <div class="icons-inline grid_3">
-          <a href="/papers/submit">
-            {{>button text="Submit a talk" symbol="fa-comment"}}
-          </a>
-        </div>
-        {{/has_permission}}
-        {{#has_permission "papers/list/own" }}
-        <div class="icons-inline grid_5">
-          <a href="/papers/list/own">
-            {{>button text="View your submitted talks" symbol="fa-comments"}}
-          </a>
-        </div>
-        {{/has_permission}}
-        {{#has_permission "papers/list/accepted" }}
-        <div class="icons-inline grid_3">
-          <a href="/papers/list">
-            {{>button text="View accepted talks" symbol="fa-check-circle"}}
-          </a>
-        </div>
-        {{/has_permission}}
-      </div>
-
-    {{/if}}
-
-
     {{#if config.registration.enabled}}
       <h2 style="padding-top: 20px;">Registration</h2>
       <div class="buttons">
@@ -91,6 +62,33 @@
       </div>
     {{/if}}
 
+    {{#if config.papers.enabled}}
+      <h2 style="padding-top: 20px;">Papers management</h2>
+      <div class="buttons">
+        {{#has_permission "papers/submit" }}
+        <div class="icons-inline grid_3">
+          <a href="/papers/submit">
+            {{>button text="Submit a talk" symbol="fa-comment"}}
+          </a>
+        </div>
+        {{/has_permission}}
+        {{#has_permission "papers/list/own" }}
+        <div class="icons-inline grid_5">
+          <a href="/papers/list/own">
+            {{>button text="View your submitted talks" symbol="fa-comments"}}
+          </a>
+        </div>
+        {{/has_permission}}
+        {{#has_permission "papers/list/accepted" }}
+        <div class="icons-inline grid_3">
+          <a href="/papers/list">
+            {{>button text="View accepted talks" symbol="fa-check-circle"}}
+          </a>
+        </div>
+        {{/has_permission}}
+      </div>
+
+    {{/if}}
 
     {{#has_permission "admin" }}
       <h2 style="padding-top: 20px;">Admin</h2>
