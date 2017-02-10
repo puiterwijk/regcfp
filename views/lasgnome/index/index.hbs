@@ -26,35 +26,6 @@
     <h2 style="text-align: center;">Welcome, {{name}} to the  Libre Application Summit registration system</h2>
     <hr class="bottom_shadow"/>
 
-    {{#if config.papers.enabled}}
-        <h2>Papers management</h2>
-        <div class="las-icons-container">
-        {{#has_permission "papers/submit" }}
-        <div class="las-icons-inline grid_3">
-        <a href="/papers/submit">
-            {{>button text="Submit a talk" symbol="fa-comment"}}
-        </a>
-        </div>
-        {{/has_permission}}
-        {{#has_permission "papers/list/own" }}
-        <div class="las-icons-inline grid_5">
-        <a href="/papers/list/own">
-            {{>button text="View your submitted talks" symbol="fa-comments"}}
-        </a>
-        </div>
-        {{/has_permission}}
-        {{#has_permission "papers/list/accepted" }}
-        <div class="las-icons-inline grid_3">
-        <a href="/papers/list">
-            {{>button text="View accepted talks" symbol="fa-check-circle"}}
-        </a>
-        </div>
-        {{/has_permission}}
-        </div>
-    {{/if}}
-
-    <div class="clearfix"></div>
-
     {{#if config.registration.enabled}}
         <div id="las-registration">
         <h2>Registration</h2>
@@ -102,6 +73,35 @@
         </div>
     {{/if}}
 
+    {{#if config.papers.enabled}}
+        <h2>Papers management</h2>
+        <div class="las-icons-container">
+        {{#has_permission "papers/submit" }}
+        <div class="las-icons-inline grid_3">
+        <a href="/papers/submit">
+            {{>button text="Submit a talk" symbol="fa-comment"}}
+        </a>
+        </div>
+        {{/has_permission}}
+        {{#has_permission "papers/list/own" }}
+        <div class="las-icons-inline grid_5">
+        <a href="/papers/list/own">
+            {{>button text="View your submitted talks" symbol="fa-comments"}}
+        </a>
+        </div>
+        {{/has_permission}}
+        {{#has_permission "papers/list/accepted" }}
+        <div class="las-icons-inline grid_3">
+        <a href="/papers/list">
+            {{>button text="View accepted talks" symbol="fa-check-circle"}}
+        </a>
+        </div>
+        {{/has_permission}}
+        </div>
+    {{/if}}
+
+    <div class="clearfix"></div>
+
     {{#has_permission "admin" }}
         <hr class="bottom_shadow"/>
         <h2>Admin</h2>
@@ -115,8 +115,8 @@
             {{>button text="Desk" symbol="fa-sliders"}}
         </a>
         </div>
-        {{/has_permission}}
         </div>
+        {{/has_permission}}
 
         <div class="grid_8">
         <h3>Papers management</h3>
