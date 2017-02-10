@@ -8,9 +8,9 @@
 <h2>GUADEC registration information</h2>
 
 <p>
-Fill in your details to register for GUADEC 2017.  All fields except your name
-and payment information are optional.  You can also book and pay for
-accommodation at the University using this form.
+All GUADEC attendees are required to register. By completing this registration
+form, you are committing to follow the
+<a href="https://2017.guadec.org/code-of-conduct/">GUADEC code of conduct</a>.
 </p>
 
 </td></tr>
@@ -18,18 +18,41 @@ accommodation at the University using this form.
 <tr><td><label for="reg-name">Your name</label></td><td><input type="text" id="reg-name" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td></tr>
 <input type="hidden" name="is_public" value="true">
 
+<tr><td><label for="reg-{{ircnick}}">{{ registration_fields.ircnick.display_name }}</label></td>
+<td>
+  {{>field_entry id="ircnick" field=registration_fields.ircnick currency=config.registration.main_currency}}
+
+  {{#if registration_fields.ircnick.message}}
+    <br/>
+    <p class="note">{{registration_fields.ircnick.message}}</p>
+  {{/if}}
+</td>
+</tr>
+
+<tr><td><label for="reg-{{volunteer}}">{{ registration_fields.volunteer.display_name }}</label></td>
+<td>
+  {{>field_entry id="volunteer" field=registration_fields.volunteer currency=config.registration.main_currency}}
+
+  {{#if registration_fields.volunteer.message}}
+    <br/>
+    <p class="note">{{registration_fields.volunteer.message}}</p>
+  {{/if}}
+</td>
+</tr>
+
+<tr><td>&nbsp;</td><td><label><input type="checkbox" id="reg-public" value="false" name="is_public" 
+{{#unless registration.is_public}}
+checked
+{{/unless}}
+> Hide my name in the public list of attendees</label></td></tr>
+</tr>
+
 {{#has_permission "registration/pay"}}
-<tr><td><label for="reg-fee">Registration fee</label></td><td>
+<tr><td>&nbsp;</label></td><td>
+<h3>Registration Fee</h3>
+Please support GUADEC and GNOME by choosing to pay a fee that is reasonable for
+you.
 {{#unless registration.paid}}
-  Please support GUADEC and GNOME by choosing to pay a fee that is reasonable
-  for you–we suggest a payment of £15 for students, £40 for hobbyist and £150
-  for professionals. Pay over £100 and receive a free conference t-shirt.<br />
-
-  You can also support GNOME by becoming a <a
-  href="https://www.gnome.org/friends/" target="_blank">Friend of GNOME</a> or
-  donating <a href="https://www.gnome.org/friends/other-ways-to-donate/"
-  target="_blank">in other ways</a>.
-
   <p>
   {{>currency_selector}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="40" />
   </p>
@@ -57,34 +80,25 @@ for any cancelation.
 
 {{/has_permission}}
 
-
 {{#each registration_fields}}
-<tr><td><label for="reg-{{@key}}">{{ this.display_name }}</label></td>
-<td>
+{{#ifEqual @key "ircnick"}}{{else}}{{#ifEqual @key "volunteer"}}{{else}}
+  <tr><td><label for="reg-{{@key}}">{{ this.display_name }}</label></td>
+  <td>
     {{>field_entry id=@key field=this currency=../config.registration.main_currency}}
 
     {{#if this.message}}
-<br/>
-<p class="note">{{this.message}}</p>
+      <br/>
+      <p class="note">{{this.message}}</p>
     {{/if}}
-</td>
-</tr>
+  </td>
+  </tr>
+{{/ifEqual}}{{/ifEqual}}
 {{/each}}
 
-<tr><td>&nbsp;</td><td><label><input type="checkbox" id="reg-public" value="false" name="is_public" 
-{{#unless registration.is_public}}
-checked
-{{/unless}}
->Hide my name in the public list of attendees</label></td></tr>
-</tr>
-<tr><td>&nbsp;</td>
-<td>This conference has a <a href="https://2016.guadec.org/code-of-conduct/" target="_blank">Code of Conduct</a> which all attendees are expected to follow at all conference venues and events.</td>
-</tr>
 <tr><td>&nbsp;</td>
 
-<tr><td>Total to pay</td><td id="reg-total">[JavaScript required to calculate]</td></tr>
+<tr><td>Total to pay</td><td id="reg-total">[JavaScript required to calculate]</td>
 
-<tr><td>&nbsp;</td>
 <td><input class="submit-talk" type="submit" value="Submit" /></td>
 </tr>
 
