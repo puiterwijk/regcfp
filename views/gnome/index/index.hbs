@@ -17,75 +17,135 @@
 
     Hi, {{name}}! Welcome to the GUADEC registration system.<br />
 
-    {{#has_permission "registration/desk"}}
-    <a class="button" href="/desk">Desk</a>
-    {{/has_permission}}
-
-
     {{#if config.papers.enabled}}
-        <h2>Papers management</h2>
-        <div class="buttons">
+      <h2 style="padding-top: 20px;">Papers management</h2>
+      <div class="buttons">
         {{#has_permission "papers/submit" }}
-        <a class="button" href="/papers/submit">Submit a talk</a>
+        <div class="icons-inline grid_3">
+          <a href="/papers/submit">
+            {{>button text="Submit a talk" symbol="fa-comment"}}
+          </a>
+        </div>
         {{/has_permission}}
         {{#has_permission "papers/list/own" }}
-        <a class="button" href="/papers/list/own">View your submitted talks</a>
+        <div class="icons-inline grid_5">
+          <a href="/papers/list/own">
+            {{>button text="View your submitted talks" symbol="fa-comments"}}
+          </a>
+        </div>
         {{/has_permission}}
         {{#has_permission "papers/list/accepted" }}
-        <a class="button" href="/papers/list">View accepted talks</a>
+        <div class="icons-inline grid_3">
+          <a href="/papers/list">
+            {{>button text="View accepted talks" symbol="fa-check-circle"}}
+          </a>
+        </div>
         {{/has_permission}}
-    </div>
+      </div>
 
     {{/if}}
 
 
     {{#if config.registration.enabled}}
-        <h2>Registration</h2>
+      <h2 style="padding-top: 20px;">Registration</h2>
+      <div class="buttons">
         {{#has_permission "registration/view_public"}}
-        <a class="button" href="/registration/list">Current registrations</a>
+        <div class="icons-inline grid_3">
+          <a href="/registration/list">
+            {{>button text="Current registrations" symbol="fa-list-ul"}}
+          </a>
+        </div>
         {{/has_permission}}
-        <div class="buttons">
-        {{#has_permission "registration/register" }}
+        {{#has_permission "registration/register"}}
         {{#if registration}}
-        <h3>Registration ID: {{registration.display_id}}</h3>
-        <a class="button" href="/registration/register">Update registration</a></div>
+        <div class="icons-inline grid_5">
+          <a href="/registration/register">
+            {{>button text="Update registration" symbol="fa-pencil"}}
+          </a>
+        </div>
         {{#has_permission "registration/request_receipt"}}
-        <a class="button" href="/registration/receipt" target="_blank">Get receipt</a>
+        <div class="icons-inline grid_3">
+          <a href="/registration/receipt" target="_blank">
+            {{>button text="Get receipt" symbol="fa-ticket"}}
+          </a>
+        </div>
         {{/has_permission}}
         {{#has_permission "registration/pay"}}
         {{#unless registration.badge_printed}}
-        <a class="button" href="/registration/pay">Pay additional fees</a>
+          <div class="icons-inline grid_11">
+            <a href="/registration/pay">
+              {{>button text="Pay more" symbol="fa-money"}}
+            </a>
+          </div>
         {{/unless}}
         {{/has_permission}}
         {{else}}
-        <a class="button" href="/registration/register">Register</a>
+          <div class="icons-inline grid_5">
+            <a href="/registration/register">
+              {{>button text="Register" symbol="fa-list-ul"}}
+            </a>
+          </div>
         {{/if}}
         {{/has_permission}}
         </div>
+      </div>
     {{/if}}
 
 
     {{#has_permission "admin" }}
-        <h2>Admin</h2>
+      <h2 style="padding-top: 20px;">Admin</h2>
 
+      <div class="buttons">
+        {{#has_permission "registration/desk"}}
+        <div class="container_12">
+        <div class="grid_2">
+          <h3>Overview</h3>
+          <div class="buttons icons-inline">
+            <a href="/desk">
+              {{>button text="Desk" symbol="fa-sliders"}}
+            </a>
+          </div>
+        </div>
+        </div>
+        {{/has_permission}}
+
+        <div class="grid_8">
         <h3>Papers management</h3>
-        <div class="buttons">
         {{#has_permission "papers/list/all"}}
-        <a class="button" href="/papers/admin/list">View all talks</a>
+        <div class="icons-inline">
+          <a href="/papers/admin/list">
+            {{>button text="View all talks" symbol="fa-comments"}}
+          </a>
+        </div>
         {{/has_permission}}
         {{#has_permission "papers/vote"}}
-        <a class="button" href="/papers/admin/vote">Vote on talks</a>
+        <div class="icons-inline">
+          <a href="/papers/admin/vote">
+            {{>button text="Vote on talks" symbol="fa-comments"}}
+          </a>
+        </div>
         {{/has_permission}}
         {{#has_permission "papers/showvotes" }}
-        <a class="button" href="/papers/admin/vote/show">Show talk votes</a>
+        <div class="icons-inline">
+          <a href="/papers/admin/vote/show">
+            {{>button text="Show talk votes" symbol="fa-comments"}}
+          </a>
+        </div>
         {{/has_permission}}
         </div>
 
+        <div class="grid_2">
         <h3>Registration</h3>
         <div class="buttons">
         {{#has_permission "registration/view_all" }}
-        <a class="button" href="/registration/admin/list">List all registrations</a>
+        <div class="icons-inline">
+          <a href="/registration/admin/list">
+            {{>button text="List all registrations" symbol="fa-list-ul"}}
+          </a>
+        </div>
+        </div>
         {{/has_permission}}
         </div>
+      </div>
     {{/has_permission}}
 {{/unless}}
