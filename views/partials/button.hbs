@@ -1,0 +1,18 @@
+{{!
+   Partial to generate a button-link using Font Awesome symbols.
+
+   Parameters:
+
+     - text: link text
+     - symbol: symbol
+
+   For example:
+
+    {>button text="Register" symbol="fa-list-ul"}
+!}}
+
+<span class="fa-stack fa-4x">
+  <i class="fa fa-circle fa-stack-2x circle-background"></i>
+  <i class="fa {{symbol}} fa-stack-1x circle-text"></i>
+</span>
+<h4>{{text}}</h4>
