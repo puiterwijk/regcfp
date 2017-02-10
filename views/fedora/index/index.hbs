@@ -28,26 +28,6 @@
     <div class="button"><a href="/desk">Desk</a></div>
     {{/has_permission}}
 
-    {{#if config.papers.enabled}}
-        <h2 class="thin">Papers management</h2>
-        <div class="buttons">
-        {{#has_permission "papers/submit" }}
-        <div class="button"><a href="/papers/submit">Submit a talk</a></div><br />
-        {{/has_permission}}
-        </div>
-        <div class="buttons">
-        {{#has_permission "papers/list/own" }}
-        <div class="button"><a href="/papers/list/own">View your submitted talks</a></div><br />
-        {{/has_permission}}
-        </div>
-        <div class="buttons">
-        {{#has_permission "papers/list/accepted" }}
-        <div class="button"><a href="/papers/list">View accepted talks</a></div>
-        {{/has_permission}}
-        </div>
-        </div>
-    {{/if}}
-
     {{#if config.registration.enabled}}
         <div class="col-xs-12 col-sm-6 bottom-margin">
         <h2 class="thin">Registration</h2>
@@ -73,6 +53,26 @@
         {{/has_permission}}
         </div>
         </div>
+        </div>
+        </div>
+    {{/if}}
+
+    {{#if config.papers.enabled}}
+        <h2 class="thin">Papers management</h2>
+        <div class="buttons">
+        {{#has_permission "papers/submit" }}
+        <div class="button"><a href="/papers/submit">Submit a talk</a></div><br />
+        {{/has_permission}}
+        </div>
+        <div class="buttons">
+        {{#has_permission "papers/list/own" }}
+        <div class="button"><a href="/papers/list/own">View your submitted talks</a></div><br />
+        {{/has_permission}}
+        </div>
+        <div class="buttons">
+        {{#has_permission "papers/list/accepted" }}
+        <div class="button"><a href="/papers/list">View accepted talks</a></div>
+        {{/has_permission}}
         </div>
         </div>
     {{/if}}
