@@ -40,6 +40,12 @@ a:hover { color: #53cfe8; }
   max-width: 60%;
 }
 
+/* Wordpress theme sets this to 100% for tables */
+table.purchase-option-list {
+  width: auto;
+  margin: 0 0 0 0;
+}
+
 /* Button design based on GNOME Grass theme (we can't reuse that directly though,
  * it requires bootstrap.js).
  */
@@ -337,4 +343,13 @@ table:not(.submission-form) th, table:not(.submission-form) td {
 .icons-inline a {
     text-decoration: none;
     outline : none;
+}
+
+.submission-form h3 {
+  padding-top: 20px;
+}
+
+/* Final payment in bold */
+td#reg-total {
+  font-weight: bold;
 }

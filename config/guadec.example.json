@@ -109,10 +109,8 @@
           "required": false,
           "options": [ "Not interested", "Keep me informed" ],
           "message" : [
-            "If you are interested in volunteering at GUADEC, we'll email you ",
-            "with details nearer to the conference. You can also subscribe to ",
-            "guadec-list@gnome.org and join us in #guadec on irc.gnome.org if ",
-            "you want to get more involved."
+            "GUADEC can't happen without help from volunteers. Choose ",
+            "if you would like to receive details."
           ],
           "private": true
         },
@@ -121,16 +119,11 @@
           "display_name": "",
           "html" : [
             "<h3>Accommodation</h3>",
-            "<p>We have prebooked rooms available on the same site as the ",
-            "conference venue at the Manchester Metropolitan University's ",
-            "Birley Campus. These are in 12-bedroom houses which are ",
-            "reserved for GUADEC attendees. See ",
+            "<p>Rooms are available in 12-bedroom houses at the conference ",
+            "venue (see ",
             "<a href=\"http://www.guadec.org/accommodation/\">the GUADEC website</a> ",
-           "for more details.</p>",
-           "<p>",
-           "You can book and pay for a room now, or you can book one later on ",
-           "by visiting this website again and choosing to edit your ",
-           "registration.</p>"
+            "for more details). These are available on a first come first ",
+            "serve basis and cost £43 per night"
          ]
         },
         "accommodation": {
@@ -177,11 +170,9 @@
           "display_name": "",
           "html" : [
             "<h3>About you</h3>",
-            "Your answers to the following questions will only be used for ",
-            "statistics. These questions are all optional and will help us ",
-            "gain a better understanding of the GUADEC community. All ",
-            "answers will only be used anonymously and will not be ",
-            "associated with you."
+            "This section is optional and is used to help organise GUADEC ",
+            "in future years. All information provided is anonymized and ",
+            "will not be associated with you."
           ]
         },
         "country": {
@@ -206,7 +197,7 @@
           "type": "radio",
           "required": false,
           "default": "Unspecified",
-          "options" : ["Unspecified", "< 20", "20–29", "30–39", "40–49", "≥ 50" ],
+          "options" : ["Unspecified", "19 or below", "20–29", "30–39", "40–49", "50 and above" ],
           "private": true
         },
         "gender": {
