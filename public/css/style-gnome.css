@@ -314,4 +314,27 @@ table:not(.submission-form) th, table:not(.submission-form) td {
     font-weight: normal;
 }
 
+.circle-text {
+    color: #fff;
+    font-size: 40px !important;
+}
 
+.buttons {
+    text-align: center;
+}
+
+.icons-inline {
+    display: inline-block;
+    margin: 0 15px;
+}
+.icons-inline h4 {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 25px;
+    text-transform: uppercase;
+}
+.icons a,
+.icons-inline a {
+    text-decoration: none;
+    outline : none;
+}
