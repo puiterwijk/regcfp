@@ -8,6 +8,7 @@
     <div class="las-icons-container las-icons grid_4" style="padding-top: 75px;">
     <form>
       <button {{{ login_buttons.login }}}">
+        {{>button text="LOG IN" symbol="fa-sign-in"}}
         <span class="fa-stack fa-3x">
           <i class="fa fa-circle fa-stack-2x circle-background"></i>
           <i class="fa fa-sign-in fa-stack-1x circle-text"></i>
@@ -31,33 +32,21 @@
         {{#has_permission "papers/submit" }}
         <div class="las-icons-inline grid_3">
         <a href="/papers/submit">
-            <span class="fa-stack fa-4x">
-              <i class="fa fa-circle fa-stack-2x circle-background"></i>
-              <i class="fa fa-comment fa-stack-1x circle-text"></i>
-            </span>
-            <h4>Submit a talk</h4>
+            {{>button text="Submit a talk" symbol="fa-comment"}}
         </a>
         </div>
         {{/has_permission}}
         {{#has_permission "papers/list/own" }}
         <div class="las-icons-inline grid_5">
         <a href="/papers/list/own">
-            <span class="fa-stack fa-4x">
-              <i class="fa fa-circle fa-stack-2x circle-background"></i>
-              <i class="fa fa-comments fa-stack-1x circle-text"></i>
-            </span>
-            <h4>View your submitted talks</h4>
+            {{>button text="View your submitted talks" symbol="fa-comments"}}
         </a>
         </div>
         {{/has_permission}}
         {{#has_permission "papers/list/accepted" }}
         <div class="las-icons-inline grid_3">
         <a href="/papers/list">
-            <span class="fa-stack fa-4x">
-              <i class="fa fa-circle fa-stack-2x circle-background"></i>
-              <i class="fa fa-check-circle fa-stack-1x circle-text"></i>
-            </span>
-            <h4>View accepted talks</h4>
+            {{>button text="View accepted talks" symbol="fa-check-circle"}}
         </a>
         </div>
         {{/has_permission}}
@@ -73,11 +62,7 @@
         {{#has_permission "registration/view_public"}}
         <div class="las-icons-inline grid_3">
         <a href="/registration/list">
-            <span class="fa-stack fa-4x">
-              <i class="fa fa-circle fa-stack-2x circle-background"></i>
-              <i class="fa fa-list-ul fa-stack-1x circle-text"></i>
-            </span>
-            <h4>Current registrations</h4>
+            {{>button text="Current registrations" symbol="fa-list-ul"}}
         </a>
         </div>
         {{/has_permission}}
@@ -85,21 +70,13 @@
         {{#if registration}}
         <div class="las-icons-inline grid_5">
         <a href="/registration/register">
-            <span class="fa-stack fa-4x">
-              <i class="fa fa-circle fa-stack-2x circle-background"></i>
-              <i class="fa fa-pencil fa-stack-1x circle-text"></i>
-            </span>
-            <h4>Update registration</h4>
+            {{>button text="Update registration" symbol="fa-pencil"}}
         </a>
         </div>
         {{#has_permission "registration/request_receipt"}}
         <div class="las-icons-inline grid_3">
         <a href="/registration/receipt" target="_blank">
-            <span class="fa-stack fa-4x">
-              <i class="fa fa-circle fa-stack-2x circle-background"></i>
-              <i class="fa fa-ticket fa-stack-1x circle-text"></i>
-            </span>
-            <h4>Get receipt</h4>
+            {{>button text="Get receipt" symbol="fa-ticket"}}
         </a>
         </div>
         {{/has_permission}}
@@ -107,11 +84,7 @@
             {{#unless registration.badge_printed}}
             <div class="las-icons-inline grid_11">
             <a href="/registration/pay">
-                <span class="fa-stack fa-4x">
-                  <i class="fa fa-circle fa-stack-2x circle-background"></i>
-                  <i class="fa fa-money fa-stack-1x circle-text"></i>
-                </span>
-                <h4>Pay more</h4>
+                {{>button text="Pay more" symbol="fa-money"}}
             </a>
             </div>
             {{/unless}}
@@ -119,11 +92,7 @@
         {{else}}
         <div class="las-icons-inline grid_5">
         <a href="/registration/register">
-            <span class="fa-stack fa-4x">
-              <i class="fa fa-circle fa-stack-2x circle-background"></i>
-              <i class="fa fa-list-ul fa-stack-1x circle-text"></i>
-            </span>
-            <h4>Register</h4>
+            {{>button text="Register" symbol="fa-list-ul"}}
         </a>
         </div>
         {{/if}}
@@ -143,11 +112,7 @@
         <h3>Overview</h3>
         <div class="las-icons-container las-icons-inline">
         <a href="/desk">
-            <span class="fa-stack fa-4x">
-              <i class="fa fa-square fa-stack-2x circle-background"></i>
-              <i class="fa fa-sliders fa-stack-1x circle-text"></i>
-            </span>
-            <h4>Desk</h4>
+            {{>button text="Desk" symbol="fa-sliders"}}
         </a>
         </div>
         {{/has_permission}}
@@ -158,33 +123,21 @@
         {{#has_permission "papers/list/all"}}
         <div class="las-icons-inline">
         <a href="/papers/admin/list">
-            <span class="fa-stack fa-4x">
-              <i class="fa fa-square fa-stack-2x circle-background"></i>
-              <i class="fa fa-comments fa-stack-1x circle-text"></i>
-            </span>
-            <h4>View all talks</h4>
+            {{>button text="View all talks" symbol="fa-comments"}}
         </a>
         </div>
         {{/has_permission}}
         {{#has_permission "papers/vote"}}
         <div class="las-icons-inline">
         <a href="/papers/admin/vote">
-            <span class="fa-stack fa-4x">
-              <i class="fa fa-square fa-stack-2x circle-background"></i>
-              <i class="fa fa-comments fa-stack-1x circle-text"></i>
-            </span>
-            <h4>Vote on talks</h4>
+            {{>button text="Vote on talks" symbol="fa-comments"}}
         </a>
         </div>
         {{/has_permission}}
         {{#has_permission "papers/showvotes" }}
         <div class="las-icons-inline">
         <a href="/papers/admin/vote/show">
-            <span class="fa-stack fa-4x">
-              <i class="fa fa-square fa-stack-2x circle-background"></i>
-              <i class="fa fa-comments fa-stack-1x circle-text"></i>
-            </span>
-            <h4>Show talk votes</h4>
+            {{>button text="Show talk votes" symbol="fa-comments"}}
         </a>
         </div>
         {{/has_permission}}
@@ -195,11 +148,7 @@
         <h3>Registration</h3>
         <div class="las-icons-inline">
         <a href="/registration/admin/list">
-            <span class="fa-stack fa-4x">
-              <i class="fa fa-square fa-stack-2x circle-background"></i>
-              <i class="fa fa-list-ul fa-stack-1x circle-text"></i>
-            </span>
-            <h4>List all registrations</h4>
+            {{>button text="List all registrations" symbol="fa-list-ul"}}
         </a>
         </div>
         {{/has_permission}}
