@@ -65,11 +65,11 @@ body {
   padding-bottom: 7px;
   padding-top: 5px;
   max-width: 50em;
+  vertical-align: top;
 }
 
 .submission-form > tbody > tr > td:first-child {
   text-align: right;
-  vertical-align: top;
   padding-right: 10px;
   font-weight: bold;
 }
