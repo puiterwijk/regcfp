@@ -1,5 +1,7 @@
 {
   "development": {
+    "site_url": "http://localhost:3000",
+
     "theming": {
       "theme": "fedora",
       "site_name": "My Event registration",
@@ -42,8 +44,7 @@
     },
 
     "auth": {
-      "module": "test",
-      "persona_audience": "http://localhost:3000"
+      "module": "test"
     },
 
     "permissions": {
