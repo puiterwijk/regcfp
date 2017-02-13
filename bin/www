@@ -9,6 +9,8 @@ var servers = {
  * Module dependencies.
  */
 
+var express_init = require('express-init');
+
 var config = require('../configuration');
 
 var app = require('../app');
@@ -45,7 +47,6 @@ if(config.listen.https.enabled) {
   servers.https.on('listening', onListeningHttps);
 }
 
-
 function startListening() {
   if(config.listen.http.enabled) {
     servers.http.listen(config.listen.http.port,
@@ -58,7 +59,12 @@ function startListening() {
 }
 
 models.sequelize.sync().then(function () {
-  startListening();
+  express_init(app, function(err) {
+    if (err)
+      throw new Error(err);
+
+    startListening();
+  });
 });
 
 
