@@ -10,7 +10,6 @@ function login_prompt_test() {
         window.location.reload();
       },
       error: function(xhr, status, err) {
-        navigator.id.logout();
         window.alert('Login failure: ' + err);
       }
     });
