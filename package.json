@@ -10,6 +10,7 @@
     "cookie-parser": "*",
     "debug": "*",
     "express": "4.*",
+    "express-init": "*",
     "express-handlebars": "*",
     "express-session": "*",
     "connect-session-sequelize": "*",
@@ -26,7 +27,8 @@
     "mktemp": "*",
     "nodemailer": "*",
     "nodemailer-smtp-transport": "*",
-    "country-data": "*"
+    "country-data": "*",
+    "openid-client": "git://github.com/ssssam/node-openid-client"
   },
   "devDependencies": {
     "mocha": "*",
