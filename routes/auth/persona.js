@@ -8,7 +8,7 @@ var utils = require('../../utils');
 var models = require('../../models');
 var User = models.User;
 
-var persona_audience    = require('../../configuration')['auth']['persona_audience'];
+var persona_audience    = require('../../configuration')['site_url'];
 console.log('Persona audience: ' + persona_audience);
 
 function invalid_type(req, res, next) {

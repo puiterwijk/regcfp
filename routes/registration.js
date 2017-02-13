@@ -268,8 +268,8 @@ function create_paypal_payment_and_redirect(req, res, next, currency, regfee, pu
       'payment_method': 'paypal'
     },
     'redirect_urls': {
-      'return_url': config['auth']['persona_audience'] + '/registration/pay/paypal/return',
-      'cancel_url': config['auth']['persona_audience'] + '/registration/pay'
+      'return_url': config['site_url'] + '/registration/pay/paypal/return',
+      'cancel_url': config['site_url'] + '/registration/pay'
     },
     'transactions': [{
       'item_list': {
