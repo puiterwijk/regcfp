@@ -54,11 +54,13 @@
               <a href="/">Registration Home</a></li>
 
               <li class="menu-item menu-item-type-post_type menu-item-object-page">
-                {{#if session.currentUser}}
-                    <a href="/#logout" onclick="{{ login_buttons.logout.onclick }}">Log out</a>
-                {{else}}
-                    <a href="/#login" onclick="{{ login_buttons.login.onclick }}">Log in with Persona</a>
-                {{/if}}
+                <form>
+                  {{#if session.currentUser}}
+                    <button {{{ login_buttons.logout }}}>Log out</button>
+                  {{else}}
+                    <button {{{ login_buttons.login }}}>Log in</button>
+                   {{/if}}
+                </form>
               </li>
             </ul>
           </div>
@@ -69,11 +71,13 @@
         <span class="hero-header">Libre Application Summit</span>
         <span class="hero-description">
         <p>
+        <form>
         {{#if session.currentUser}}
-            <a href="/#logout" onclick="{{ login_buttons.logout.onclick }}">Log out</a>
+          <button {{{ login_buttons.logout }}}>Log out</button>
         {{else}}
-            <a href="/#login" onclick="{{ login_buttons.login.onclick }}">Registration</a>
+          <button {{{ login_buttons.login }}}>Registration</button>
         {{/if}}
+        </form>
         </p>
         </span>
       </div>
