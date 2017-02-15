@@ -20,13 +20,15 @@ You will need to authenticate with a third party service to log in. Some privacy
 </div>
 
 <div class="las-icons-container las-icons grid_4" style="padding-top: 75px;">
-<a href="/#login" onclick="{{ login_buttons.login.onclick }}">
+<form>
+  <button {{{ login_buttons.login }}}">
     <span class="fa-stack fa-3x">
       <i class="fa fa-circle fa-stack-2x circle-background"></i>
       <i class="fa fa-sign-in fa-stack-1x circle-text"></i>
     </span>
-    <h4>LOG IN WITH PERSONA</h4>
-</a>
+    <h4>LOG IN</h4>
+  </button>
+</form>
 </div>
 
 <div class="clearfix"></div>
