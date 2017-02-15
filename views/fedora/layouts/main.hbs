@@ -80,11 +80,13 @@
                 <div class="col-xs-8 col-xs-offset-2 bottom-margin">
                     <h1 class="thin">Welcome to the Flock Registration System.</h1>
                     <h4 class="thin">
+                      <form>
                         {{#if session.currentUser}}
-                        <button id="logoutBtn" onclick="{{ login_buttons.logout.onclick }}">Log out</button>
+                          <button id="logoutBtn" {{{ login_buttons.logout }}}>Log out</button>
                         {{else}}
-                        <button id="loginBtn" onclick="{{ login_buttons.login.onclick }}">Log in with Persona</button>
+                          <button id="loginBtn" {{{ login_buttons.login }}}>Log in</button>
                         {{/if}}
+                      </form>
                     </h4>
                 </div>
               </div>

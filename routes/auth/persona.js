@@ -53,12 +53,8 @@ router.post('/logout', function(req, res, next) {
 });
 
 router.buttons = {
-  login: {
-    onclick: 'javascript: navigator.id.request(login_args);',
-  },
-  logout: {
-    onclick: 'javascript: navigator.id.logout();',
-  }
+  login: "onclick='javascript: navigator.id.request(login_args);'",
+  logout: "onclick='javascript: navigator.id.logout();'"
 };
 
 router.middleware = function(req, res, next) {
