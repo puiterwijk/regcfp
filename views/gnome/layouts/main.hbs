@@ -93,6 +93,10 @@
             </p>
         </noscript>
 
+        {{#if error}}
+          <div class="validation">Something went wrong: {{error}}.</div>
+        {{/if}}
+
         {{{ body }}}
 
                                     <div id="footer_art" class="grid_12 default">
