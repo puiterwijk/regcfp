@@ -69,6 +69,11 @@
             <h2>Data in this instance may be deleted at any time!</h1>
             </span>
         {{/if}}
+
+        {{#if error}}
+          <div class="validation">Something went wrong: {{error}}.</div>
+        {{/if}}
+
         <div class="main-head-index">
             <div class="container">
               <div class="row">
