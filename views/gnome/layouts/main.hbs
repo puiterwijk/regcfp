@@ -60,9 +60,9 @@
               <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home">
                 <form>
                   {{#if session.currentUser}}
-                    <button {{{ login_buttons.logout }}}>Log out</a>
+                    <button class="login" {{{ login_buttons.logout }}}>Log out</a>
                   {{else}}
-                    <button {{{ login_buttons.login }}}>Log in</a>
+                    <button class="login" {{{ login_buttons.login }}}>Log in</a>
                    {{/if}}
                 </form>
               </li>

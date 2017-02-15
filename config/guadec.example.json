@@ -1,5 +1,7 @@
 {
   "development": {
+    "site_url": "http://localhost:3000",
+
     "theming": {
       "theme": "gnome",
       "site_name": "TEST GUADEC 2017 registration",
