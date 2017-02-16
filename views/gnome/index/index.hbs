@@ -21,73 +21,65 @@
     Hi, {{name}}! Welcome to the GUADEC registration system.<br />
 
     {{#if config.registration.enabled}}
-      <h2 style="padding-top: 20px;">Registration</h2>
-      <div class="buttons">
-        {{#has_permission "registration/view_public"}}
-        <div class="icons-inline grid_3">
-          <a href="/registration/list">
-            {{>button text="Current registrations" symbol="fa-list-ul"}}
-          </a>
+    {{#has_permission "registration/register"}}
+      {{#unless registration}}
+        <h2 style="padding-top: 20px;">Registration is Open</h2>
+        <p>
+          Conference attendees are required to register. It only takes a minute!
+        </p>
+
+        <a class="button" href="/registration/register">Register</a>
+      {{else}}
+        <h2 style="padding-top: 20px;">Registration Details</h2>
+        <p>
+          Registration details will be printed on your conference badge shortly
+          before the conference opens. They can be changed prior to this time.
+        </p>
+        <p>
+          Name: {{ name }}
+
+          {{#if registration_fields.ircnick.value }}
+            Chat nickname: {{ registration_fields.ircnick.value }}
+          {{/if}}
+
+          {{#unless registration.badge_printed}}
+            <a class="button" href="/registration/register"">Edit registration</a>
+          {{/unless}}
+        </p>
+        <p>
+          {{#if registration.paid_paypal }}
+            Paid: {{ registration.paid_paypal }}
+          {{/if}}
+          {{#if registration.outstanding_onsite }}
+            To pay: {{ registration.outstanding_onsite }}
+          {{/if}}
+
+          <a class="button" href="/registration/receipt" target="_blank">Get receipt</a>
+
+          {{#has_permission "registration/pay"}}
+          {{#unless registration.badge_printed}}
+            <a class="button" href="/registration/pay">Make payment</a>
+          {{/unless}}
+          {{/has_permission}}
         </div>
-        {{/has_permission}}
-        {{#has_permission "registration/register"}}
-        {{#if registration}}
-        <div class="icons-inline grid_5">
-          <a href="/registration/register">
-            {{>button text="Update registration" symbol="fa-pencil"}}
-          </a>
-        </div>
-        {{#has_permission "registration/request_receipt"}}
-        <div class="icons-inline grid_3">
-          <a href="/registration/receipt" target="_blank">
-            {{>button text="Get receipt" symbol="fa-ticket"}}
-          </a>
-        </div>
-        {{/has_permission}}
-        {{#has_permission "registration/pay"}}
-        {{#unless registration.badge_printed}}
-          <div class="icons-inline grid_11">
-            <a href="/registration/pay">
-              {{>button text="Pay more" symbol="fa-money"}}
-            </a>
-          </div>
-        {{/unless}}
-        {{/has_permission}}
-        {{else}}
-          <div class="icons-inline grid_5">
-            <a href="/registration/register">
-              {{>button text="Register" symbol="fa-list-ul"}}
-            </a>
-          </div>
-        {{/if}}
-        {{/has_permission}}
-        </div>
-      </div>
+      {{/unless}}
+    {{/has_permission}}
     {{/if}}
 
     {{#if config.papers.enabled}}
-      <h2 style="padding-top: 20px;">Papers management</h2>
+      <h2 style="padding-top: 20px;">Talk Submissions</h2>
+      <p>
+        The GUADEC 2017 call for papers is open until April 23rd! Read the call
+        to see what kinds of talks we are interested in.
+      </p>
+
       <div class="buttons">
         {{#has_permission "papers/submit" }}
-        <div class="icons-inline grid_3">
-          <a href="/papers/submit">
-            {{>button text="Submit a talk" symbol="fa-comment"}}
-          </a>
-        </div>
+          <a class="button" href="/papers/submit">Submit a Talk</a>
         {{/has_permission}}
+
         {{#has_permission "papers/list/own" }}
-        <div class="icons-inline grid_5">
-          <a href="/papers/list/own">
-            {{>button text="View your submitted talks" symbol="fa-comments"}}
-          </a>
-        </div>
-        {{/has_permission}}
-        {{#has_permission "papers/list/accepted" }}
-        <div class="icons-inline grid_3">
-          <a href="/papers/list">
-            {{>button text="View accepted talks" symbol="fa-check-circle"}}
-          </a>
-        </div>
+          <a class="button" href="/papers/list/own">View your Submitted Talks</a>
         {{/has_permission}}
       </div>
 
@@ -101,11 +93,7 @@
         <div class="container_12">
         <div class="grid_2">
           <h3>Overview</h3>
-          <div class="buttons icons-inline">
-            <a href="/desk">
-              {{>button text="Desk" symbol="fa-sliders"}}
-            </a>
-          </div>
+          <a class="button" href="/desk">Desk</a>
         </div>
         </div>
         {{/has_permission}}
@@ -113,25 +101,13 @@
         <div class="grid_8">
         <h3>Papers management</h3>
         {{#has_permission "papers/list/all"}}
-        <div class="icons-inline">
-          <a href="/papers/admin/list">
-            {{>button text="View all talks" symbol="fa-comments"}}
-          </a>
-        </div>
+          <a class="button" href="/papers/admin/list">View all talks</a>
         {{/has_permission}}
         {{#has_permission "papers/vote"}}
-        <div class="icons-inline">
-          <a href="/papers/admin/vote">
-            {{>button text="Vote on talks" symbol="fa-comments"}}
-          </a>
-        </div>
+          <a class="button" href="/papers/admin/vote">Vote on talks</a>
         {{/has_permission}}
         {{#has_permission "papers/showvotes" }}
-        <div class="icons-inline">
-          <a href="/papers/admin/vote/show">
-            {{>button text="Show talk votes" symbol="fa-comments"}}
-          </a>
-        </div>
+          <a class="button" href="/papers/admin/vote/show">Show talk votes</a>
         {{/has_permission}}
         </div>
 
@@ -139,10 +115,7 @@
         <h3>Registration</h3>
         <div class="buttons">
         {{#has_permission "registration/view_all" }}
-        <div class="icons-inline">
-          <a href="/registration/admin/list">
-            {{>button text="List all registrations" symbol="fa-list-ul"}}
-          </a>
+          <a class="button" href="/registration/admin/list">List all registrations</a>
         </div>
         </div>
         {{/has_permission}}
