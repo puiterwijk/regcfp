@@ -54,31 +54,6 @@ table.purchase-option-list {
   margin: 0 0 0 0;
 }
 
-/* Button design based on GNOME Grass theme (we can't reuse that directly though,
- * it requires bootstrap.js).
- */
-
-.button {
-  text-decoration: none;
-  border-radius: 6px;
-  padding: 6px 30px;
-  background-color: #fff;
-  border: 1px solid;
-  border-color: #ccc;
-  color: #204a87;
-  font-size: 14px;
-}
-
-.button:hover {
-  background-color: #ccc;
-  color: #3465a4;
-}
-
-.button:visited {
-  color: #204a87;
-}
-
-
 /* Footer taken from the GNOME Grass theme:
  * https://www.gnome.org/wp-content/themes/gnome-grass/style.css?ver=4.7.2
  */
@@ -377,6 +352,15 @@ td#reg-total {
 
 .guadec-login p {
 	color: #4a86cf;
+}
+
+.button {
+  border-radius: 0;
+  text-decoration: none;
+  padding: 6px 30px;
+  background-color: #4a86cf;
+  color: white;
+  border: 0px;
 }
 
 .button-big {
