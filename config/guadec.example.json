@@ -178,24 +178,18 @@
           ]
         },
         "country": {
-          "display_name": "Country",
+          "display_name": "Country of residence",
           "short_display_name": "Country",
-          "type": "string",
+          "type": "country",
           "required": false,
           "default": "Unspecified",
-          "placeholder": "",
-          "private": true
-        },
-        "occupation": {
-          "display_name": "Occupation",
-          "short_display_name": "Occupation",
-          "type": "string",
-          "required": false,
+          "options": ["Unspecified"],
           "placeholder": "",
           "private": true
         },
         "age": {
           "display_name": "Age group",
+          "short_display_name": "Age",
           "type": "radio",
           "required": false,
           "default": "Unspecified",
@@ -205,6 +199,14 @@
         "gender": {
           "display_name": "Gender identity",
           "short_display_name": "Gender",
+          "type": "string",
+          "required": false,
+          "placeholder": "",
+          "private": true
+        },
+        "source": {
+          "display_name": "How did you hear about GUADEC?",
+          "short_display_name": "Source",
           "type": "string",
           "required": false,
           "placeholder": "",
