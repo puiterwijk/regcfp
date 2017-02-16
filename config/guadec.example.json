@@ -199,7 +199,7 @@
           "type": "radio",
           "required": false,
           "default": "Unspecified",
-          "options" : ["Unspecified", "19 or below", "20–29", "30–39", "40–49", "50 and above" ],
+          "options" : ["Unspecified", "19 or below", "20–29", "30–39", "40–49", "50-59", "60-69", "Over 70" ],
           "private": true
         },
         "gender": {
