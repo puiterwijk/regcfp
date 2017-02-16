@@ -33,8 +33,8 @@ router.post('/login', login_handler);
 router.post('/logout', logout_handler);
 
 router.buttons = {
-  login: "onclick='javascript: login_prompt_test()'",
-  logout: "onclick='javascript: logout_test()'"
+  login: "onclick='javascript: login_prompt_test(); return false;'",
+  logout: "onclick='javascript: logout_test(); return false;'"
 };
 
 router.middleware = function(req, res, next) {
