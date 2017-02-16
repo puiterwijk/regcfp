@@ -12,9 +12,9 @@ var Email = models.Email;
 var extend = require('util')._extend;
 
 var countries = require('country-data').countries;
-countries.all_assigned = countries.all
+countries.all_assigned = (countries.all
   .filter(function(c) { return c.status == 'assigned'; })
-  .sort(function(a, b) { return a.name.localeCompare(b.name); })
+  .sort(function(a, b) { return a.name.localeCompare(b.name); }));
 
 function get_permission_checker(permission) {
   var required = permission.split('/');
@@ -241,8 +241,8 @@ utils.get_reg_fields = function (request, registration, skip_internal) {
     if(field['type'] == 'country') {
       field['type'] = 'select';
       var options = extend([], field['options']);
-      for(var country in countries.all) {
-        options.push(countries.all[country].name);
+      for(var country in countries.all_assigned) {
+        options.push(countries.all_assigned[country].name);
       };
       field['options'] = options;
     }
