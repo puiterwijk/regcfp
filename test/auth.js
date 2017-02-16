@@ -18,9 +18,9 @@ describe('auth', function() {
     .end(done);
   });
 
-  it('should refuse get on auth', function(done) {
+  it('should allow get on auth', function(done) {
     agent.get('/auth/login')
-    .expect(401)
+    .expect(200)
     .end(done);
   });
 

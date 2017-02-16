@@ -10,23 +10,27 @@ function invalid_type(req, res, next) {
   res.status(401).send('Invalid request type');
 }
 
-router.get('/login', invalid_type);
-router.get('/logout', invalid_type);
-
-router.post('/login', function(req, res, next) {
+login_handler = function(req, res, next) {
   var email = req.body.email;
 
   req.session.currentUser = email;
   console.log('Welcoming ' + email);
   res.send('Welcome ' + req.session.currentUser);
-});
+};
 
-router.post('/logout', function(req, res, next) {
+logout_handler = function(req, res, next) {
   req.session.currentUser = null;
   req.session.destroy(function(err) {
     res.send('Logged out');
   });
-});
+};
+
+
+router.get('/login', login_handler);
+router.get('/logout', logout_handler);
+
+router.post('/login', login_handler);
+router.post('/logout', logout_handler);
 
 router.buttons = {
   login: "onclick='javascript: login_prompt_test()'",
