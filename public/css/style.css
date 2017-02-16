@@ -124,3 +124,8 @@ body {
   text-align: right;
   padding-left: 20px;
 }
+
+.entry-header {
+  background: #4a86cf url("https://static.gnome.org/guadec-2017/website-hero.svg") center bottom no-repeat !important;
+  height: 800px;
+}

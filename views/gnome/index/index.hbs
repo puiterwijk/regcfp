@@ -1,17 +1,20 @@
 {{#unless session.currentUser}}
 
     <div id="las-login">
-    <div class="grid_8">
-    <h2>Please log in</h2>
+    <div class="guadec-login">
 
-    <p>
-    Welcome to the GUADEC registration system. To use this registration and CfP system you need to login.
-    <br/>
-    This is a test instance; the login button will open a dialog that allows you to log in with any
-    email address.
-    </p>
+      <p class="index-welcome">
+        Welcome to the GUADEC registration and paper submissions website. Here,
+        you can register to attend the conference, submit talk proposals and manage
+        your registration details.
+      </p>
+      <p class="index-welcome">
+        To preoceed, log in using X, Y or Z.
+      </p>
 
-    <form><button {{{ login_buttons.login }}}>Log in</button></form>
+      <form><button {{{ login_buttons.login }}}>Log in</button></form>
+    </div>
+    </div>
 
 {{else}}
 

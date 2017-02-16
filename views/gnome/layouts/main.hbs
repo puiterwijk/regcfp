@@ -46,42 +46,19 @@
   <header id="masthead" class="site-header" role="banner">
     <div class="grid grid-pad head-overflow">
       <div class="navigation-container">
-        <nav id="site-navigation" class="main-navigation" role="navigation">
-          <div class="menu-main-container">
-            <ul id="menu-main" class="menu">
-              <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home">
-                <a href="https://2017.guadec.org/">GUADEC</a>
-              </li>
-
-              <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home">
-                <a href="/">Registration Home</a>
-              </li>
-
-              <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home">
-                <form>
-                  {{#if session.currentUser}}
-                    <button class="login" {{{ login_buttons.logout }}}>Log out</a>
-                  {{else}}
-                    <button class="login" {{{ login_buttons.login }}}>Log in</a>
-                   {{/if}}
-                </form>
-              </li>
-            </ul>
-          </div>
-        </nav>
+        {{#if session.currentUser}}
+            <form>
+              <button class="login" {{{ login_buttons.logout }}}>Log out</a>
+            </form>
+            <div class="currentuser">Logged in as {{name}}</div>
+        {{/if}}
       </div>
     </div>
   </header>
 
   <section id="content" class="site-content">
 
-    <header class="entry-header">
-      <div class="grid grid-pad">
-        <div class="col-1-1">
-          <h1 class="entry-title">Registration</h1>
-      </div>
-    </div>
-   </header>
+    <header class="entry-header"></header>
    <div class="grid grid-pad">
 
      <div class="container_12">
@@ -113,38 +90,36 @@
 
     <!-- footer -->
     <div id="footer">
-        <div class="container_12">
-            <div class="links grid_9">
-                <div class="menu-footer-container"><ul id="menu-footer" class="menu"><li id="menu-item-1048" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-has-children menu-item-1048"><a href="/">The GNOME Project</a>
-<ul class="sub-menu">
-	<li id="menu-item-1049" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1049"><a href="https://www.gnome.org/about/">About Us</a></li>
-	<li id="menu-item-1050" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1050"><a href="https://www.gnome.org/get-involved/">Get Involved</a></li>
-	<li id="menu-item-1051" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1051"><a href="https://www.gnome.org/teams/">Teams</a></li>
-	<li id="menu-item-1053" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1053"><a href="https://www.gnome.org/support-gnome/">Support GNOME</a></li>
-	<li id="menu-item-1054" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1054"><a href="https://www.gnome.org/contact/">Contact Us</a></li>
-	<li id="menu-item-2246" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2246"><a href="https://www.gnome.org/foundation/">The GNOME Foundation</a></li>
-</ul>
-</li>
-<li class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-has-children"><a href="https://guadec.org">GUADEC: The GNOME Conference</a>
-<ul class="sub-menu">
-	<li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://guadec.org/code-of-conduct">Code of Conduct</a></li>
-	<li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://guadec.org/sponsors/">Sponsors</a></li>
-	<li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://guadec.org/travel/">Travel Information</a></li>
-</ul>
-</li>
-</ul></div>            </div>
-	    <!-- footnotes -->
-            <div id="footnotes" class="grid_9">
-                <small>
-                    Hosted by <a href="http://www.redhat.com/">Red Hat</a>.
-                    Powered by <a href="https://github.com/puiterwijk/regcfp">regcfp</a>.
-                </small>
-            </div>
-
-            <div class="clear"></div>
+      <div class="container_12">
+        <div class="links grid_12">
+          <div class="menu-footer-container">
+            <ul id="menu-footer" class="menu">
+              <li class="menu-item menu-item-type-post_type menu-item-has-children "><a href="https://2017.guadec.org/"><strong>GUADEC</strong></a>
+                <ul class="sub-menu">
+                  <li class="menu-item menu-item-type-post_type"><a href="https://2017.guadec.org/travel/">Travel</a></li>
+                  <li class="menu-item"><a href="https://2017.guadec.org/accommodation/">Acommodation</a></li>
+                  <li class="menu-item"><a href="https://2017.guadec.org/location/">Location</a></li>
+                  <li class="menu-item"><a href="https://2017.guadec.org/code-of-conduct/">Code of conduct</a></li>
+                  <li class="menu-item"><a href="https://registration.guadec.org/">Call for papers</a></li>
+                  <li class="menu-item">&nbsp</li>
+                  <li class="menu-item"><a href="https://www.gnome.org/about/">About the GNOME Project</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
         </div>
+      </div>
+      <!-- footnotes -->
+      <div id="footnotes" class="container_12">
+        <small>
+          Hosted by <a href="http://www.redhat.com/">Red Hat</a>.
+          Powered by <a href="https://github.com/puiterwijk/regcfp">regcfp</a>.
+        </small>
+      </div>
+
+      <div class="clear"></div>
     </div>
 
 
-    </body>
+  </body>
 </html>
