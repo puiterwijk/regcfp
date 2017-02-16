@@ -43,7 +43,7 @@ router.init = function(app, callback) {
 
 router.auth_callback_url = config['site_url'] + '/auth/login/return'
 
-router.post('/login', function(req, res, next) {
+login_handler = function(req, res, next) {
   req.session.state = crypto.randomBytes(32).toString('hex');
 
   const auth_url = router.client.authorizationUrl({
@@ -52,7 +52,7 @@ router.post('/login', function(req, res, next) {
     state: req.session.state,
   })
   res.redirect(auth_url);
-});
+};
 
 router.get('/login/return', function(req, res, next) {
   state = req.session.state; delete req.session.state;
@@ -76,20 +76,19 @@ router.get('/login/return', function(req, res, next) {
                            "contact the admins of this site.");
       return res.redirect(config['site_url']);
     });
-})
+});
 
-router.post('/logout', function(req, res, next) {
+logout_handler = function(req, res, next) {
   req.session.currentUser = null;
   req.session.destroy(function(err) {
     return res.redirect(config['site_url']);
   });
-});
+};
 
-function invalid_type(req, res, next) {
-  res.status(401).send('Invalid request type');
-}
-router.get('/login', invalid_type);
-router.get('/logout', invalid_type);
+router.get('/login', login_handler);
+router.get('/logout', logout_handler);
+router.post('/login', login_handler);
+router.post('/logout', logout_handler);
 
 router.buttons = {
   login:  'type="submit" formmethod="post" formaction="/auth/login"',
