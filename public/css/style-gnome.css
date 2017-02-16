@@ -197,33 +197,33 @@ a { color: #4a86cf; }
 
 .main-navigation li:hover > a, a:hover { color: #53cfe8; }
 
-.member .fa:hover { background: #4a86cf; } 
+.member .fa:hover { background: #4a86cf; }
 
-#sequence .slide-arrow { background: #4a86cf; } 
+#sequence .slide-arrow { background: #4a86cf; }
 
-.social-media-icons .fa { color: #1e73be; } 
+.social-media-icons .fa { color: #1e73be; }
 
 .social-media-icons .fa:hover { color: #8224e3; }
 
 .home-services .fa, .service .fa  { background: #4a86cf; }
- 
+
 .entry-header { background: #4a86cf; }
 
-.home-entry-title:after, .member-entry-title:after, .works-entry-title:after, .client-entry-title:after, .home-news h5:after, .home-team h5:after, .home-cta h6:after, .footer-contact h5:after, .member h5:after { border-color: #4a86cf; } 
+.home-entry-title:after, .member-entry-title:after, .works-entry-title:after, .client-entry-title:after, .home-news h5:after, .home-team h5:after, .home-cta h6:after, .footer-contact h5:after, .member h5:after { border-color: #4a86cf; }
 
 .main-navigation ul ul li { border-color: #4a86cf; }
 
-button, input[type="button"], input[type="reset"], input[type="submit"] { background: #4a86cf; }  
+button, input[type="button"], input[type="reset"], input[type="submit"] { background: #4a86cf; }
 
-button, input[type="button"], input[type="reset"], input[type="submit"] { border-color: #4a86cf; }  
+button, input[type="button"], input[type="reset"], input[type="submit"] { border-color: #4a86cf; }
 
-.home-blog .entry-footer:hover, button:hover, input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover { border-color: #4a86cf; }  
+.home-blog .entry-footer:hover, button:hover, input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover { border-color: #4a86cf; }
 
-.nav-previous, .paging-navigation .nav-previous, .post-navigation .nav-previous, .nav-next, .paging-navigation .nav-next, .post-navigation .nav-next { background: #4a86cf; }  
+.nav-previous, .paging-navigation .nav-previous, .post-navigation .nav-previous, .nav-next, .paging-navigation .nav-next, .post-navigation .nav-next { background: #4a86cf; }
 
 #site-navigation button:hover { background: none; }
 
-h1.site-title a { color: #4a86cf; } 
+h1.site-title a { color: #4a86cf; }
 
 body, button, input, select, textarea, p { color: #1e2628; }
 
@@ -310,7 +310,7 @@ table:not(.submission-form) th, table:not(.submission-form) td {
 
 
 .slider-tick{
-    -webkit-box-sizing: border-box; 
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     float: left;
     top: -100%;
@@ -360,4 +360,56 @@ table:not(.submission-form) th, table:not(.submission-form) td {
 /* Final payment in bold */
 td#reg-total {
   font-weight: bold;
+}
+
+/* GUADEC 2017 styles */
+.guadec-login {
+	color: #4a86cf;
+	font-size: x-large;
+	text-align: center;
+}
+
+.guadec-login {
+	color: #4a86cf;
+	font-size: x-large;
+	text-align: center;
+}
+
+.guadec-login p {
+	color: #4a86cf;
+}
+
+.button-big {
+	display: inline-block;
+	padding: 15px 30px;
+	min-width: 300px;
+	color: white;
+	background-color: #4a86cf;
+	font-size: x-large;
+	text-align: center;
+}
+
+.button-big:hover {
+	color: white;
+	background-color: #5b97df;
+}
+
+.currentuser {
+	color: white;
+}
+
+.button-big.logout {
+	float: right;
+	background-color: #3975be;
+	margin: 0;
+	padding: 10px;
+	min-width: 150px;
+}
+
+.button-big.logout:hover {
+	background-color: #5b97df;
+}
+
+#footnotes {
+	text-align: right;
 }
