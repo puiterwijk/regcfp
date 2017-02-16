@@ -10,6 +10,9 @@ if(env == "test") {
   var config = require(__dirname + '/config/config.json')[env];
 }
 
+/* Remove trailing slash from site_url if present */
+config.site_url = config.site_url.replace(/\/$/, "");
+
 config.env = env;
 
 module.exports = config;
