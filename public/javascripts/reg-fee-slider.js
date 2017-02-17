@@ -42,11 +42,11 @@ $(function() {
 	$('#reg-fee-slider').append(bg_student);
 
 	var bg_normal = $('<div class="slider-bg slider-bg-casual"><span>Hobbyist</span></div>');
-	bg_normal.css('width', (100 - 20) / 250.0 * 100 +'%');
+	bg_normal.css('width', (150 - 20) / 250.0 * 100 +'%');
 	$('#reg-fee-slider').append(bg_normal);
 
 	var bg_normal = $('<div class="slider-bg slider-bg-professional"><span>Professional</span></div>');
-	bg_normal.css('width', (250 - 100) / 250.0 * 100 +'%');
+	bg_normal.css('width', (250 - 150) / 250.0 * 100 +'%');
 	$('#reg-fee-slider').append(bg_normal);
 
 
