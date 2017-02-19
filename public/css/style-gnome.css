@@ -209,6 +209,12 @@ button, input[type="button"], input[type="reset"], input[type="submit"] {
 	border-color: #4a86cf;
 }
 
+input[type=text], input[type=email], input[type=number], select {
+	padding: 5px;
+	border-radius: 3px;
+	border: 1px gray solid;
+}
+
 .home-blog .entry-footer:hover, button:hover, input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover { border-color: #4a86cf; }
 
 .nav-previous, .paging-navigation .nav-previous, .post-navigation .nav-previous, .nav-next, .paging-navigation .nav-next, .post-navigation .nav-next { background: #4a86cf; }
@@ -447,17 +453,39 @@ td#reg-total {
 		float: right;
 }
 
-#reg-currency {
+#reg-currency, #reg-country {
 	text-align: center;
-	border-radius: 3px;
-	padding: 5px;
 }
 
 #reg-fee {
 	text-align: center;
-	padding: 5px;
-	border-radius: 3px;
-	border: 1px gray solid;
 	width: 35px;
 	margin-left: 5px;
+}
+
+#total-to-pay {
+	margin-top: 10px;
+	font-size: x-large;
+	font-weight: bold;
+}
+
+table {
+	width: 100% !important;
+}
+
+table tr td {
+	padding: 10px 0 !important;
+	border: none !important;
+}
+
+td.field-label {
+	width: 20%;
+}
+
+td.field-widget {
+	width: 80%
+}
+
+td.field-widget > * {
+	width: 100%
 }
