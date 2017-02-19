@@ -6,43 +6,54 @@
 
 <p>By completing this registration form, you are committing to follow the <a href="https://2017.guadec.org/code-of-conduct/">GUADEC code of conduct</a>.</p>
 
-<table class="submission-form">
+<table>
+  <tr>
+    <td class="field-label"><label for="reg-name">Your name</label></td>
+    <td class="field-widget"><input type="text" id="reg-name" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td>
+  </tr>
 
-<tr><td><label for="reg-name">Your name</label></td><td><input type="text" id="reg-name" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td></tr>
-<input type="hidden" name="is_public" value="true">
 
-<tr><td><label for="reg-{{ircnick}}">{{ registration_fields.ircnick.display_name }}</label></td>
-<td>
-  {{>field_entry id="ircnick" field=registration_fields.ircnick}}
+  <tr>
+    <td class="field-label"><label for="reg-{{ircnick}}">{{ registration_fields.ircnick.display_name }}</label></td>
+    <td class="field-widget">
+      {{>field_entry id="ircnick" field=registration_fields.ircnick}}
+    </td>
+  </tr>
 
   {{#if registration_fields.ircnick.message}}
-    <br/>
-    <p class="note">{{registration_fields.ircnick.message}}</p>
+  <tr>
+    <td class="field-label">&nbsp;</td>
+    <td class="field-widget note">
+      {{registration_fields.ircnick.message}}
+    </td>
+  </tr>
   {{/if}}
-</td>
-</tr>
 
-<tr><td>&nbsp;</td><td><label><input type="checkbox" id="reg-public" value="false" name="is_public"
-{{#if registration.is_public}}
-checked
-{{/if}}
-> Show my name in the public list of attendees</label></td></tr>
-</tr>
+  <tr>
+    <td colspan="2"><label>
+      <input type="hidden" name="is_public" value="true">
+      <input type="checkbox" id="reg-public" value="false" name="is_public"
+        {{#if registration.is_public}}
+          checked
+        {{/if}}
+        > Show my name in the public list of attendees</label></td>
+  </tr>
 
+  <tr>
+    <td class="field-label"><label for="reg-{{volunteer}}">{{ registration_fields.volunteer.display_name }}</label></td>
+    <td class="field-widget">
+      {{>field_entry id="volunteer" field=registration_fields.volunteer currency=config.registration.main_currency}}
+    </td>
+  </tr>
 
-
-<tr><td><label for="reg-{{volunteer}}">{{ registration_fields.volunteer.display_name }}</label></td>
-<td>
-  {{>field_entry id="volunteer" field=registration_fields.volunteer currency=config.registration.main_currency}}
-
-  {{#if registration_fields.volunteer.message}}
-    <br/>
-    <p class="note">{{registration_fields.volunteer.message}}</p>
-  {{/if}}
-</td>
-</tr>
-<tr><td>&nbsp;</label></td><td>
-
+    {{#if registration_fields.volunteer.message}}
+    <tr>
+      <td class="field-label">&nbsp;</td>
+      <td class="field-widget note">
+        {{registration_fields.volunteer.message}}</p>
+      </td>
+    </tr>
+    {{/if}}
 </table>
 
 
@@ -86,8 +97,8 @@ for any cancelation.
     <table>
   {{else}}
     {{#if this.display_name }}
-      <tr><td><label for="reg-{{@key}}">{{ this.display_name }}</label></td>
-      <td>
+      <tr><td class="field-label"><label for="reg-{{@key}}">{{ this.display_name }}</label></td>
+      <td class="field-widget">
         {{>field_entry id=@key field=this currency=../config.registration.main_currency}}
 
         {{#if this.message}}
@@ -113,7 +124,7 @@ for any cancelation.
 
 </table>
 <input class="button-big register-and-pay-button" type="submit" value="Register and pay" />
-Total to pay <span id="reg-total">[JavaScript required to calculate]</span>
+<div id="total-to-pay">Total to pay <span id="reg-total">[JavaScript required to calculate]</span></div>
 
 
 </form>
