@@ -28,6 +28,7 @@
     "nodemailer": "*",
     "nodemailer-smtp-transport": "*",
     "country-data": "*",
+    "openid": "^ 2.0.6",
     "openid-client": "^ 1.5.3"
   },
   "devDependencies": {
