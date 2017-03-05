@@ -6,11 +6,6 @@ var models = require('./models');
 var User = models.User;
 var Email = models.Email;
 
-// FIXME: this is deprecated since Node v6.0.0 in favour of Object.assign().
-// We still support Node v0.10 (due to CentOS), and that doesn't have
-// Object.assign()
-var extend = require('util')._extend;
-
 var countries = require('country-data').countries;
 countries.all_assigned = (countries.all
   .filter(function(c) { return c.status == 'assigned'; })
@@ -232,7 +227,7 @@ utils.get_reg_fields = function (request, registration, skip_internal) {
     if (skip_internal && config['registration']['fields'][field_name]['internal'])
       continue;
 
-    fields[field_name] = extend({}, config['registration']['fields'][field_name]);
+    fields[field_name] = Object.assign({}, config['registration']['fields'][field_name]);
 
     var field = fields[field_name];
 
@@ -240,7 +235,7 @@ utils.get_reg_fields = function (request, registration, skip_internal) {
 
     if(field['type'] == 'country') {
       field['type'] = 'select';
-      var options = extend([], field['options']);
+      var options = Object.assign([], field['options']);
       for(var country in countries.all_assigned) {
         options.push(countries.all_assigned[country].name);
       };
