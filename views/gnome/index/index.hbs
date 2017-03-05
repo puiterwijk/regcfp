@@ -9,17 +9,48 @@
         your registration details.
       </p>
       <p class="index-welcome">
-        To proceed, please log in using your Google account. (We will add
-        support for more login providers soon).
+        To proceed, please choose a way to identify yourself.
       </p>
+    </div>
 
-      <form>
-        <button class="button-big" {{{ login_buttons.login }}}>
-          Log in with Google
-        </button>
-      </form>
-   </div>
-   </div>
+    <table>
+      <tr>
+        <td>
+          <form>
+            <input type="hidden" name="openid_2_0_provider_url" value="https://id.gnome.org/">
+
+            <button class="button-big" type="submit" formmethod="post" formaction="/auth/login/2.0">
+              Log in with a GNOME account
+            </button>
+          </form>
+        </td>
+
+        <td>
+          <form>
+            <input type="hidden" name="openid_connect_provider" value="google">
+
+            <button class="button-big"  class="button-big" type="submit" formmethod="post" formaction="/auth/login/connect">
+              Log in with a Google account
+            </button>
+          </form>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <form>
+            <input type="hidden" name="openid_2_0_provider_url" value="https://id.fedoraproject.org/">
+
+            <button class="button-big" type="submit" formmethod="post" formaction="/auth/login/2.0">
+              Log in with a Fedora account
+            </button>
+          </form>
+        </td>
+      <tr>
+    </table>
+
+    </div>
+    </div>
 
 {{else}}
 
