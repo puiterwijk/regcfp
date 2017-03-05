@@ -1,4 +1,4 @@
-var request = require('supertest-as-promised');
+var request = require('supertest');
 var Promise = require('bluebird')
 var paypal = require('paypal-rest-sdk')
 
