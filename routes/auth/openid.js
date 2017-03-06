@@ -116,7 +116,13 @@ router.get('/login/2.0/return', function(req, res, next) {
 //
 // This init() hook expects that the app uses the 'express-init' extension.
 router.init = function(app, callback) {
-  var provider_names = Object.keys(config.auth.openid_connect_providers);
+  var openid_connect_providers = config.auth['openid_connect_providers'];
+  if (!openid_connect_providers) {
+    callback();
+    return;
+  };
+
+  var provider_names = Object.keys(openid_connect_providers);
   var openid_connect_promises = provider_names.map(function(provider_name) {
       provider = config.auth.openid_connect_providers[provider_name];
       console.log("auth.openid.connect: %s: Trying to discover OpenID Connect " +
