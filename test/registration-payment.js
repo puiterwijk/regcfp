@@ -28,7 +28,7 @@ function simple_registration(options) {
 }
 
 function get_registration_for_user(email) {
-   return models.User.findOne({email: email})
+   return models.User.findOne({where: {email: email}})
    .then(function(user) { return user.getRegistration({ include: [models.RegistrationPayment] }); })
 }
 
@@ -370,6 +370,32 @@ describe('payment-onsite', function() {
     })
   });
 
+  it('should update onsite registration fee on when registration is edited', function(done) {
+    // This user chose an on-site fee of £19 in the previous test.
+    set_user(agent, 'payment-test-1@regcfp')
+    .then(function() {
+      return agent
+      .post('/registration/register')
+      .send(simple_registration({regfee: 10, currency: 'GBP'}))
+      .expect(/<form[^>]+action="\/registration\/pay\/do"/)
+      .expect(/You chose a registration fee of £10/)
+    })
+    .then(function() {
+      return agent
+      .post('/registration/pay/do')
+      .send({'regfee-method': 'onsite'})
+      .expect(200)
+      .expect(/You will be asked to pay for your registration at the Registration Desk/)
+    })
+    .then(function() {
+      get_registration_for_user('payment-test-1@regcfp').then(function(reg) {
+        assert(reg.has_outstanding_onsite)
+        assert.equal(reg.outstanding_onsite, "£10")
+        done();
+      })
+    })
+  });
+
   it('should offer onsite payment for registration fee and PayPal for purchases', function(done) {
     set_user(agent, 'payment-test-2@regcfp')
     .then(function() {
@@ -394,7 +420,7 @@ describe('payment-onsite', function() {
       .expect(/paypal\.com/)
     })
     .then(function() {
-      get_registration_for_user('payment-test-1@regcfp').then(function(reg) {
+      get_registration_for_user('payment-test-2@regcfp').then(function(reg) {
         assert(reg.has_outstanding_onsite)
         assert.equal(reg.outstanding_onsite, "£19")
         done();
