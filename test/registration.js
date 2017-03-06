@@ -456,6 +456,45 @@ describe('registration', function() {
     });
   });
 
+  describe('booleans', function() {
+    before('Login', function(done) {
+      set_user(agent, 'booleans-test@regcfp', done);
+    });
+
+    function basic_reg() {
+      return {
+        'name': 'TestUser A',
+        'regfee': '0',
+        'currency': 'EUR',
+        'field_ircnick': 'testirc'
+      }
+    }
+
+    it('should set boolean option to true', function(done) {
+      agent.post('/registration/register')
+        .send(basic_reg())
+        .send({'field_volunteer': 'any random string should evaluate to true!'})
+        .expect(200)
+        .then(function() {
+      agent.get('/registration/register')
+        .expect(/name="field_volunteer" checked="checked"/)
+        .end(done);
+      });
+    });
+
+    it('should set boolean option to false', function(done) {
+      agent.post('/registration/register')
+        // The browser sends no data for checkbox <input> fields if they
+        // unchecked.
+        .expect(200)
+        .then(function() {
+      agent.get('/registration/register')
+        .expect(/name="field_volunteer"\s+>/)
+        .end(done);
+      });
+    });
+  });
+
   describe('inventory', function() {
     before('Login', function(done) {
       set_user(agent, 'inventory-test@regcfp', done);

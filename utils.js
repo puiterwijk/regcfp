@@ -197,6 +197,45 @@ var render_cost_in_currencies = function(cost, main_currency, currencies) {
   return list.join(' / ');
 };
 
+const fill_reg_fields_from_stored_registration = function(fields, registration) {
+  // Each RegistrationInfo record in the database stores a single field+value
+  // pair for the given user.
+  for(var info in registration.RegistrationInfos) {
+    info = registration.RegistrationInfos[info];
+    var field = fields[info.field];
+    field.value = info.value;
+
+    if (field.type == 'purchase' && info.RegistrationPayment != null) {
+      if (info.RegistrationPayment.paid == false) {
+        field.payment_state = 'pending';
+        field.can_change = false;
+      } else {
+        field.payment_state = 'paid';
+        field.can_change = false;
+      }
+    }
+  }
+}
+
+const fill_reg_fields_from_form_submission = function(fields, request_body) {
+  for(var field in fields) {
+    if (fields[field].type == "boolean") {
+      // Checkbox <input> tags send no value when unchecked, so we need to set
+      // a default for each 'boolean' type field.
+      fields[field].value = "false";
+    }
+
+    if (('field_' + field) in request_body) {
+      if (fields[field].type == "boolean") {
+        // Any value for a boolean indicates the <input> was checked.
+        fields[field].value = "true";
+      } else {
+        fields[field].value = request_body['field_' + field];
+      }
+    }
+  };
+};
+
 // List all registration fields that are defined in the configuration file.
 //
 // Returns an array of objects representing the fields.
@@ -262,43 +301,16 @@ utils.get_reg_fields = function (request, registration, skip_internal) {
     })
   };
 
-  if(request)
-    console.log(request.body);
+  // Values in the request body (i.e. a new form submission) override values
+  // from the stored registration.
+  if (registration) {
+    fill_reg_fields_from_stored_registration(fields, registration);
+  }
 
-  for(var field in fields) {
-    // Checkbox <input> tags send no value when unchecked, so we need to set
-    // a default for each 'boolean' type field.
-    if (fields[field].type == "boolean")
-      fields[field].value = "false";
+  if (request) {
+    fill_reg_fields_from_form_submission(fields, request.body);
+  }
 
-    if (request && ('field_' + field) in request.body) {
-      if (fields[field].type == "boolean") {
-        // Any value for a boolean indicates the <input> was checked.
-        fields[field].value = "true";
-      } else {
-        fields[field].value = request.body['field_' + field];
-      }
-    } else if (registration) {
-      for(var info in registration.RegistrationInfos) {
-        info = registration.RegistrationInfos[info];
-        if(info.field == field) {
-          fields[field].value = info.value;
-
-          if (fields[field].type == 'purchase' && info.RegistrationPayment != null) {
-            if (info.RegistrationPayment.paid == false) {
-              fields[field].payment_state = 'pending';
-              fields[field].can_change = false;
-            } else {
-              fields[field].payment_state = 'paid';
-              fields[field].can_change = false;
-            }
-          }
-        }
-      }
-    } else {
-      fields[field].value = '';
-    }
-  };
   return fields;
 }
 
