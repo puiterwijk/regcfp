@@ -15,7 +15,8 @@
       "storage": "database.sqlite",
       "define": {
         "paranoid": true
-      }
+      },
+      "logging": false
     },
 
     "email": {
