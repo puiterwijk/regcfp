@@ -9,8 +9,11 @@
              'value' and 'left' fields also permitted.
 }}
 
+{{#ifEqual this.type "documentation"}}
 
-{{#ifEqual field.type "boolean"}}
+  {{{ this.html }}}
+
+{{else}}{{#ifEqual field.type "boolean"}}
 
   <p>
     <input type="checkbox" id="reg-{{id}}" name="field_{{id}}" {{#ifEqual field.value "true"}}checked="checked"{{/ifEqual}}>
@@ -23,98 +26,161 @@
 
 {{else}}{{#ifEqual field.type "string"}}
 
-  <input type="text" id="reg-{{id}}" name="field_{{id}}" value="{{ field.value }}" placeholder="{{ field.placeholder }}">
+  <table>
+    <tr>
+      <td class="field-label">
+        <label for="reg-{{id}}">{{ field.display_name }}</label>
+      </td>
+      <td class="field-widget">
+        <input type="text" id="reg-{{id}}" name="field_{{id}}" value="{{ field.value }}" placeholder="{{ field.placeholder }}">
+      </td>
+
+    {{#if field.message}}
+      <tr>
+        <td class="field-label">&nbsp;</td>
+        <td class="field-widget note">{{field.message}}</td>
+      </tr>
+    {{/if}}
+  </table>
 
 {{else}}{{#ifEqual field.type "radio"}}
 
-  {{#each field.options}}
-    <label>
-      <input type="radio" name="field_{{../id}}" id="reg-{{../id}}" value="{{ this }}"
-        {{#ifEqual ../field.value this}}
-          checked
-        {{/ifEqual}}
-      >{{this}}</option>
-    </label>
-    {{#unless @last}} </br /> {{/unless}}
-  {{/each}}
+  <table>
+    <tr>
+      <td class="field-label">
+        <label for="reg-{{id}}">{{ field.display_name }}</label>
+      </td>
+      <td class="field-widget">
+        {{#each field.options}}
+          <label>
+            <input type="radio" name="field_{{../id}}" id="reg-{{../id}}" value="{{ this }}"
+              {{#ifEqual ../field.value this}}
+                checked
+              {{/ifEqual}}
+            >{{this}}</option>
+          </label>
+          {{#unless @last}} </br /> {{/unless}}
+        {{/each}}
+      </td>
+    </tr>
+
+    {{#if field.message}}
+      <tr>
+        <td class="field-label">&nbsp;</td>
+        <td class="field-widget note">{{field.message}}</td>
+      </tr>
+    {{/if}}
+  </table>
 
 {{else}}{{#ifEqual field.type "select"}}
 
-  <select name="field_{{id}}" id="reg-{{id}}">
-    {{#each field.options}}
-      <option
-        {{#ifEqual ../field.value this}}
-          selected="selected"
-        {{/ifEqual}}
-      >{{this}}</option>
-    {{/each}}
-  </select>
+  <table>
+    <tr>
+      <td class="field-label">
+        <label for="reg-{{id}}">{{ field.display_name }}</label>
+      </td>
+      <td class="field-widget">
+        <select name="field_{{id}}" id="reg-{{id}}">
+          {{#each field.options}}
+            <option
+              {{#ifEqual ../field.value this}}
+                selected="selected"
+              {{/ifEqual}}
+            >{{this}}</option>
+          {{/each}}
+        </select>
+      </td>
+    </tr>
+
+    {{#if field.message}}
+      <tr>
+        <td class="field-label">&nbsp;</td>
+        <td class="field-widget note">{{field.message}}</td>
+      </tr>
+    {{/if}}
+  </table>
 
 {{else}}{{#ifEqual field.type "purchase"}}
 
-  <table class="purchase-option-list" id="reg-{{id}}">
-    <tr><td>
-      {{#ifEqual field.required false}}
-        <label>
-          <input type="radio" class="purchase-option" name="field_{{id}}" value="None" data-cost="0"
-            {{#ifEqual ../field.value None}}
-              checked
+  <table>
+    <tr>
+      <td class="field-label">
+        <label for="reg-{{id}}">{{ field.display_name }}</label>
+      </td>
+      <td class="field-widget">
+        <table class="purchase-option-list" id="reg-{{id}}">
+          <tr><td>
+            {{#ifEqual field.required false}}
+              <label>
+                <input type="radio" class="purchase-option" name="field_{{id}}" value="None" data-cost="0"
+                  {{#ifEqual ../field.value None}}
+                    checked
+                  {{/ifEqual}}
+                  {{#unless field.can_change}}
+                    disabled="disabled"
+                  {{/unless}}
+                />
+                None
+              </label>
             {{/ifEqual}}
-            {{#unless field.can_change}}
-              disabled="disabled"
-            {{/unless}}
-          />
-          None
-        </label>
-      {{/ifEqual}}
-    </td></tr>
+          </td></tr>
 
-    {{#each field.options}}
-        <td class="purchase-option-name">
-          <label>
-            <input type="radio" class="purchase-option" name="field_{{../id}}" value="{{@key}}" data-cost="{{cost}}" data-left="{{left}}" data-payment-state="{{../field.payment_state}}"
-              {{#ifEqual ../field.value @key}}
-                checked
-              {{/ifEqual}}
-              {{#ifEqual left 0}}
-                disabled="disabled"
-              {{/ifEqual}}
-              {{#unless ../field.can_change}}
-                disabled="disabled"
-              {{/unless}}
-            />
-            {{display_name}}
-          </label>
-        </td>
-        <td class="purchase-option-price">
-          {{cost_all_currencies}}
-        </td>
-        <td class="purchase-option-left">
-          {{left}} left
-        </td>
+          {{#each field.options}}
+              <td class="purchase-option-name">
+                <label>
+                  <input type="radio" class="purchase-option" name="field_{{../id}}" value="{{@key}}" data-cost="{{cost}}" data-left="{{left}}" data-payment-state="{{../field.payment_state}}"
+                    {{#ifEqual ../field.value @key}}
+                      checked
+                    {{/ifEqual}}
+                    {{#ifEqual left 0}}
+                      disabled="disabled"
+                    {{/ifEqual}}
+                    {{#unless ../field.can_change}}
+                      disabled="disabled"
+                    {{/unless}}
+                  />
+                  {{display_name}}
+                </label>
+              </td>
+              <td class="purchase-option-price">
+                {{cost_all_currencies}}
+              </td>
+              <td class="purchase-option-left">
+                {{left}} left
+              </td>
+            </tr>
+          {{/each}}
+        </table>
+
+        {{#ifEqual field.value "None"}}
+        {{else}}
+          {{#ifEqual field.payment_state 'unpaid'}}
+            <p class="note">You have not yet made payment for this purchase, and can still change it.</p>
+          {{/ifEqual}}
+          {{#ifEqual field.payment_state 'pending'}}
+            <p class="note">You have already paid for this purchase. The payment is pending authorization.</p>
+          {{/ifEqual}}
+          {{#ifEqual field.payment_state 'paid'}}
+            <p class="note">You have already paid for this purchase.</p>
+          {{/ifEqual}}
+        {{/ifEqual}}
+      </td>
+    </tr>
+
+    {{#if field.message}}
+      <tr>
+        <td class="field-label">&nbsp;</td>
+        <td class="field-widget note">{{field.message}}</td>
       </tr>
-    {{/each}}
+    {{/if}}
   </table>
-
-  {{#ifEqual field.value "None"}}
-  {{else}}
-    {{#ifEqual field.payment_state 'unpaid'}}
-      <p class="note">You have not yet made payment for this purchase, and can still change it.</p>
-    {{/ifEqual}}
-    {{#ifEqual field.payment_state 'pending'}}
-      <p class="note">You have already paid for this purchase. The payment is pending authorization.</p>
-    {{/ifEqual}}
-    {{#ifEqual field.payment_state 'paid'}}
-      <p class="note">You have already paid for this purchase.</p>
-    {{/ifEqual}}
-  {{/ifEqual}}
-
-{{else}}{{#ifEqual field.type "documentation"}}
-
-  {{{field.html}}}
 
 {{else}}
 
   Unknown field type
 
 {{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}
+
+</tr>
+
+</table>
