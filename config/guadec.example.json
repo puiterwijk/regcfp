@@ -185,12 +185,12 @@
           "private": true
         },
         "age": {
-          "display_name": "Age group",
+          "display_name": "Age",
           "short_display_name": "Age",
-          "type": "radio",
+          "type": "string",
           "required": false,
           "default": "Unspecified",
-          "options" : ["Unspecified", "19 or below", "20–29", "30–39", "40–49", "50-59", "60-69", "Over 70" ],
+          "placeholder": "",
           "private": true
         },
         "gender": {
