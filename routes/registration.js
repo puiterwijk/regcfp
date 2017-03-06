@@ -300,17 +300,34 @@ function create_paypal_payment_and_redirect(req, res, next, currency, regfee, pu
   });
 };
 
-function create_onsite_payment(reg, currency, amount) {
-  var info = {
-    currency: currency,
-    amount: amount,
-    paid: false,
-    type: 'onsite',
-  };
-  return RegistrationPayment
-  .create(info)
-  .then(function(payment) {
-    return reg.addRegistrationPayment(payment)
+function create_or_update_onsite_payment(reg, currency, amount) {
+  return reg.getRegistrationPayments({where: {type: 'onsite'}})
+  .then(function(onsite_payments) {
+    console.log("Got onsite payments: %j", onsite_payments);
+    if (onsite_payments.length == 0) {
+      // Create a new payment
+      var info = {
+        currency: currency,
+        amount: amount,
+        paid: false,
+        type: 'onsite',
+      };
+      console.log("Creating a payment: %j", info);
+      return RegistrationPayment
+      .create(info)
+      .then(function(payment) {
+        return reg.addRegistrationPayment(payment)
+      });
+    } else {
+      if (onsite_payments.length > 1)
+        console.warn("User id %s has multiple onsite payments!", reg.UserId);
+      if (onsite_payments[0].paid)
+        console.warn("Refusing to update onsite payment that was already " +
+            "paid for user id %s.", reg.UserId)
+      onsite_payments[0].currency = currency;
+      onsite_payments[0].amount = amount;
+      return onsite_payments[0].save();
+    };
   });
 };
 
@@ -355,7 +372,7 @@ router.post('/pay/do', function(req, res, next) {
 
     var promises = [];
     if (to_pay_onsite > 0) {
-      promises.push(create_onsite_payment(reg, currency, to_pay_onsite));
+      promises.push(create_or_update_onsite_payment(reg, currency, to_pay_onsite));
       regfee = 0;
     }
 
@@ -654,7 +671,7 @@ function handle_registration(req, res, next) {
               registration: reg,
               reg_fields: reg_fields,
             }, function() {
-              console.log("Reg: " + reg);
+              console.log("Reg: %j", reg);
               var new_purchase_choices = utils.get_reg_purchase_choices_unpaid(reg, reg_fields, currency);
               var needpay = !reg.paid || new_purchase_choices.length > 0;
 
