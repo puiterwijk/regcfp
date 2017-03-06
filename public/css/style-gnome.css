@@ -12,7 +12,7 @@
  * theme does.
  */
 
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:800');
 
 @media screen and (max-width: 900px) {
 	.main-navigation ul {
@@ -25,6 +25,7 @@
 	padding: 0 40px;
 	height: 570px;
 	background-image: url('https://dl.dropboxusercontent.com/u/16508001/guadec2017-website/website-hero-regcfp.svg') !important;
+	background-image: url('https://dl.dropboxusercontent.com/u/5031519/guadec2017/website-hero-regcfp.svg') !important;
 }
 
 /* This means horizontal scrollbars are visible when needed */
@@ -289,6 +290,7 @@ table:not(.submission-form) th, table:not(.submission-form) td {
     width: 100%;
     text-align: center;
     top: -1.75em;
+		font-size: 12pt;
     font-weight: normal;
     display: block;
 }
@@ -488,4 +490,13 @@ td.field-widget {
 
 td.field-widget > * {
 	width: 100%
+}
+
+td.note {
+	color: gray;
+	font-size: small;
+}
+
+#authproviders td {
+	text-align: center;
 }
