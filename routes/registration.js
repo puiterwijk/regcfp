@@ -303,7 +303,6 @@ function create_paypal_payment_and_redirect(req, res, next, currency, regfee, pu
 function create_or_update_onsite_payment(reg, currency, amount) {
   return reg.getRegistrationPayments({where: {type: 'onsite'}})
   .then(function(onsite_payments) {
-    console.log("Got onsite payments: %j", onsite_payments);
     if (onsite_payments.length == 0) {
       // Create a new payment
       var info = {
@@ -599,8 +598,8 @@ function handle_registration(req, res, next) {
       var currency = req.body.currency;
       var regfee = req.body.regfee;
 
-      if (reg && !currency) { currency = reg.currency; };
-      if (reg && !regfee) { regfee = reg.regfee; };
+      if (reg && currency==undefined) { currency = reg.currency; };
+      if (reg && regfee==undefined) { regfee = reg.regfee; };
 
       var reg_info = {
         is_public: req.body.is_public.indexOf('false') == -1,
@@ -671,12 +670,20 @@ function handle_registration(req, res, next) {
               registration: reg,
               reg_fields: reg_fields,
             }, function() {
-              console.log("Reg: %j", reg);
               var new_purchase_choices = utils.get_reg_purchase_choices_unpaid(reg, reg_fields, currency);
               var needpay = !reg.paid || new_purchase_choices.length > 0;
 
               if (needpay && !can_pay) {
                 console.warn("User " + req.user.id + " needs to pay but lacks permission");
+              }
+
+              if (!reg.paid && regfee == 0) {
+
+                // If there's no registration fee, we'll need to create/update
+                // an onsite RegistrationPayment object in case there already
+                // was one.
+                create_or_update_onsite_payment(reg, currency, 0);
+                needpay = false;
               }
 
               res.render(template, {currency: currency, regfee: regfee,
