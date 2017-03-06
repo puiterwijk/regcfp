@@ -104,11 +104,10 @@
           "message": "Nickname used in online chat networks like IRC. It will be printed on your badge beneath your name."
         },
         "volunteer": {
-          "display_name": "Help us at GUADEC",
+          "display_name": "I'm interested in helping out",
           "short_display_name": "Volunteer",
-          "type": "radio",
+          "type": "boolean",
           "required": false,
-          "options": [ "Not interested", "Keep me informed" ],
           "message" : [
             "GUADEC can't happen without help from volunteers. Choose ",
             "if you would like to receive details."
