@@ -6,7 +6,6 @@ var config = require('../configuration');
 
 function get_amount_string(amounts) {
   var amount = "";
-  console.log("amount str: " + amounts);
   for(var cur in amounts) {
     if(amount != "") {
       amount += ", ";
