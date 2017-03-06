@@ -427,4 +427,16 @@ describe('payment-onsite', function() {
       })
     })
   });
+
+  it('should not ask for payment if registration fee is updated to be 0', function(done) {
+    set_user(agent, 'payment-test-2@regcfp')
+    .then(function() {
+      return agent
+      .post('/registration/register')
+      .send(simple_registration({regfee: 0, room: '1 night', currency: 'GBP'}))
+      .expect(/Your registration was updated/)
+      .expect(function (res) { if (res.text.match('Pay registration fee now')) throw new Error('Contains string "Pay registration fee now"'); })
+      .then(function() { done(); })
+    })
+   });
 });
