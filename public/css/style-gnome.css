@@ -492,7 +492,7 @@ td.field-widget > * {
 	width: 100%
 }
 
-td.note {
+td.note, p.note {
 	color: gray;
 	font-size: small;
 }
