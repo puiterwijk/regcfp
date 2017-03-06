@@ -58,7 +58,7 @@
 
 
 {{#has_permission "registration/pay"}}
-<h2>Registration Fee</h2>
+<h3>Registration Fee</h3>
 Please support GUADEC and GNOME by choosing to pay a fee that is reasonable for
 you.
 {{#unless registration.paid}}
@@ -92,7 +92,6 @@ for any cancelation.
 {{#ifEqual @key "ircnick"}}{{else}}{{#ifEqual @key "volunteer"}}{{else}}
   {{#ifEqual this.type "documentation"}}
     </table>
-      <h2>{{ this.display_name }}</h2>
       {{{ this.html }}}
     <table>
   {{else}}
