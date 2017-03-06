@@ -162,7 +162,7 @@ openid_connect_login_handler = function(req, res, next) {
     return res.redirect(config['site_url']);
   };
 
-  req.session.provider_name = provider_name;
+  req.session.provider = provider_name;
 
   // This is a security token which allows us to validate responses on our
   // /login/connect/return/ endpoint.
