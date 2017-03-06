@@ -15,7 +15,7 @@
 
 {{>field_entry id="ircnick" field=registration_fields.ircnick}}
 
-<input type="checkbox" id="reg-public" value="false" name="is_public" {{#if registration.is_public}}checked{{/if}}>
+<input type="checkbox" id="reg-public" value="true" name="is_public" {{#if registration.is_public}}checked{{/if}}>
 <label for="reg-public">Show my name in the public list of attendees</label>
 
 {{>field_entry id="volunteer" field=registration_fields.volunteer currency=config.registration.main_currency}}
