@@ -107,6 +107,7 @@ describe('registration', function() {
     .send({'name': 'TestUser A'})
     .send({'field_ircnick': 'testirc'})
     .send({'is_public': 'true'})
+    .send({'field_volunteer': 'on'})
     .send({'currency': 'EUR'})
     .send({'field_shirtsize': 'M'})
     .send({'regfee': '0'})
@@ -144,6 +145,7 @@ describe('registration', function() {
     .expect(200)
     .expect(/name="name" value="TestUser A"/)
     .expect(/name="regfee" class="reg-fee" value="0"/)
+    .expect(/name="field_volunteer" checked="checked"/)
     .expect(/option value="EUR"[^>]*selected="selected"/)
     .expect(/Hide my name/)
     .end(done);

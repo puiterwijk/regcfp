@@ -93,6 +93,10 @@
     "registration": {
       "enabled": true,
       "fields": {
+        "volunteer": {
+          "display_name": "Volunteer?",
+          "type": "boolean"
+        },
         "country": {
           "display_name": "Country",
           "short_display_name": "Ctr",
