@@ -195,7 +195,7 @@ var render_cost_in_currencies = function(cost, main_currency, currencies) {
       list.push(currencies[id].symbol + Math.ceil(cost * currencies[id].conversion_rate));
   });
   return list.join(' / ');
-}
+};
 
 // List all registration fields that are defined in the configuration file.
 //
@@ -222,6 +222,8 @@ var render_cost_in_currencies = function(cost, main_currency, currencies) {
 //    user.getRegistration({include: [RegistrationPayment, { model: RegistrationInfo, include: RegistrationPayment }]})
 //
 utils.get_reg_fields = function (request, registration, skip_internal) {
+  if (request)
+    console.log("Update reg fields: req.body: %j", request['body']);
   var fields = {};
   for(var field_name in config['registration']['fields']) {
     if (skip_internal && config['registration']['fields'][field_name]['internal'])
@@ -264,9 +266,19 @@ utils.get_reg_fields = function (request, registration, skip_internal) {
     console.log(request.body);
 
   for(var field in fields) {
-    if(request && ('field_' + field) in request.body) {
-      fields[field].value = request.body['field_' + field];
-    } else if(registration != null) {
+    // Checkbox <input> tags send no value when unchecked, so we need to set
+    // a default for each 'boolean' type field.
+    if (fields[field].type == "boolean")
+      fields[field].value = "false";
+
+    if (request && ('field_' + field) in request.body) {
+      if (fields[field].type == "boolean") {
+        // Any value for a boolean indicates the <input> was checked.
+        fields[field].value = "true";
+      } else {
+        fields[field].value = request.body['field_' + field];
+      }
+    } else if (registration) {
       for(var info in registration.RegistrationInfos) {
         info = registration.RegistrationInfos[info];
         if(info.field == field) {

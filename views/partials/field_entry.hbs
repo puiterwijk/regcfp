@@ -10,7 +10,18 @@
 }}
 
 
-{{#ifEqual field.type "string"}}
+{{#ifEqual field.type "boolean"}}
+
+  <p>
+    <input type="checkbox" id="reg-{{id}}" name="field_{{id}}" {{#ifEqual field.value "true"}}checked="checked"{{/ifEqual}}>
+    <label for="reg-{{id}}">{{ field.display_name }}</label>
+  </p>
+
+  {{#if field.message}}
+    <p class="note">{{ field.message }}</p>
+  {{/if}}
+
+{{else}}{{#ifEqual field.type "string"}}
 
   <input type="text" id="reg-{{id}}" name="field_{{id}}" value="{{ field.value }}" placeholder="{{ field.placeholder }}">
 
@@ -106,4 +117,4 @@
 
   Unknown field type
 
-{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}
+{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}
