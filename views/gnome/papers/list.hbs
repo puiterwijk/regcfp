@@ -1,4 +1,8 @@
-{{description}} submitted papers:<br /><br />
+{{#unless papers}}
+  You have no submitted papers.
+{{else}}
+  {{description}} submitted papers:<br /><br />
+{{/unless}}
 
 {{#each papers}}
   <div class="paper">
@@ -88,3 +92,7 @@
 
   </div>
 {{/each}}
+
+<p>
+<a href="/">Return</a>
+</p>
