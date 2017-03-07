@@ -54,6 +54,8 @@ var utils = require('../../utils');
 var models = require('../../models');
 var User = models.User;
 
+var inspect = require('util').inspect;
+
 const config = require('../../configuration')
 
 router.openid_2_0 = new openid.RelyingParty(
@@ -136,7 +138,7 @@ router.init = function(app, callback) {
           info = {};
           info[provider_name] = new issuer.Client({
               client_id: provider.client_id,
-              client_secret: config.auth.client_secret,
+              client_secret: provider.client_secret,
             })
           return info;
         });
@@ -185,7 +187,7 @@ router.get('/login/connect/return', function(req, res, next) {
   return provider.authorizationCallback(router.openid_connect_auth_callback_url, params, { state })
     .then(function (token_set) {
       access_token = token_set.access_token;
-      return router.client.userinfo(access_token);
+      return provider.userinfo(access_token);
     })
     .then(function (userinfo) {
       const user_email = userinfo.email;
@@ -194,7 +196,7 @@ router.get('/login/connect/return', function(req, res, next) {
       return res.redirect(config['site_url']);
     })
     .catch(function (e) {
-      console.log("auth/login/connect/return: Error: %s", e);
+      console.log("auth/login/connect/return: Error: " + inspect(e));
       req.session.error = ("There was a problem communicating with the " +
                            "'" + provider_name + "' OpenID Connect server. " +
                            "Please contact the admins of this site.");
