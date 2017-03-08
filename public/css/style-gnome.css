@@ -496,6 +496,10 @@ td.note, p.note {
 	font-size: small;
 }
 
-#authproviders td {
+#authproviders {
 	text-align: center;
+}
+
+#authproviders .login-buttons {
+    margin-bottom: 20px;
 }
