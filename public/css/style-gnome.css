@@ -425,7 +425,6 @@ td#reg-total {
 .grid {
     width: 100%;
     max-width: 1240px;
-    min-width: 755px;
     margin: 0 auto;
     overflow: hidden;
 }
