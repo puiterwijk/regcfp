@@ -23,8 +23,9 @@
 /* This removes needless blue space in header */
 .entry-header {
 	padding: 0 40px;
-	height: 570px;
+	height: 450px;
 	background-image: url('https://static.gnome.org/guadec-2017/website-hero-regcfp.svg') !important;
+	background-image: url('https://dl.dropboxusercontent.com/u/5031519/guadec2017/website-hero-regcfp.svg') !important;
 }
 
 /* This means horizontal scrollbars are visible when needed */
@@ -348,7 +349,9 @@ td#reg-total {
 }
 
 .index-welcome {
-	font-size: xx-large;
+	font-size: x-large;
+	margin-bottom: 70px;
+	font-weight: 300;
 }
 
 /* GUADEC 2017 styles */
@@ -496,6 +499,9 @@ td.note, p.note {
 }
 
 p.login-choose-text {
+	font-size: 13pt;
+	font-weight: bolder;
+	padding: 25px;
 	color: gray;
 }
 
@@ -505,6 +511,10 @@ p.login-choose-text {
 
 #authproviders .login-buttons {
     margin-bottom: 20px;
+}
+
+#authproviders .login-buttons p {
+    font-size: small;
 }
 
 #authproviders .login-buttons button {
