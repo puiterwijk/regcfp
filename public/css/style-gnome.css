@@ -12,7 +12,7 @@
  * theme does.
  */
 
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:900');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:500');
 
 @media screen and (max-width: 900px) {
 	.main-navigation ul {
@@ -495,10 +495,28 @@ td.note, p.note {
 	font-size: small;
 }
 
+p.login-choose-text {
+	color: gray;
+}
+
 #authproviders {
 	text-align: center;
 }
 
 #authproviders .login-buttons {
     margin-bottom: 20px;
+}
+
+#authproviders .login-buttons button {
+	text-align: center;
+  width: 100%;
+	background-color: white;
+	border: 1px lightgray solid;
+	margin: 0;
+	color: black;
+	cursor: pointer;
+}
+
+#authproviders .login-buttons button:hover {
+	background: #def;
 }
