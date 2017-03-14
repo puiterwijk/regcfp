@@ -8,38 +8,38 @@
         you can register to attend the conference, submit talk proposals and manage
         your registration details.
       </p>
-      <p class="index-welcome">
+      <p class="login-choose-text">
         To proceed, please choose a way to identify yourself.
       </p>
     </div>
 
     <div id="authproviders">
-         <div class="grid_6 login-buttons">
+         <div class="grid_4 login-buttons">
           <form>
             <input type="hidden" name="openid_2_0_provider_url" value="https://id.gnome.org/">
 
             <button class="button-big" type="submit" formmethod="post" formaction="/auth/login/2.0">
-              Log in with a GNOME account
+              <img src="https://static.gnome.org/guadec-2017/gnome.png" alt="Log in with a GNOME account">
             </button>
           </form>
          </div>
 
-         <div class="grid_6 login-buttons">
-          <form>
-            <input type="hidden" name="openid_connect_provider" value="google">
-
-            <button class="button-big"  class="button-big" type="submit" formmethod="post" formaction="/auth/login/connect">
-              Log in with a Google account
-            </button>
-          </form>
-         </div>
-
-         <div class="grid_12 login-buttons">
+         <div class="grid_4 login-buttons">
           <form>
             <input type="hidden" name="openid_2_0_provider_url" value="https://id.fedoraproject.org/">
 
             <button class="button-big" type="submit" formmethod="post" formaction="/auth/login/2.0">
-              Log in with a Fedora account
+              <img src="https://static.gnome.org/guadec-2017/fedora.png" alt="Log in with a Fedora account">
+            </button>
+          </form>
+         </div>
+
+         <div class="grid_4 login-buttons">
+          <form>
+            <input type="hidden" name="openid_connect_provider" value="google">
+
+            <button class="button-big"  class="button-big" type="submit" formmethod="post" formaction="/auth/login/connect">
+              <img src="https://static.gnome.org/guadec-2017/google.png" alt="Log in with a Google account">
             </button>
           </form>
          </div>
