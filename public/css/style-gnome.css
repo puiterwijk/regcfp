@@ -12,7 +12,7 @@
  * theme does.
  */
 
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:800');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:900');
 
 @media screen and (max-width: 900px) {
 	.main-navigation ul {
