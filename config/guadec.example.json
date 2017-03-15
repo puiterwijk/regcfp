@@ -133,27 +133,27 @@
           "private": true,
           "options": {
             "thu27-sun30": {
-              "display_name": "Thu 27th Jul - Sun 30th Jul (4 nights)",
+              "display_name": "Thu 27th Jul - Mon 31st Jul (4 nights)",
               "cost": 172,
               "limit": 12
             },
             "thu27-tue1": {
-              "display_name": "Thu 27th Jul - Tue 1st Aug (6 nights)",
+              "display_name": "Thu 27th Jul - Wed 2nd Aug (6 nights)",
               "cost": 258,
               "limit": 12
             },
             "thu27-wed2": {
-              "display_name": "Thu 27th Jul - Wed 2nd Aug (7 nights)",
+              "display_name": "Thu 27th Jul - Thu 3rd Aug (7 nights)",
               "cost": 301,
               "limit": 12
             },
             "fri28-sun30": {
-              "display_name": "Fri 28th Jul - Sun 30th Jul (3 nights)",
+              "display_name": "Fri 28th Jul - Mon 31st Jul (3 nights)",
               "cost": 129,
               "limit": 12
             },
             "fri28-wed2": {
-              "display_name": "Fri 28th Jul - Wed 2nd Aug (6 nights)",
+              "display_name": "Fri 28th Jul - Thu 3rd Aug (6 nights)",
               "cost": 258,
               "limit": 36
             }
