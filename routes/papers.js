@@ -426,16 +426,11 @@ router.post('/tag', function(req, res, next) {
   PaperTag
     .create(info)
     .catch(function(err) {
-        console.log('Error saving paper ta: ' + err);
+        console.log('Error saving paper tag: ' + err);
         res.status(500).send('Error saving paper tag');
     })
     .then(function(paper) {
-      utils.send_email(req, res, null, "papers/tag_added", {
-        paper: paper,
-        tag: info
-      }, function() {
-        res.render('papers/tag_success');
-      });
+      res.render('papers/tag_success');
     });
 });
 
