@@ -20,9 +20,10 @@
     },
 
     "email": {
-      "from": "test-guadec-2017@example.com",
+      "from": "\"GUADEC 2017 registration\" <registration@guadec.org>",
       "transport": {
-        "host": "localhost"
+        "host": "localhost",
+        "port": 25
       }
     },
 
