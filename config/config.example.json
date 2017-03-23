@@ -20,7 +20,7 @@
     },
 
     "email": {
-      "from": "myevent@example.com",
+      "from": "\"My Event registration\" <myevent@example.com>",
       "transport": {
         "host": "localhost"
       }
