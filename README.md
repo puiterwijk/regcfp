@@ -1,8 +1,8 @@
 Event registration system
 =========================
 
-This system has been used for GUADEC 2015 and is currently being reworked to be more general
-for use by other FOSS events, like Flock 2016.
+This system has been used for several conferences including GUADEC, Flock and
+Libre Application Submit.
 
 [![Build Status](https://travis-ci.org/puiterwijk/regcfp.svg?branch=master)](https://travis-ci.org/puiterwijk/regcfp)
 [![Coverage Status](https://coveralls.io/repos/github/puiterwijk/regcfp/badge.svg?branch=master)](https://coveralls.io/github/puiterwijk/regcfp?branch=master)
@@ -17,6 +17,7 @@ Get started
 -----------
 
 To run the code:
+
 - git clone
 - cp config/config.example.json config/config.json
 - npm install
@@ -90,6 +91,18 @@ See `config/config.example.json` for a full example.
 
 [input element]: https://developer.mozilla.org/en/docs/Web/HTML/Element/input
 [select element]: https://developer.mozilla.org/en/docs/Web/HTML/Element/select
+
+
+Deployment tips
+---------------
+
+When running in production, set `NODE_ENV=production` in the environment. This
+requires the config.json file to have the first property name as "production"
+rather than "development" too. `NODE_ENV` must be set when running the helper
+scripts as well.
+
+Queued emails are sent when the script `bin/send-emails` executes. You will
+normally want to run this regularly from a 'cron' job or similar.
 
 
 Development tips
