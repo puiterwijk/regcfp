@@ -111,6 +111,7 @@ describe('registration', function() {
     .send({'currency': 'EUR'})
     .send({'field_shirtsize': 'M'})
     .send({'regfee': '0'})
+    .send({'age': '3000 years'})
     .expect(200)
     .expect(/Thanks for registering/)
     .end(done);
@@ -255,7 +256,7 @@ describe('registration', function() {
     .end(done);
   });
 
-  it('should list all info for admin (except payment)', function(done) {
+  it('should list all info for admin (except payment and stats)', function(done) {
     agent.get('/registration/admin/list')
     .expect(200)
     .expect(/TestUser A/)
@@ -264,7 +265,10 @@ describe('registration', function() {
     .expect(/Admin/)
     .expect(/adminnick/)
     .expect(/Internal/)
-    .expect(function (res) { if (res.text.match('Paid')) throw new Error('String "Paid" found!'); })
+    .expect(function (res) {
+      if (res.text.match('Paid')) throw new Error('String "Paid" found!');
+      if (res.text.match('Age')) throw new Error('Aggregate-only field was displayed');
+    })
     .end(done);
   });
 

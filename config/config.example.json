@@ -186,6 +186,13 @@
                 "cost": 40
             }
           }
+        },
+        "age": {
+          "type": "string",
+          "display_name": "Age",
+          "short_display_name": "Age",
+          "private": true,
+          "aggregate_only": true
         }
       },
 

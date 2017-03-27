@@ -183,7 +183,8 @@
           "default": "Unspecified",
           "options": ["Unspecified"],
           "placeholder": "",
-          "private": true
+          "private": true,
+          "aggregate_only": true
         },
         "age": {
           "display_name": "Age",
@@ -192,7 +193,8 @@
           "required": false,
           "default": "Unspecified",
           "placeholder": "",
-          "private": true
+          "private": true,
+          "aggregate_only": true
         },
         "gender": {
           "display_name": "Gender identity",
@@ -200,7 +202,8 @@
           "type": "string",
           "required": false,
           "placeholder": "",
-          "private": true
+          "private": true,
+          "aggregate_only": true
         },
         "source": {
           "display_name": "How did you hear about GUADEC?",

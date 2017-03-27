@@ -26,7 +26,7 @@ router.all('/', utils.require_feature("registration"));
 // Show all registrations.
 //
 // This function is used both for the public list (which shows the names only)
-// and admin views (which show all info).
+// and admin views (which show all info not marked aggregate-only).
 function show_list(req, res, next, show_private, show_payment) {
   var filter = {};
   var include = {};
@@ -54,6 +54,8 @@ function show_list(req, res, next, show_private, show_payment) {
 
       for(var field in fields) {
         if (fields[field]['type'] == 'documentation')
+          continue;
+        if (fields[field]['aggregate_only'])
           continue;
         if(show_private || (!fields[field]['private'] && !fields[field]['internal'])) {
           field_ids.push(field);
