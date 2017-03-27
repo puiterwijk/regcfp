@@ -35,14 +35,7 @@ var hbs = handlebars.create({
      path.join(__dirname, 'views', config['theming']['theme'], 'partials')
   ],
   helpers: {
-    breaklines: function(text) {
-      return text
-      /* This doesn't work, so let's comment it out for now
-      text = handlebars.handlebars.Utils.escapeExpression(text);
-      text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
-      return new handlebars.handlebars.SafeString(text);
-      */
-    },
+    breaklines: safe_string_with_newlines,
     currency_symbol: function(currency) {
       return config['registration']['currencies'][currency]['symbol'];
     },
@@ -66,6 +59,12 @@ var hbs = handlebars.create({
 app.set('views', path.join(__dirname, 'views', config['theming']['theme']));
 app.engine('.hbs', hbs.engine);
 app.set('view engine', '.hbs');
+
+function safe_string_with_newlines(text) {
+  text = hbs.handlebars.Utils.escapeExpression(text);
+  text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+  return new hbs.handlebars.SafeString(text);
+}
 
 // Session setup
 app.use(session({
