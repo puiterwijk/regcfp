@@ -14,6 +14,8 @@ var config = require('../configuration');
 
 router.all('/', utils.require_feature('papers'));
 
+router.get('/', function(req, res, next) { res.redirect('/') });
+
 router.all('/submit', utils.require_user);
 router.all('/submit', utils.require_permission('papers/submit'));
 router.get('/submit', function(req, res, next) {
