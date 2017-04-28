@@ -10,6 +10,7 @@ var RegistrationInfo = models.RegistrationInfo;
 var config = require('../configuration');
 
 var utils = require('../utils');
+var regutils = require('./registration_utils');
 
 
 /* GET home page. */
@@ -22,7 +23,7 @@ router.get('/', function(req, res, next) {
       req.user.getRegistration({include: [RegistrationPayment, { model: RegistrationInfo, include: RegistrationPayment }]})
       .then(function(reg) {
         res.render('index/index', { name: req.user.name, registration: reg,
-                                    registration_fields: utils.get_reg_fields(null, reg, true),
+                                    registration_fields: regutils.get_reg_fields(null, reg, true),
                                     error: error });
       });
     } else {

@@ -3,6 +3,7 @@ var router = express.Router();
 var Promise = require("bluebird");
 
 var utils = require('../utils');
+var regutils = require('./registration_utils');
 
 var models = require('../models');
 var User = models.User;
@@ -12,54 +13,20 @@ var RegistrationInfo = models.RegistrationInfo;
 
 var config = require('../configuration');
 
-var paypal = require('paypal-rest-sdk');
-paypal.configure(config['registration']['paypal']['api_credentials']);
-
 function get_min_main() {
   // Get the minimum amount for receipt in local currency
   var main_currency = config['registration']['main_currency'];
   return config['registration']['currencies'][main_currency]['min_amount_for_receipt'];
 }
 
-router.all('/', utils.require_feature("registration"));
-
-// Returns information for a given registration, for use by show_list().
-function show_registration(registration, field_ids, show_private, show_payment) {
-  const fields = config['registration']['fields'];
-  var cur_reg = [];
-  cur_reg.push(registration['User'].name);
-  var field_values = utils.get_reg_fields(null, registration, !show_private);
-
-  if (show_private) {
-    cur_reg.push(registration['User'].email);
-  }
-
-  for(var field in field_ids) {
-    field = field_ids[field];
-    if(field != null) {
-      var value = field_values[field].value;
-      if (show_payment && value && value != 'None' && fields[field].type == 'purchase') {
-        value += " (payment: " + field_values[field].payment_state + ")";
-      }
-      cur_reg.push(value);
-    }
-  }
-
-  if(show_payment) {
-    var str = registration.paid;
-    if (registration.has_outstanding_onsite)
-      str = str + " (" + registration.outstanding_onsite + ")";
-    cur_reg.push(str);
-  }
-
-  return cur_reg;
-}
+var paypal = require('paypal-rest-sdk');
+paypal.configure(config['registration']['paypal']['api_credentials']);
 
 // Show all registrations.
 //
 // This function is used both for the public list (which shows the names only)
 // and admin views (which show all info not marked aggregate-only).
-function show_list(req, res, next, show_private, show_payment) {
+const show_list = function(req, res, next, show_private, show_payment) {
   var filter = {};
   var include = {};
   if(!show_private) {
@@ -100,7 +67,7 @@ function show_list(req, res, next, show_private, show_payment) {
       }
 
       var display_regs = registrations.map(function(registration) {
-        return show_registration(registration, field_ids,
+        return regutils.show_registration(registration, field_ids,
             show_private, show_payment)
       })
 
@@ -110,6 +77,8 @@ function show_list(req, res, next, show_private, show_payment) {
       );
     });
 };
+
+router.all('/', utils.require_feature("registration"));
 
 router.get('/', function(req, res, next) { res.redirect('/') });
 
@@ -134,7 +103,7 @@ router.get('/pay', function(req, res, next) {
     if (reg == null || !can_pay)
       res.redirect('/');
     else {
-      var new_purchase_choices = utils.get_reg_purchase_choices_unpaid(reg, utils.get_reg_fields(null, reg, true), reg.currency);
+      var new_purchase_choices = regutils.get_reg_purchase_choices_unpaid(reg, regutils.get_reg_fields(null, reg, true), reg.currency);
       var needpay = !reg.paid || new_purchase_choices.length > 0;
 
       res.render('registration/pay', { registration: reg, needpay: needpay,
@@ -244,7 +213,7 @@ function create_paypal_payment_and_redirect(req, res, next, currency, regfee, pu
     total += regfee;
     items.push({
       'name': config['registration']['payment_product_name'],
-      'sku': utils.make_paypal_sku_for_purchase('regfee', req.user.email),
+      'sku': regutils.make_paypal_sku_for_purchase('regfee', req.user.email),
       'price': regfee.toString(),
       'currency': currency,
       'quantity': 1
@@ -255,7 +224,7 @@ function create_paypal_payment_and_redirect(req, res, next, currency, regfee, pu
     total += choice.cost;
     items.push({
       'name': choice.field_display_name + " (" + choice.option_display_name + ")",
-      'sku': utils.make_paypal_sku_for_purchase(choice.field_name, choice.option_name),
+      'sku': regutils.make_paypal_sku_for_purchase(choice.field_name, choice.option_name),
       'price': choice.cost.toString(),
       'currency': currency,
       'quantity': 1
@@ -266,7 +235,7 @@ function create_paypal_payment_and_redirect(req, res, next, currency, regfee, pu
     total += donation;
     items.push({
       'name': "Donation",
-      'sku': utils.make_paypal_sku_for_purchase('donation', req.user.email),
+      'sku': regutils.make_paypal_sku_for_purchase('donation', req.user.email),
       'price': donation.toString(),
       'currency': currency,
       'quantity': 1
@@ -362,7 +331,7 @@ router.post('/pay/do', function(req, res, next) {
       regfee = reg.regfee;
     };
 
-    var purchase_choices = utils.get_reg_purchase_choices_unpaid(reg, utils.get_reg_fields(req, reg, true), currency);
+    var purchase_choices = regutils.get_reg_purchase_choices_unpaid(reg, regutils.get_reg_fields(req, reg, true), currency);
     var purchase_choices_total = 0;
     purchase_choices.forEach(function(choice) { purchase_choices_total += choice.cost });
 
@@ -410,7 +379,7 @@ router.get('/receipt', function(req, res, next) {
     if(reg == null || !reg.has_confirmed_payment) {
       res.status(401).send('We do not have any confirmed payments for this registration.');
     } else {
-      var paid_purchase_choices = utils.get_reg_purchase_choices_paid(reg, utils.get_reg_fields(null, reg, true), reg.currency);
+      var paid_purchase_choices = regutils.get_reg_purchase_choices_paid(reg, regutils.get_reg_fields(null, reg, true), reg.currency);
       res.render('registration/receipt', { registration: reg,
                                            paid_purchase_choices: paid_purchase_choices,
                                            layout: false });
@@ -425,7 +394,7 @@ router.get('/register', function(req, res, next) {
   if(req.user) {
     req.user.getRegistration({include: [RegistrationPayment, { model: RegistrationInfo, include: RegistrationPayment }]})
     .then(function(reg) {
-      query_inventory(reg, utils.get_reg_fields(null, reg, true))
+      regutils.query_inventory(reg, regutils.get_reg_fields(null, reg, true))
       .then(function(reg_fields) {
         var regfee = config.registration.default_amount;
         if (reg) regfee = reg['regfee'];
@@ -438,7 +407,7 @@ router.get('/register', function(req, res, next) {
       });
     });
   } else {
-    query_inventory(null, utils.get_reg_fields(null, null, true))
+    regutils.query_inventory(null, regutils.get_reg_fields(null, null, true))
     .then(function(reg_fields) {
       res.render('registration/register', { registration: {is_public: true},
                                             registration_fields: reg_fields,
@@ -458,7 +427,7 @@ router.post('/register', function(req, res, next) {
     }
 
     if(req.body.name.trim() == '') {
-      query_inventory(null, utils.get_reg_fields(req, null, true))
+      regutils.query_inventory(null, regutils.get_reg_fields(req, null, true))
       .then(function(reg_fields) {
         var error = "No name was given";
         console.log("Submission error: " + error);
@@ -486,122 +455,10 @@ router.post('/register', function(req, res, next) {
   }
 });
 
-// For each 'purchase' type field in the registration form, this function
-// counts how many times each option has already been selected and
-// checks against the configured maximum.
-//
-// The result is the same 'fields' dictionary that was passed in, with
-// additional options.left properties set for any 'purchase' type fields.
-function query_inventory(reg, fields) {
-  var fields_to_check = Object.keys(fields)
-    .filter(function(name) { return fields[name].type == 'purchase' });
-
-  var all_promises = fields_to_check.map(function(field_name) {
-    var field = fields[field_name];
-
-    var options = field.options;
-
-    var options_to_check = Object.keys(options)
-      .filter(function(name) { return options[name].limit > 0 });
-
-    var count_promises = options_to_check.map(function(option_name) {
-      // Here we count the number of purchases of a single option, by querying
-      // the database of existing registrations.
-      var option = options[option_name];
-
-      var reg_where = {};
-      if (reg) {
-        reg_where = {
-          /* Not this user. */
-          'id' : {
-            ne : reg.id
-          }
-        };
-      }
-
-      return new Promise(function (resolve, reject) {
-        Registration.count(
-          {
-            include: [{
-              model: RegistrationInfo,
-              'where' : {
-                'field' : field_name,
-                'value' : option_name,
-              }
-            }],
-            'where' : reg_where
-          }
-        ).then(function(count) {
-          var left = Math.max(0, option.limit - count);
-          option.left = left;
-          resolve();
-        })
-      });
-    });
-
-    return Promise.all(count_promises);
-  });
-
-  return new Promise(function (resolve, reject) {
-    Promise.all(all_promises).then(function(result) {
-      resolve(fields);
-    });
-  });
-}
-
-// Check if registration submission is valid.
-//
-// If 'reg' is set, it's treated as an existing registration that
-// would be updated with the new field values.
-//
-// Returns null if there is no error, or a string describing the problem
-// if an error is found.
-function check_field_values(req, reg, field_values) {
-  for (var fieldname in field_values) {
-    var field = field_values[fieldname];
-    if (field['type'] == 'string') {
-      if (field['required'] && field['value'].trim() == '')
-        return "Required field '" + field['display_name'] + "' was not set";
-    } else if (field['type'] == 'select') {
-      if (field['required']) {
-        /* Check whether the option exists. */
-        if (field['options'].indexOf(field['value']) == -1) {
-          return "Invalid choice '" + field['value'] + "' for field '" + field['display_name'] + "'";
-        }
-      }
-    } else if (field['type'] == 'purchase') {
-      var option = field['options'][field['value']];
-
-      if (reg) {
-        for(var info in reg.RegistrationInfos) {
-          info = reg.RegistrationInfos[info];
-          if (info.field == fieldname && info.value != 'None' && info.value != field['value']) {
-            if (info.RegistrationPayment != null) {
-              return "You cannot change purchase choices after payment, for field: " + field['display_name'];
-            }
-          }
-        }
-      }
-
-      if (option == undefined) {
-        if (field['required']) {
-          return "Invalid choice '" + field['value'] + "' for field '" + field['display_name'] + "'";
-        };
-      } else {
-        if (option['left'] !== undefined) {
-          if (option['left'] == 0)
-            return "No more '" + field['value'] + "' purchases available for field: " + field['display_name'];
-        }
-      };
-    }
-  }
-  return null;
-}
-
 function handle_registration(req, res, next) {
   req.user.getRegistration({include: [RegistrationPayment, { model: RegistrationInfo, include: RegistrationPayment }]})
   .then(function(reg) {
-    query_inventory(reg, utils.get_reg_fields(req, reg, true))
+    regutils.query_inventory(reg, regutils.get_reg_fields(req, reg, true))
     .then(function (reg_fields) {
       if(req.body.is_public === undefined) {
         req.body.is_public = 'false';
@@ -637,7 +494,7 @@ function handle_registration(req, res, next) {
         currency = reg.currency;
         error = "You cannot change your preferred currency because you have already paid.";
       } else {
-        error = check_field_values(req, reg, reg_fields);
+        error = regutils.check_field_values(reg, reg_fields);
       }
 
       if (error != null) {
@@ -682,7 +539,7 @@ function handle_registration(req, res, next) {
               registration: reg,
               reg_fields: reg_fields,
             }, function() {
-              var new_purchase_choices = utils.get_reg_purchase_choices_unpaid(reg, reg_fields, currency);
+              var new_purchase_choices = regutils.get_reg_purchase_choices_unpaid(reg, reg_fields, currency);
               var needpay = !reg.paid || new_purchase_choices.length > 0;
 
               if (needpay && !can_pay) {

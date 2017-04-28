@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var utils = require('../utils');
+var regutils = require('./registration_utils');
 
 var models = require('../models');
 var User = models.User;
@@ -149,7 +150,7 @@ router.get('/badge', function(req, res, next) {
 
           for(var reg in regs) {
             if(!!regs[reg]) {
-              var regfields = utils.get_reg_fields(null, regs[reg]);
+              var regfields = regutils.get_reg_fields(null, regs[reg]);
               var name = regs[reg].User.name;
               var longname = "";
               if(name.length > 20) {
