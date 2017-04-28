@@ -45,7 +45,15 @@
     },
 
     "auth": {
-      "module": "test"
+      "module": "openid",
+      "openid_connect_providers": {
+	      "fedora": {
+		      "discovery_url": "https://iddev.fedorainfracloud.org/openidc/.well-known/openid-configuration",
+		      "client_id": "regcfpdev",
+		      "client_secret": "NTvIED_E-1aOT4DYkoNbbyehUSVCruKK",
+              "email_domain": "fedoraproject.org"
+		  }
+	  }
     },
 
     "permissions": {
