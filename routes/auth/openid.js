@@ -1,42 +1,14 @@
 // auth/openid:
 //
-// Identifies a user using OpenID 2.0 or OpenID Connect.
+// Identifies a user using OpenID Connect.
 //
-// The initial design of OpenID was that users provide a URL to identify
-// themselves. Initially it was designed mostly for bloggers to comment on
-// other blogs, so the idea was you'd identify yourself with the URL of your
-// blog. The blog you're commenting on would use the provided URL as an OpenID
-// endpoint and ask it to confirm that the user did indeed control that URL.
-// It was up to the OpenID provider how it did this, but usually it meant
-// asking for a password or validating an existing session cookie.
-//
-// OpenID 2.0 introduced the concept of "identifier select" which allows the
-// user to provide a more generic URL and then be prompted by the OpenID
-// provider about what identity they want to return. We use this system to
-// provide a "Log in with $PROVIDER" button which takes the user straight to
-// the provider's login screen whichsaves users from having to have a URL
-// memorized before they can log in.
-//
-// The OpenID protocol initially avoided returning anything except whether
-// the user had authorized themself successfully but the SimpleRegistration
-// extension was later added to provide other details like their name and email
-// address. It depends on the provider whether that address is a *verified*
-// email address.
-//
-// With OpenID Connect we get roughly the same functionality. It's actually a
-// separate protocol built on top of OAuth2 and it dispenses with the concept
-// of "URL as identifier" that previous iterations of OpenID have been based
-// around. Ideally we would only support OpenID Connect but at the time of
-// writing not all providers we are interested in using support it.
-//
-// OpenID 2.0 support is provided by:
-//   <https://github.com/havard/node-openid>
+// OpenID Connect is an identity layer on top of Oauth2.
+// During the login process, the identity of the user is confirmed, after which
+// they are asked what personally identifiable information they are willing to
+// share with the Service Provider.
 //
 // OpenID Connect support is provided by:
 //   <https://github.com/panva/node-openid-client>.
-//
-// Notes on the history of OpenID:
-// <https://willnorris.com/2009/07/openid-directed-identity-identifier-select>.
 //
 // You can find decent documentation of the OpenID Connect "server" flow
 // here: <https://developers.google.com/identity/protocols/OpenIDConnect>.
@@ -58,56 +30,6 @@ var inspect = require('util').inspect;
 
 const config = require('../../configuration')
 
-router.openid_2_0 = new openid.RelyingParty(
-  config['site_url'] + '/auth/login/2.0/return',  // Our callback URL
-  config['site_url'],  // Realm
-  true,                // Use stateless verification?
-  false,               // Strict mode
-  [                    // Extensions
-    new openid.SimpleRegistration({'email': 'required'})
-  ]);
-
-openid_2_0_login_handler = function(req, res, next) {
-  var provider_url = req.body.openid_2_0_provider_url;
-
-  if (! provider_url) {
-    return res.redirect(config['site_url']);
-  };
-
-  router.openid_2_0.authenticate(provider_url, false, function(error, auth_url) {
-    if (error || !auth_url) {
-      console.log("auth/login/2.0: Error: %s", error['message'] || "No auth_url was returned");
-      req.session.error = ("There was a problem resolving " + provider_url);
-      return res.redirect(config['site_url']);
-    } else {
-      return res.redirect(auth_url);
-    };
-  });
-};
-
-router.get('/login/2.0/return', function(req, res, next) {
-  router.openid_2_0.verifyAssertion(req, function(error, openid_response) {
-    if (error || !openid_response.authenticated) {
-      console.log("auth/login/2.0/return: Error: %j", error);
-      req.session.error = "There was a problem verifying your OpenID";
-      return res.redirect(config['site_url']);
-    } else {
-      console.log("Welcoming user %s (email: %s)",
-          openid_response.claimedIdentifier, openid_response.email);
-      if (!openid_response.email || !openid_response.claimedIdentifier) {
-        console.log("auth/login/2.0/return: Not all information returned by provider");
-        req.session.error = "The OpenID provider did not return all required information";
-      } else {
-        // This assumes that the OpenID provider has verified that the
-        // user owns this email address. It's very important to only accept
-        // logins from providers that give us a *verified* email address.
-        req.session.currentUser = openid_response.email;
-      }
-      return res.redirect(config['site_url']);
-    };
-  });
-});
-
 // On startup, we iterate through the configured OpenID Connect providers and
 // authenticate as a client with each one. The resulting Client objects are
 // saved in the `router.openid_connect_providers` property.
@@ -124,11 +46,36 @@ router.init = function(app, callback) {
     return;
   };
 
+  var needs_legacy_callback = null;
   var provider_names = Object.keys(openid_connect_providers);
   var openid_connect_promises = provider_names.map(function(provider_name) {
+      if (provider_name == 'connect' && needs_legacy_callback) {
+        throw new Error('It is not possible to have a provider called "connect" together with a provider that needs legacy callback');
+      } else if (provider_name == 'connect') {
+        needs_legacy_callback = false;
+      }
+
       provider = config.auth.openid_connect_providers[provider_name];
+      if (provider.legacy_callback) {
+        if (needs_legacy_callback === false) {
+          throw new Error('It is not possible to have a provider called "connect" together with a provider that needs legacy callback');
+        } else {
+          console.log('auth.openid.connect: %s: Provider needed legacy callback',
+              provider_name);
+          needs_legacy_callback = true;
+        }
+      }
       console.log("auth.openid.connect: %s: Trying to discover OpenID Connect " +
           "provider at %s", provider_name, provider.discovery_url);
+
+      if (!provider.legacy_callback) {
+        router.get('/login/' + provider_name + '/return', function(req, res, next) {
+          return openid_connect_login_complete_handler(req, res, next, provider_name);
+        });
+      }
+      router.get('/login/' + provider_name, function(req, res, next) {
+        return openid_connect_init_login(req, res, next, provider_name);
+      });
 
       return openid_client.Issuer.discover(provider.discovery_url)
         .then(function (issuer) {
@@ -144,6 +91,14 @@ router.init = function(app, callback) {
         });
     });
 
+  if (needs_legacy_callback) {
+    router.get('/login/connect/return', function(req, res, next) {
+      var provider_name = req.session.provider; delete req.session.provider;
+      return openid_connect_login_complete_handler(req, res, next, provider_name);
+    });
+  }
+
+
   Promise.all(openid_connect_promises).then(function(infos) {
     router.openid_connect_providers = Object();
     infos.forEach(function(info) {
@@ -153,44 +108,73 @@ router.init = function(app, callback) {
   .then(callback);
 };
 
-router.openid_connect_auth_callback_url = config['site_url'] + '/auth/login/connect/return'
-
 openid_connect_login_handler = function(req, res, next) {
   var provider_name = req.body['openid_connect_provider'];
-  var provider = router.openid_connect_providers[provider_name];
 
   if (!provider_name || !provider) {
     console.log("/auth/login/connect: Bad provider %s", provider_name);
     return res.redirect(config['site_url']);
   };
 
+  return openid_connect_init_login(req, res, next, provider_name);
+}
+
+function openid_connect_init_login(req, res, next, provider_name) {
+  var provider = router.openid_connect_providers[provider_name];
+  var provider_info = config.auth.openid_connect_providers[provider_name];
+
   req.session.provider = provider_name;
 
   // This is a security token which allows us to validate responses on our
-  // /login/connect/return/ endpoint.
+  // /login/$providername/return/ endpoint.
   req.session.state = crypto.randomBytes(32).toString('hex');
 
+  var claims = {};
+  if (provider_info.email_domain) {
+    claims["userinfo"] = {"nickname": {"essential": true}};
+  } else {
+    claims["userinfo"] = {"email": {"essential": true}};
+  }
+  var callback_url;
+  if (provider_info.legacy_callback) {
+    callback_url = config['site_url'] + '/auth/login/connect/return';
+  } else {
+    callback_url = config['site_url'] + '/auth/login/' + provider_name + '/return';
+  }
   const auth_url = provider.authorizationUrl({
-    redirect_uri: router.openid_connect_auth_callback_url,
-    scope: 'openid email',
+    redirect_uri: callback_url,
+    scope: 'openid',
     state: req.session.state,
+    claims: claims,
   })
   res.redirect(auth_url);
 };
 
-router.get('/login/connect/return', function(req, res, next) {
-  var provider_name = req.session.provider; delete req.session.provider;
+function openid_connect_login_complete_handler(req, res, next, provider_name) {
   var state = req.session.state; delete req.session.state;
 
   var provider = router.openid_connect_providers[provider_name];
+  var provider_info = config.auth.openid_connect_providers[provider_name];
+  var callback_url;
+  if (provider_info.legacy_callback) {
+    callback_url = config['site_url'] + '/auth/login/connect/return';
+  } else {
+    callback_url = config['site_url'] + '/auth/login/' + provider_name + '/return';
+  }
+
   var params = provider.callbackParams(req)
-  return provider.authorizationCallback(router.openid_connect_auth_callback_url, params, { state })
+  return provider.authorizationCallback(callback_url, params, { state })
     .then(function (token_set) {
       access_token = token_set.access_token;
       return provider.userinfo(access_token);
     })
     .then(function (userinfo) {
-      const user_email = userinfo.email;
+      var user_email;
+      if (provider_info.email_domain) {
+        user_email = userinfo.nickname + '@' + provider_info.email_domain;
+      } else {
+        user_email = userinfo.email;
+      }
       console.log("Welcoming user %s", user_email);
       req.session.currentUser = user_email;
       return res.redirect(config['site_url']);
@@ -202,7 +186,7 @@ router.get('/login/connect/return', function(req, res, next) {
                            "Please contact the admins of this site.");
       return res.redirect(config['site_url']);
     });
-});
+}
 
 logout_handler = function(req, res, next) {
   req.session.currentUser = null;
@@ -219,10 +203,7 @@ login_get_handler = function(req, res, next) {
   return res.redirect(config['site_url']);
 };
 
-router.get('/login/2.0', login_get_handler);
 router.get('/login/connect', login_get_handler);
-
-router.post('/login/2.0', openid_2_0_login_handler);
 router.post('/login/connect', openid_connect_login_handler);
 router.get('/logout', logout_handler);
 router.post('/logout', logout_handler);
