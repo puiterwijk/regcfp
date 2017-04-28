@@ -259,6 +259,7 @@ describe('registration', function() {
   it('should list all info for admin (except payment and stats)', function(done) {
     agent.get('/registration/admin/list')
     .expect(200)
+    .expect(/Total registrations: 2/)
     .expect(/TestUser A/)
     .expect(/testirc/)
     .expect(/usera@regcfp/)
