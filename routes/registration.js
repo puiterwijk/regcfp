@@ -23,6 +23,38 @@ function get_min_main() {
 
 router.all('/', utils.require_feature("registration"));
 
+// Returns information for a given registration, for use by show_list().
+function show_registration(registration, field_ids, show_private, show_payment) {
+  const fields = config['registration']['fields'];
+  var cur_reg = [];
+  cur_reg.push(registration['User'].name);
+  var field_values = utils.get_reg_fields(null, registration, !show_private);
+
+  if (show_private) {
+    cur_reg.push(registration['User'].email);
+  }
+
+  for(var field in field_ids) {
+    field = field_ids[field];
+    if(field != null) {
+      var value = field_values[field].value;
+      if (show_payment && value && value != 'None' && fields[field].type == 'purchase') {
+        value += " (payment: " + field_values[field].payment_state + ")";
+      }
+      cur_reg.push(value);
+    }
+  }
+
+  if(show_payment) {
+    var str = registration.paid;
+    if (registration.has_outstanding_onsite)
+      str = str + " (" + registration.outstanding_onsite + ")";
+    cur_reg.push(str);
+  }
+
+  return cur_reg;
+}
+
 // Show all registrations.
 //
 // This function is used both for the public list (which shows the names only)
@@ -67,37 +99,15 @@ function show_list(req, res, next, show_private, show_payment) {
         field_display_names.push('Paid');
       }
 
-      var display_regs = [];
-      for(var registration in registrations) {
-        registration = registrations[registration];
-        var cur_reg = [];
-        cur_reg.push(registration['User'].name);
-        var field_values = utils.get_reg_fields(null, registration, !show_private);
+      var display_regs = registrations.map(function(registration) {
+        return show_registration(registration, field_ids,
+            show_private, show_payment)
+      })
 
-        if (show_private) {
-          cur_reg.push(registration['User'].email);
-        }
-
-        for(var field in field_ids) {
-          field = field_ids[field];
-          if(field != null) {
-            var value = field_values[field].value;
-            if (show_payment && value && value != 'None' && fields[field].type == 'purchase') {
-              value += " (payment: " + field_values[field].payment_state + ")";
-            }
-            cur_reg.push(value);
-          }
-        }
-        if(show_payment) {
-          var str = registration.paid;
-          if (registration.has_outstanding_onsite)
-            str = str + " (" + registration.outstanding_onsite + ")";
-          cur_reg.push(str);
-        }
-
-        display_regs.push(cur_reg);
-      }
-      res.render('registration/list', { fields: field_display_names, registrations: display_regs });
+      res.render('registration/list', {
+          fields: field_display_names,
+          registrations: display_regs }
+      );
     });
 };
 
