@@ -132,8 +132,6 @@ function openid_connect_init_login(req, res, next, provider_name) {
   var claims = {};
   if (provider_info.email_domain) {
     claims["userinfo"] = {"nickname": {"essential": true}};
-  } else {
-    claims["userinfo"] = {"email": {"essential": true}};
   }
   var callback_url;
   if (provider_info.legacy_callback) {
@@ -143,7 +141,7 @@ function openid_connect_init_login(req, res, next, provider_name) {
   }
   const auth_url = provider.authorizationUrl({
     redirect_uri: callback_url,
-    scope: 'openid',
+    scope: 'openid email',
     state: req.session.state,
     claims: claims,
   })
@@ -177,6 +175,7 @@ function openid_connect_login_complete_handler(req, res, next, provider_name) {
       }
       console.log("Welcoming user %s", user_email);
       req.session.currentUser = user_email;
+      req.session.currentEmail = userinfo.email;
       return res.redirect(config['site_url']);
     })
     .catch(function (e) {

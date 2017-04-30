@@ -24,6 +24,9 @@
 {{/has_permission}}
 
 
+<tr><td>Emails will be sent to:</td>
+<td>{{ req.session.currentEmail }}</td></tr>
+
 {{#each registration_fields}}
 <tr><td>{{ this.display_name }}</td>
 <td>

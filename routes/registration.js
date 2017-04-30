@@ -403,7 +403,8 @@ router.get('/register', function(req, res, next) {
                                               registration_fields: reg_fields,
                                               regfee: regfee,
                                               min_amount_main_currency: get_min_main(),
-                                              already_registered: reg != null });
+                                              already_registered: reg != null,
+                                              req: req});
       });
     });
   } else {
@@ -413,7 +414,8 @@ router.get('/register', function(req, res, next) {
                                             registration_fields: reg_fields,
                                             regfee: config.registration.default_amount,
                                             min_amount_main_currency: get_min_main(),
-                                            already_registered: false});
+                                            already_registered: false,
+                                            req: req });
     });
   }
 });
@@ -433,7 +435,8 @@ router.post('/register', function(req, res, next) {
         console.log("Submission error: " + error);
         res.render('registration/register', { registration: null, submission_error: error,
                                               registration_fields: reg_fields,
-                                              min_amount_main_currency: get_min_main()} );
+                                              min_amount_main_currency: get_min_main(),
+                                              req: req} );
       });
     } else {
       var user_info = {
@@ -503,7 +506,8 @@ function handle_registration(req, res, next) {
                                               registration_fields: reg_fields,
                                               regfee: regfee,
                                               submission_error: error,
-                                              min_amount_main_currency: get_min_main()});
+                                              min_amount_main_currency: get_min_main(),
+                                              req: req});
       } else {
         // Form OK
         var is_new_registration = (reg == null);
