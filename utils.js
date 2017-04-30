@@ -11,13 +11,13 @@ function get_permission_checker(permission) {
   var allowed = config.permissions;
   for(var i = 0; i < required.length; i++)
   {
+    allowed = allowed[required[i]];
     if(typeof allowed == 'undefined') {
-      console.log("Permission checker for unspecified permission requested: " + permission);
+      throw new Error("Permission checker for unspecified permission requested: " + permission);
       return function(username) {
         return false;
       }
     };
-    allowed = allowed[required[i]];
   }
 
   // This function return is so we can make it optimized for require_permission
