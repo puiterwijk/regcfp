@@ -613,6 +613,14 @@ describe('registration', function() {
       .end(done);
     });
 
+    it('should not allow double cancelling', function(done) {
+      agent.post('/registration/cancel')
+      .send({'sure': 'yes'})
+      .expect(401)
+      .expect(/You are not currently registered/)
+      .end(done);
+    });
+
     it('should allow re-registration', function(done) {
       agent.post('/registration/register')
       .send({'name': 'TestUser A'})
@@ -635,5 +643,41 @@ describe('registration', function() {
       .end(done);
     });
 
+    it('logout second user', function(done) {
+      agent.post('/auth/logout')
+      .expect(200)
+      .expect('Logged out')
+      .end(done);
+    });
+
+    it('should login as admin', function(done) {
+      agent.post('/auth/login')
+      .send({'email': 'admin@regcfp'})
+      .expect(200)
+      .expect('Welcome admin@regcfp')
+      .end(done);
+    });
+
+    it('should offer admin cancel', function(done) {
+      agent.get('/registration/admin/list')
+      .expect(200)
+      .expect(/Cancel/)
+      .end(done);
+    });
+
+    it('should allow admin cancel', function(done) {
+      agent.post('/registration/admin/cancel')
+      .send({'regid': 3})
+      .expect(302)
+      .expect('Location', '/registration/admin/list')
+      .end(done);
+    });
+
+    it('should not allow double cancel', function(done) {
+      agent.post('/registration/admin/cancel')
+      .send({'regid': 3})
+      .expect(404)
+      .end(done);
+    });
   });
 });

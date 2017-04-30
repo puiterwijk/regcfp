@@ -14,9 +14,17 @@ Total registrations: {{ registrations.length }}
 </tr>
 {{#each registrations}}
 <tr>
-{{#each this}}
+{{#each this.info}}
 <td>{{this}}</td>
 {{/each}}
+{{#has_permission "registration/cancel_all" }}
+<td>
+<form action="/registration/admin/cancel" method="post">
+<input type="hidden" name="regid" value="{{this.id}}">
+<input type="submit" value="Cancel">
+</form>
+</td>
+{{/has_permission}}
 {{/each}}
 </table>
 </div>
