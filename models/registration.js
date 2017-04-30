@@ -66,7 +66,6 @@ module.exports = function(sequelize, DataTypes) {
     is_public: DataTypes.BOOLEAN,
     badge_printed: DataTypes.BOOLEAN,
     receipt_sent: DataTypes.BOOLEAN,
-    cancelled: DataTypes.BOOLEAN,
     regfee: DataTypes.DECIMAL(10,2),
     currency: DataTypes.STRING(10),
   }, {
