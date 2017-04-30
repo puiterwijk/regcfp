@@ -387,6 +387,40 @@ router.get('/receipt', function(req, res, next) {
   });
 });
 
+router.all('/cancel', utils.require_user);
+router.all('/cancel', utils.require_permission('registration/cancel'));
+router.get('/cancel', function(req, res, next) {
+  req.user.getRegistration({include: [RegistrationPayment, { model: RegistrationInfo }]})
+  .catch(function(err) {
+    res.status(500).send('Error retrieving your registration');
+  })
+  .then(function(reg) {
+    if(reg == null) {
+      res.status(401).send('You are not currently registered.');
+    } else {
+      res.render('registration/cancel_confirm', { registration: reg});
+    }
+  });
+});
+
+router.post('/cancel', function(req, res, next) {
+  req.user.getRegistration({include: [RegistrationPayment, { model: RegistrationInfo }]})
+  .catch(function(err) {
+    res.status(500).send('Error retrieving your registration');
+  })
+  .then(function(reg) {
+    if(reg == null) {
+      res.status(401).send('You are not currently registered.');
+    } else {
+      reg.destroy();
+      utils.send_email(req, res, null, "registration/cancelled", {
+      }, function() {
+        res.render('registration/cancelled');
+      });
+    }
+  });
+});
+
 router.all('/register', utils.require_permission('registration/register'));
 router.get('/register', function(req, res, next) {
   // Show the registration form; used both for initial registration and

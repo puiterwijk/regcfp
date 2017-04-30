@@ -164,39 +164,39 @@ describe('registration', function() {
   });
 
   // Proof that this works to check the DB
-//  it('country ends up in database', function(done) {
-//    var res = agent.post('/registration/register')
-//    .send({'name': 'TestUser A'})
-//    .send({'field_ircnick': 'testirc'})
-//    .send({'field_country': 'testing'})
-//    .expect(200)
-//    .then(function() {
-//      models.RegistrationInfo.count({'where' : { 'field' : 'country', 'value' : 'testing' }})
-//        .then(function (count) {
-//          if (count == 0)
-//            done(new Error('Field did not end ended up in database!'))
-//          else
-//            done();
-//        });
-//    });
-//  });
+  it('country ends up in database', function(done) {
+    var res = agent.post('/registration/register')
+    .send({'name': 'TestUser A'})
+    .send({'field_ircnick': 'testirc'})
+    .send({'field_country': 'testing'})
+    .expect(200)
+    .then(function() {
+      models.RegistrationInfo.count({'where' : { 'field' : 'country', 'value' : 'testing' }})
+        .then(function (count) {
+          if (count == 0)
+            done(new Error('Field did not end ended up in database!'))
+          else
+            done();
+        });
+    });
+  });
 
-//  it('documentation fields are ignored when storing into database', function(done) {
-//    var res = agent.post('/registration/register')
-//    .send({'name': 'TestUser A'})
-//    .send({'field_ircnick': 'testirc'})
-//    .send({'field_doc': 'testing'})
-//    .expect(200)
-//    .then(function() {
-//      models.RegistrationInfo.count({'where' : { 'field' : 'doc', 'value' : 'testing' }})
-//        .then(function (count) {
-//          if (count != 0)
-//            done(new Error('Field end ended up in database!'))
-//          else
-//            done();
-//        });
-//    });
-//  });
+  it('documentation fields are ignored when storing into database', function(done) {
+    var res = agent.post('/registration/register')
+    .send({'name': 'TestUser A'})
+    .send({'field_ircnick': 'testirc'})
+    .send({'field_doc': 'testing'})
+    .expect(200)
+    .then(function() {
+      models.RegistrationInfo.count({'where' : { 'field' : 'doc', 'value' : 'testing' }})
+        .then(function (count) {
+          if (count != 0)
+            done(new Error('Field end ended up in database!'))
+          else
+            done();
+        });
+    });
+  });
 
   it('should show the payment form', function(done) {
     agent.get('/registration/pay')
@@ -577,5 +577,63 @@ describe('registration', function() {
         .end(done);
       });
     });
+  });
+
+  describe('cancellation', function() {
+    before('Login', function(done) {
+      set_user(agent, 'inventory-test@regcfp', done);
+    });
+
+    it('should offer cancellation', function(done) {
+      agent.get('/')
+      .expect(200)
+      .expect(/Cancel/)
+      .end(done);
+    });
+
+    it('should show confirmation when cancelling', function(done) {
+      agent.get('/registration/cancel')
+      .expect(200)
+      .expect(/Are you sure/)
+      .end(done);
+    });
+
+    it('should allow cancelling', function(done) {
+      agent.post('/registration/cancel')
+      .send({'sure': 'yes'})
+      .expect(200)
+      .expect(/Your registration is cancelled/)
+      .end(done);
+    });
+
+    it('should list as unregistered', function(done) {
+      agent.get('/')
+      .expect(200)
+      .expect(/<a href="\/registration\/register">Register<\/a>/)
+      .end(done);
+    });
+
+    it('should allow re-registration', function(done) {
+      agent.post('/registration/register')
+      .send({'name': 'TestUser A'})
+      .send({'field_ircnick': 'testirc'})
+      .send({'is_public': 'true'})
+      .send({'field_volunteer': 'on'})
+      .send({'currency': 'EUR'})
+      .send({'field_shirtsize': 'M'})
+      .send({'regfee': '0'})
+      .send({'age': '3000 years'})
+      .expect(200)
+      .expect(/Thanks for registering/)
+      .end(done);
+    });
+
+    it('should offer cancellation', function(done) {
+      agent.get('/')
+      .expect(200)
+      .expect(/Cancel/)
+      .end(done);
+    });
+
   });
 });
