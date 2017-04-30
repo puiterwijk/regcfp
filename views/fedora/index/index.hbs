@@ -37,11 +37,15 @@
         <div class="buttons">
         {{#has_permission "registration/register" }}
         {{#if registration}}
-        <h3>Registration ID: {{registration.display_id}}</h3>
         <div class="button"><a href="/registration/register">Update registration</a></div><br/><br />
         {{#has_permission "registration/request_receipt"}}
-        <div class="button"><a href="/registration/receipt" target="_blank">Get receipt</a></div><br />
+        <div class="button"><a href="/registration/receipt" target="_blank">Get receipt</a></div><br /><br/>
         {{/has_permission}}
+
+        {{#has_permission "registration/cancel"}}
+        <div class="button"><a href="/registration/cancel">Cancel</a></div><br/><br/>
+        {{/has_permission}}
+
         {{#has_permission "registration/pay"}}
         {{#unless registration.badge_printed}}
         <div class="button"><a href="/registration/pay">Pay more</a></div><br />

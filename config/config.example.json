@@ -81,6 +81,7 @@
       "registration": {
         "register": ["*authenticated*"],
         "pay": ["*authenticated*"],
+        "cancel": ["*authenticated*"],
         "request_receipt": ["*authenticated*"],
         "view_public": ["*authenticated*"],
         "view_all": ["admin@regcfp", "payadm@regcfp"],
