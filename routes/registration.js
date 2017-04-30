@@ -67,8 +67,10 @@ const show_list = function(req, res, next, show_private, show_payment) {
       }
 
       var display_regs = registrations.map(function(registration) {
-        return regutils.show_registration(registration, field_ids,
-            show_private, show_payment)
+        return {"id": registration.id,
+                "info": regutils.show_registration(registration, field_ids,
+                  show_private, show_payment)
+          };
       })
 
       res.render('registration/list', {
@@ -93,6 +95,22 @@ router.get('/admin/list', function(req, res, next) {
   var show_payment = utils.get_permission_checker('registration/view_payment')(req.session.currentUser);
   return show_list(req, res, next, true, show_payment);
 });
+
+router.all('/admin/cancel', utils.require_user);
+router.all('/admin/cancel', utils.require_permission('registration/cancel_all'));
+router.post('/admin/cancel', function(req, res, next) {
+  var regid = req.body.regid;
+  Registration.findOne({where: {id: regid}})
+  .then(function(reg) {
+    if (!reg) {
+      res.status(404).send('Registration not found.');
+    } else {
+      reg.destroy();
+      res.redirect('/registration/admin/list');
+    }
+  });
+});
+
 
 router.all('/pay', utils.require_user);
 router.all('/pay', utils.require_permission('registration/pay'));
