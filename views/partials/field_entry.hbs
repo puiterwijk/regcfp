@@ -9,7 +9,24 @@
              'value' and 'left' fields also permitted.
 }}
 
-{{#ifEqual this.type "documentation"}}
+{{#ifEqual this.type "split"}}
+
+  {{#ifNotEqual this.close null}}
+    <tr class="split_{{this.close}}">
+    {{#ifNotEqual this.close 0}}
+    <td>
+    <button value="Previous" onclick="javascript:showSplit({{this.close}}-1); return false;">Previous</Button>
+    </td>
+    {{/ifNotEqual}}
+    {{#ifNotEqual this.open config.registration.max_split}}
+    <td>
+    <button value="Next" onclick="javascript:showSplit({{this.open}}); return false;">Next</Button>
+    </td>
+    {{/ifNotEqual}}
+    </tr>
+  {{/ifNotEqual}}
+
+{{else}}{{#ifEqual this.type "documentation"}}
 
   {{{ this.html }}}
 
@@ -179,8 +196,4 @@
 
   Unknown field type
 
-{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}
-
-</tr>
-
-</table>
+{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}{{/ifEqual}}
