@@ -1,14 +1,34 @@
 // Code to deal with registration splits
 var opensplit = 0;
+var maxsplit = 0;
 function showSplit(splitnr) {
   $(".split_" + opensplit).hide();
   $(".split_" + splitnr).show();
+  if(splitnr == 0) {
+    $("#split_previous").hide();
+  } else {
+    $("#split_previous").show();
+  }
+  if(splitnr == maxsplit) {
+    $("#split_next").hide();
+    $("#submit").show();
+  } else {
+    $("#split_next").show();
+    $("#submit").hide();
+  }
   opensplit = splitnr;
 }
 
-function hideAllSplits(maxsplit) {
+function hideAllSplits(msplit) {
+  maxsplit = msplit;
   for(i = 1; i <= maxsplit; i++) {
     $(".split_" + i).hide();
+  }
+  $("#split_previous").hide();
+  if(maxsplit == 0) {
+    $("#split_next").hide();
+  } else {
+    $("#submit").hide();
   }
 }
 

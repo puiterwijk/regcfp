@@ -71,9 +71,14 @@
 checked
 {{/unless}}
 > Hide my name in the public list of attendees</td></tr>
-<tr class="split_{{config.registration.max_split}}"><td>&nbsp;</td>
 
-<td><input class="submit-talk" type="submit" value="Submit" /></td>
+
+<tr><td>&nbsp;</td>
+<td>
+  <button id="split_previous" value="Previous" onclick="javascript:showSplit(opensplit-1); return false;">Previous</Button>
+  <button id="split_next" value="Next" onclick="javascript:showSplit(opensplit+1); return false;">Next</Button>
+  <input id="submit" class="submit-talk" type="submit" value="Submit" />
+</td>
 </tr>
 
 </table>
