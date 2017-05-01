@@ -72,7 +72,6 @@ describe('registration', function() {
   it('should show documentation HTML', function(done) {
     agent.get('/registration/register')
     .expect(200)
-    .expect(/docentry/)
     .expect(/<h3>Documentation test html<\/h3>/)
     .end(done);
   });
