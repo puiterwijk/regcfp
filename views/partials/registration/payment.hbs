@@ -16,24 +16,28 @@
   You chose a registration fee of {{currency_symbol currency}}{{regfee}}:
   </p>
 
-  <div>
-    <label>
-      <input type="radio" class="regfee-method" name="regfee-method" value="paypal" style="vertical-align: top;" checked="checked" />
-      <div style="display: inline-block;">
-        Pay registration fee now using PayPal
-        <p class="note">No PayPal account required</p>
+  {{#if config.registration.regfee_paypal}}
+    <input type="hidden" name="regfee-method" value="paypal">
+  {{else}}
+      <div>
+        <label>
+          <input type="radio" class="regfee-method" name="regfee-method" value="paypal" style="vertical-align: top;" checked="checked" />
+          <div style="display: inline-block;">
+            Pay registration fee now using PayPal
+            <p class="note">No PayPal account required</p>
+          </div>
+        </label>
+        <br />
+        <label>
+          <input type="radio" class="regfee-method" name="regfee-method" value="onsite" style="vertical-align: top;" />
+            <div style="display: inline-block;">
+              Pay registration fee at the conference
+              <p class="note">If you select this option, you can pay at the registration desk</p>
+            </div>
+          </div>
+        </label>
       </div>
-    </label>
-    <br />
-    <label>
-      <input type="radio" class="regfee-method" name="regfee-method" value="onsite" style="vertical-align: top;" />
-        <div style="display: inline-block;">
-          Pay registration fee at the conference
-          <p class="note">If you select this option, you can pay at the registration desk</p>
-        </div>
-      </div>
-    </label>
-  </div>
+  {{/if}}
 {{/unless}}
 
 The total to be paid now is {{currency_symbol currency}}<span id="total-payment">[JavaScript required to calculate]</span>.
