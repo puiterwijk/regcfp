@@ -3,7 +3,7 @@
     "site_url": "http://localhost:3000",
 
     "theming": {
-      "theme": "fedora",
+      "theme": "test",
       "site_name": "My Event registration",
       "event_name": "My Event",
       "logo": ""
