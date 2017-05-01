@@ -21,7 +21,7 @@
 
 {{else}}
 <tr class="split_{{this.split}}">
-<td>
+<td id="tr_reg-{{@key}}">
 
 {{>field_entry id=@key field=this}}
 
@@ -31,6 +31,37 @@
 {{/if}}
 </td>
 </tr>
+
+{{#if this.shownif}}
+  <script type="text/javascript">
+    $("#reg-{{this.shownif}}").change(function() {
+      if($("#reg-{{this.shownif}}").is(":checked")) {
+        $("#tr_reg-{{@key}}").show();
+      } else {
+        $("#tr_reg-{{@key}}").hide();
+      }
+    });
+    if(!$("#reg-{{this.shownif}}").is(":checked")) {
+      $("#tr_reg-{{@key}}").hide();
+    }
+  </script>
+{{/if}}
+
+{{#if this.shownifnot}}
+  <script type="text/javascript">
+    $("#reg-{{this.shownifnot}}").change(function() {
+      if($("#reg-{{this.shownifnot}}").is(":checked")) {
+        $("#tr_reg-{{@key}}").hide();
+      } else {
+        $("#tr_reg-{{@key}}").show();
+      }
+    });
+    if($("#reg-{{this.shownifnot}}").is(":checked")) {
+      $("#tr_reg-{{@key}}").hide();
+    }
+  </script>
+{{/if}}
+
 {{/ifEqual}}
 {{/each}}
 
