@@ -49,7 +49,14 @@
         <label for="reg-{{id}}">{{ field.display_name }}</label>
       </td>
       <td class="field-widget">
-        <input type="text" id="reg-{{id}}" name="field_{{id}}" value="{{ field.value }}" placeholder="{{ field.placeholder }}">
+        <input type="text" id="reg-{{id}}"
+        {{#ifEqual id "regfee" }}
+        name="regfee"
+        {{else}}
+        name="field_{{id}}"
+        {{/ifEqual}}
+        value="{{ field.value }}" placeholder="{{ field.placeholder }}"
+        {{#if this.readonly}}readonly{{/if}}>
       </td>
 
     {{#if field.message}}
