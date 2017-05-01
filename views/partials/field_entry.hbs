@@ -97,7 +97,7 @@
         <label for="reg-{{id}}">{{ field.display_name }}</label>
       </td>
       <td class="field-widget">
-        <select name="field_{{id}}" id="reg-{{id}}">
+        <select name="field_{{id}}" id="reg-{{id}}" onchange="{{ this.onchange }}">
           {{#each field.options}}
             <option
               {{#ifEqual ../field.value this}}
