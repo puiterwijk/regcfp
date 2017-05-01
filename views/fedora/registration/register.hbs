@@ -10,19 +10,6 @@
 <tr class="split_0"><td>Your name</td><td><input type="text" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td></tr>
 <input type="hidden" name="is_public" value="true">
 
-{{#has_permission "registration/pay"}}
-<tr><td>Registration fee</td><td>
-{{#unless registration.paid}}
-  {{>currency_selector selected=registration.currency}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="{{regfee}}">
-  <p class="note">Feel free to support us by donating as much as you're able to.<br />
-  We can only provide receipts for payments over {{currency_symbol config.registration.main_currency}}{{min_amount_main_currency}} or an equivalent value in another currency.
-  </p>
-{{else}}
-  {{>currency_selector selected=registration.currency disabled="disabled"}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="{{regfee}}" disabled="disabled">
-{{/unless}}
-</tr>
-{{/has_permission}}
-
 <tr class="split_0"><td>Emails will be sent to:</td>
 <td>{{ req.session.currentEmail }}</td></tr>
 
