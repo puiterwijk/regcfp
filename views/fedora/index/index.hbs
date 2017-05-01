@@ -31,12 +31,13 @@
     {{#if config.registration.enabled}}
         <div class="col-xs-12 col-sm-6 bottom-margin">
         <h2 class="thin">Registration</h2>
-        {{#has_permission "registration/view_public"}}
-        <div class="button"><a href="/registration/list">Current registrations</a></div><br />
-        {{/has_permission}}
         <div class="buttons">
         {{#has_permission "registration/register" }}
         {{#if registration}}
+        {{#ifEqual registration.paid_paypal 0}}
+        <div class="button"><a href="/registration/pay">Finish registration</a></div><br /><br />
+        {{/ifEqual}}
+
         <div class="button"><a href="/registration/register">Update registration</a></div><br/><br />
         {{#has_permission "registration/request_receipt"}}
         <div class="button"><a href="/registration/receipt" target="_blank">Get receipt</a></div><br /><br/>
@@ -46,19 +47,19 @@
         <div class="button"><a href="/registration/cancel">Cancel</a></div><br/><br/>
         {{/has_permission}}
 
-        {{#has_permission "registration/pay"}}
-        {{#unless registration.badge_printed}}
-        <div class="button"><a href="/registration/pay">Pay more</a></div><br />
-        {{/unless}}
-        {{/has_permission}}
         {{else}}
         <div class="button"><a href="/registration/register">Register</a></div>
         {{/if}}
         {{/has_permission}}
+
+        {{#has_permission "registration/view_public"}}
+        <div class="button"><a href="/registration/list">Current registrations</a></div><br />
+        {{/has_permission}}
         </div>
         </div>
         </div>
         </div>
+
     {{/if}}
 
     {{#if config.papers.enabled}}
