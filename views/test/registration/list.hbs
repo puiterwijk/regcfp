@@ -1,0 +1,32 @@
+<div class="container">
+<div class="row">
+<div class="col-xs-12 bottom-space">
+
+<p>
+Total registrations: {{ registrations.length }}
+</p>
+
+<table class="table table-striped table-bordered">
+<tr>
+{{#each fields}}
+<th>{{this}}</th>
+{{/each}}
+</tr>
+{{#each registrations}}
+<tr>
+{{#each this.info}}
+<td>{{this}}</td>
+{{/each}}
+{{#has_permission "registration/cancel_all" }}
+<td>
+<form action="/registration/admin/cancel" method="post">
+<input type="hidden" name="regid" value="{{this.id}}">
+<input type="submit" value="Cancel">
+</form>
+</td>
+{{/has_permission}}
+{{/each}}
+</table>
+</div>
+</div>
+</div>

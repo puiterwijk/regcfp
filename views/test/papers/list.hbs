@@ -1,0 +1,65 @@
+<div class="container">
+<div class="row">
+<div class="col-xs-12 bottom-margin">
+{{description}} submitted papers:<br /><br />
+
+{{#each papers}}
+    <b>{{ this.title }}</b>
+    {{#if ../showAuthors}}
+      ({{ this.User.name }} &lt;{{ this.User.email }}&gt;)
+    {{/if}}
+
+    (Track: {{ this.track }})
+    -
+    {{ breaklines this.summary }}
+
+    {{#ifNotEqual ../allowEdit ''}}
+        {{#has_permission ../allowEdit}}
+            <form action="/papers/edit" method="post">
+                <input type="hidden" name="paper" value="{{this.id}}">
+                <input type="submit" value="Edit">
+            </form>
+        {{/has_permission}}
+    {{/ifNotEqual}}
+    {{#ifNotEqual ../allowDelete ''}}
+        {{#has_permission ../allowDelete}}
+            <form action="/papers/delete" method="post"
+                  onsubmit="return confirm('Do you really want to delete this paper?')">
+                <input type="hidden" name="paper" value="{{this.id}}">
+                <input type="submit" value="Delete">
+            </form>
+        {{/has_permission}}
+    {{/ifNotEqual}}
+
+
+    <br />
+    (
+    {{#each this.PaperTags}}
+        {{this.tag}},
+    {{/each}}
+    )
+
+    <form action="/papers/tag" method="post">
+    <input type="hidden" name="paper" value="{{this.id}}">
+    <input type="text" name="tag">
+    <input type="submit" value="Tag">
+    </form>
+
+    Co-presenters:
+    {{#if ../showAuthors}}
+        {{this.PaperCoPresenters}}
+    {{/if}}
+    {{#ifEqual this.User.id ../user.id}}
+        <form action="/papers/copresenter/add" method="post">
+        <input type="hidden" name="paper" value="{{this.id}}">
+        <input type="text" name="email">
+        <input type="submit" value="Add copresenter">
+        </form>
+    {{/ifEqual}}
+
+    <br />
+    <br />
+{{/each}}
+</div>
+</div>
+</div>

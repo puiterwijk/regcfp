@@ -1,0 +1,43 @@
+<div class="container">
+<div class="row">
+<div class="col-xs-12 bottom-margin">
+<form action="/desk/add" method="post">
+<table class="table table-striped table-bordered">
+<tr><td>Your name</td><td><input type="text" id="name" name="name"></td></tr>
+<tr><td>Your email</td><td><input type="text" id="email1" name="email"></td></tr>
+<tr><td>Confirm email</td><td><input type="text" id="email2" name="email2"></td></tr>
+<tr><td>IRC nickname</td><td><input type="text" name="irc"></td></tr>
+<input type="hidden" name="is_public" value="true">
+
+
+<tr><td>Gender</td><td><input type="text" name="gender" value="{{registration.gender}}" placeholder="(optional: male, female, genderqueer, etc.)"><br/><p class="note">We will not publish gender data.<br/> It will only be used for attendee statistics and for an invitation to the women's dinner.</p></td></tr>
+
+<tr><td>Country</td><td><input type="text" name="country" value="{{registration.country}}" placeholder="(optional)"><br/><p class="note">We will not publish country data.<br/> It will only be used for attendee statistics.</p></td></tr>
+
+
+<tr><td>&nbsp;</td><td><input type="checkbox" value="false" name="is_public"> Hide my name in the public list of attendees</td></tr>
+<tr><td>&nbsp;</td>
+<td><input class="submit-talk" type="submit" value="Submit" /></td>
+</tr>
+
+</table>
+</form>
+</div>
+</div>
+</div>
+
+
+<script type="text/javascript">
+$(function() {
+    $('form').submit(function(event) {
+        if($('#name').val() == '') {
+            window.alert("Please enter your name");
+            return false;
+        }
+        if($('#email1').val() == '' || $('#email1').val() != $('#email2').val()) {
+            window.alert("Please check your email address");
+            return false;
+        }
+    });
+});
+</script>

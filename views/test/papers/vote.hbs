@@ -1,0 +1,43 @@
+<div class="container">
+<div class="row">
+<div class="col-xs-12 bottom-margin">
+Vote on papers:
+
+<form action="/papers/admin/vote" method="POST">
+<table class="table table-striped table-bordered">
+<tr><th>Title</th><th>Track</th><th>Author</th><th>Vote</th><th>Comment</th></tr>
+    {{#each papers}}
+        <tr>
+            <th><span title="{{this.summary}}">{{ this.title }}</span></th>
+            <td>{{ this.track }}</td>
+            <td>{{ this.User.name }}</td>
+            <td>
+                <input type="radio" name="vote_{{this.id}}" id="vote_{{this.id}}_A" value="A"
+                {{#if this.vote.abstained}}
+                checked
+                {{/if}}
+                >
+                <label for="vote_{{this.id}}_A">Abstain</label>
+                |
+                {{#each ../voteOptions}}
+                    <input type="radio" name="vote_{{../this.id}}" id="vote_{{../this.id}}_{{this}}" value="{{this}}"
+                    {{#ifEqual ../this.vote.vote this}}
+                        checked
+                    {{/ifEqual}}
+                    >
+                    <label for="vote_{{../this.id}}_{{this}}">{{this}}</label>
+                {{/each}}
+            </td>
+            <td>
+                <input type="text" name="comment_vote_{{this.id}}" value="{{this.vote.comment}}">
+            </td>
+        </tr>
+    {{/each}}
+</table>
+
+<input type="submit" value="Submit">
+</form>
+</div>
+</div>
+</div>
+

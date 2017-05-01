@@ -1,0 +1,68 @@
+<div class="container">
+<div class="row">
+<div class="col-xs-12 bottom-margin">
+{{#if submission_error}}
+<div class="validation">Something went wrong: {{submission_error}}.</div>
+{{/if}}
+
+<form action="/registration/register" method="post">
+<table class="submission-form">
+<tr class="split_0"><td>Your name</td><td><input type="text" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td></tr>
+<input type="hidden" name="is_public" value="true">
+
+{{#has_permission "registration/pay"}}
+<tr><td>Registration fee</td><td>
+{{#unless registration.paid}}
+  {{>currency_selector selected=registration.currency}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="{{regfee}}">
+  <p class="note">Feel free to support us by donating as much as you're able to.<br />
+  We can only provide receipts for payments over {{currency_symbol config.registration.main_currency}}{{min_amount_main_currency}} or an equivalent value in another currency.
+  </p>
+{{else}}
+  {{>currency_selector selected=registration.currency disabled="disabled"}} <input type="text" id="reg-fee" name="regfee" class="reg-fee" value="{{regfee}}" disabled="disabled">
+{{/unless}}
+</tr>
+{{/has_permission}}
+
+<tr class="split_0"><td>Emails will be sent to:</td>
+<td>{{ req.session.currentEmail }}</td></tr>
+
+{{#each registration_fields}}
+{{#ifEqual this.type "split" }}
+
+{{>field_entry id=@key field=this}}
+
+{{else}}
+<tr class="split_{{this.split}}">
+<td>
+
+{{>field_entry id=@key field=this}}
+
+{{#if this.message}}
+<br/>
+<p class="note">{{this.message}}</p>
+{{/if}}
+</td>
+</tr>
+{{/ifEqual}}
+{{/each}}
+
+
+<tr class="split_{{config.registration.max_split}}"><td>&nbsp;</td><td><input type="checkbox" value="false" name="is_public"
+{{#unless registration.is_public}}
+checked
+{{/unless}}
+> Hide my name in the public list of attendees</td></tr>
+<tr class="split_{{config.registration.max_split}}"><td>&nbsp;</td>
+
+<td><input class="submit-talk" type="submit" value="Submit" /></td>
+</tr>
+
+</table>
+</form>
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+  hideAllSplits({{config.registration.max_split}});
+</script>

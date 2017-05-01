@@ -1,0 +1,70 @@
+<div class="container">
+<div class="row">
+<div class="col-xs-12 bottom-margin">
+Vote on papers:
+
+<form action="/papers/admin/vote/show" method="POST">
+<table class="table table-striped table-bordered">
+<tr><th>Title</th><th>Author</th><th>Vote average</th><th>Accepted</th>
+{{#has_permission "papers/edit/all"}}
+    <th>Edit</th>
+{{/has_permission}}
+{{#has_permission "papers/delete/all"}}
+    <th>Delete</th>
+{{/has_permission}}
+</tr>
+    {{#each papers}}
+        <tr>
+            <th><span title="{{this.summary}}">{{ this.title }} ({{this.track}})</span></th>
+            <td>{{ this.User.name }}</td>
+            <td>{{ this.vote_average }} (num: {{this.vote_count}}, total: {{this.vote_total}})</td>
+            <td>
+                <select name="accept_{{this.id}}">
+                {{#each ../acceptOptions}}
+                    <option
+                        value="{{this}}"
+                        id="accept_{{../this.id}}_{{this}}"
+                        {{#ifEqual ../this.accepted this}}
+                            selected="selected"
+                        {{/ifEqual}}
+                        {{#has_permission "papers/accept"}}
+                        {{else}}
+                            disabled
+                        {{/has_permission}}
+                    >{{this}}</option>
+                {{/each}}
+                </select>
+            </td>
+            {{#has_permission "papers/edit/all"}}
+                <td>
+                    <a href="/papers/edit?paper={{this.id}}" target="_blank">Edit</a>
+                </td>
+            {{/has_permission}}
+            {{#has_permission "papers/delete/all"}}
+                <td>
+                    <a href="/papers/delete?paper={{this.id}}" target="_blank">Delete</a>
+                </td>
+            {{/has_permission}}
+        </tr>
+        {{#each this.votes}}
+            <tr>
+                <td>Comment</td>
+                <td colspan="3">
+                    {{this.comment}}
+                    {{#if this.abstained}}
+                        <b>Abstained</b>
+                    {{/if}}
+                    <b>(Voted {{this.vote}} by {{this.user}})</b>
+                </td>
+            </tr>
+        {{/each}}
+    {{/each}}
+</table>
+
+{{#has_permission "papers/accept"}}
+<input type="submit" value="Submit">
+{{/has_permission}}
+</form>
+</div>
+</div>
+</div>
