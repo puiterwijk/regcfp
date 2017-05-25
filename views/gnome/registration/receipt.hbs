@@ -37,18 +37,21 @@ body {
 <h1>Receipt</h1>
 <h3>Thank you, {{user.name}}, for registering for GUADEC 2017!</h3>
  
-<p>We received your payment of {{registration.paid_paypal}} to the GNOME Foundation, as a registration fee for GUADEC 2017.</p>
+<p>We received your payment of {{registration.paid_paypal}} to the GNOME Foundation.</p>
  
-{{#if paid_purchase_choices}}
+You purchased the following:
   <p>
-  You purchased the following:
   <ul>
-    {{#each paid_purchase_choices}}
-      <li>{{field_display_name}}: {{option_display_name}} ({{cost_display}})</li>
-    {{/each}}
+
+    <li>Conference registration: {{currency_symbol registration.currency}}{{registration.regfee}}</li>
+
+    {{#if paid_purchase_choices}}
+      {{#each paid_purchase_choices}}
+        <li>{{field_display_name}}: {{option_display_name}}: {{cost_display}}</li>
+      {{/each}}
+    {{/if}}
   </ul>
   </p>
-{{/if}}
  
 <p>See you in Manchester, England!</p>
 </div>
