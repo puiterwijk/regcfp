@@ -123,17 +123,22 @@ router.get('/pay', function(req, res, next) {
     else {
       var new_purchase_choices = regutils.get_reg_purchase_choices_unpaid(reg, regutils.get_reg_fields(null, reg, true), reg.currency);
       var needpay = !reg.paid || new_purchase_choices.length > 0;
+      var donation = regutils.get_reg_fields(null, reg, false)['sponsor_additional_amount']['value'];
+      if(isNaN(parseFloat(donation)) || parseFloat(donation) < 0) { donation = "0" };
 
       res.render('registration/pay', { registration: reg, needpay: needpay,
                                        currency: reg.currency, regfee: reg.regfee,
                                        regfee_paid: reg.paid.length > 0,
+                                       donation: donation, total_topay: parseFloat(reg.regfee)+parseFloat(donation),
                                        new_purchase_choices: new_purchase_choices });
     }
   });
 });
 
 router.post('/pay', function(req, res, next) {
-  req.user.getRegistration({include: [RegistrationPayment]}).then(function(reg) {
+  req.user.getRegistration({include: [RegistrationPayment, { model: RegistrationInfo, include: RegistrationPayment }]}).then(function(reg) {
+    var donation = regutils.get_reg_fields(null, reg, false)['sponsor_additional_amount']['value'];
+    if(isNaN(parseFloat(donation)) || parseFloat(donation) < 0) { donation = "0" };
     if(reg.regfee == null) {
       res.render('registration/pay');
     } else {
@@ -225,20 +230,20 @@ router.post('/pay/paypal/execute', function(req, res, next) {
 function create_paypal_payment_and_redirect(req, res, next, currency, regfee, purchase_choices, donation) {
   var items = [];
 
-  var total = 0;
+  var total = 0.0;
 
   if (regfee > 0) {
-    total += regfee;
+    total += parseFloat(regfee);
     items.push({
       'name': config['registration']['payment_product_name'],
-      'sku': regutils.make_paypal_sku_for_purchase('regfee', req.user.email),
+      'sku': 'regfee:' + req.user.email,
       'price': regfee.toString(),
       'currency': currency,
       'quantity': 1
     });
   }
 
-  purchase_choices.forEach(function(choice) {
+  /*purchase_choices.forEach(function(choice) {
     total += choice.cost;
     items.push({
       'name': choice.field_display_name + " (" + choice.option_display_name + ")",
@@ -247,22 +252,23 @@ function create_paypal_payment_and_redirect(req, res, next, currency, regfee, pu
       'currency': currency,
       'quantity': 1
     })
-  });
+  });*/
 
   if (donation > 0) {
-    total += donation;
+    total += parseFloat(donation);
     items.push({
       'name': "Donation",
-      'sku': regutils.make_paypal_sku_for_purchase('donation', req.user.email),
+      'sku': 'donation:' + req.user.email,
       'price': donation.toString(),
       'currency': currency,
       'quantity': 1
     });
   }
+  console.log(typeof total);
 
   var create_payment = {
     'intent': 'sale',
-    //"experience_profile_id": config['registration']['paypal_experience_profile'],
+    "experience_profile_id": config['registration']['paypal_experience_profile'],
     'payer': {
       'payment_method': 'paypal'
     },
@@ -349,24 +355,19 @@ router.post('/pay/do', function(req, res, next) {
       regfee = reg.regfee;
     };
 
-    var purchase_choices = regutils.get_reg_purchase_choices_unpaid(reg, regutils.get_reg_fields(req, reg, true), currency);
-    var purchase_choices_total = 0;
-    purchase_choices.forEach(function(choice) { purchase_choices_total += choice.cost });
-
-    if (req.body['donation'] > 0) {
-      donation = parseFloat(req.body['donation']);
-    }
+    var donation = regutils.get_reg_fields(null, reg, false)['sponsor_additional_amount']['value'];
+    if(isNaN(parseFloat(donation)) || parseFloat(donation) < 0) { donation = "0" };
 
     var to_pay_paypal = 0;
     var to_pay_onsite = 0;
 
     if (req.body['regfee-method'] == 'onsite') {
-      to_pay_onsite += regfee;
+      to_pay_onsite += parseFloat(regfee);
+      to_pay_onsite += parseFloat(regfee);
     } else {
-      to_pay_paypal += regfee;
+      to_pay_paypal += parseFloat(regfee);
+      to_pay_paypal += parseFloat(donation);
     }
-    to_pay_paypal += purchase_choices_total;
-    to_pay_paypal += donation;
 
     var promises = [];
     if (to_pay_onsite > 0) {
@@ -378,7 +379,7 @@ router.post('/pay/do', function(req, res, next) {
       if (to_pay_paypal > 0) {
         req.session.currency = currency;
         req.session.to_pay = to_pay_paypal;
-        create_paypal_payment_and_redirect(req, res, next, currency, regfee, purchase_choices, donation);
+        create_paypal_payment_and_redirect(req, res, next, currency, regfee, 0.0, donation);
       } else {
         res.render('registration/payment_onsite_registered', {currency: currency, amount: to_pay_onsite});
       }
@@ -521,9 +522,12 @@ function handle_registration(req, res, next) {
 
       var currency = req.body.currency;
       var regfee = req.body.regfee;
+      var donation = req.body.field_sponsor_additional_amount;
+      if(isNaN(parseFloat(donation)) || parseFloat(donation) < 0) { donation = "0" };
 
       if (reg && currency==undefined) { currency = reg.currency; };
       if (reg && regfee==undefined) { regfee = reg.regfee; };
+      console.log('Donation: ' + donation);
 
       var reg_info = {
         is_public: req.body.is_public.indexOf('false') == -1,
@@ -544,7 +548,6 @@ function handle_registration(req, res, next) {
         error = "Please choose a valid currency";
       } else if(reg != null && regfee != reg.regfee && reg.paid) {
         regfee = reg.regfee;
-        error = "You cannot change your registration fee because you have already paid.";
       } else if(reg != null && currency != reg.currency && reg.paid) {
         currency = reg.currency;
         error = "You cannot change your preferred currency because you have already paid.";
@@ -601,6 +604,7 @@ function handle_registration(req, res, next) {
               if (needpay && !can_pay) {
                 console.warn("User " + req.user.id + " needs to pay but lacks permission");
               }
+              if(isNaN(parseFloat(donation)) || parseFloat(donation) < 0) { donation = "0" };
 
               if (!reg.paid && regfee == 0) {
 
@@ -613,7 +617,7 @@ function handle_registration(req, res, next) {
 
               res.render(template, {currency: currency, regfee: regfee,
                                     regfee_paid: reg.paid.length > 0,
-                                    new_purchase_choices: new_purchase_choices,
+                                    donation: donation, total_topay: parseFloat(regfee)+parseFloat(donation),
                                     needpay: can_pay && needpay});
             })
           })

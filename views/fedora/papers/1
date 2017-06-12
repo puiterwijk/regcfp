@@ -1,0 +1,86 @@
+<div class="container">
+<div class="row">
+<div class="col-xs-12 bottom-margin">
+<h3>{{description}} Submitted Papers</h3>
+
+{{#if papers}}
+<table class="papers">
+{{#each papers}}
+    <tbody>
+    <tr>
+    <td><h4>{{ this.title }}</h4></td>
+    <td>
+    {{#if ../showAuthors}}
+      <p>{{ this.User.name }}</p> 
+      <p class="small">&lt;{{ this.User.email }}&gt;</a>
+    {{/if}}
+    </td>
+    
+    <td class="summary">
+    {{ breaklines this.summary }}
+    </td>
+    
+    <td>{{ this.track }}</td>
+
+    <td class="paper-button">
+    {{#ifNotEqual ../allowEdit ''}}  
+      {{#has_permission ../allowEdit}}
+            <form action="/papers/edit" method="post">
+                <input type="hidden" name="paper" value="{{this.id}}">
+                <input type="submit" value="Edit">
+            </form>
+        {{/has_permission}}
+    {{/ifNotEqual}}
+    </td>
+    <td class="paper-button">
+    {{#ifNotEqual ../allowDelete ''}}
+        {{#has_permission ../allowDelete}}
+            <form action="/papers/delete" method="post"
+                  onsubmit="return confirm('Do you really want to delete this paper?')">
+                <input type="hidden" name="paper" value="{{this.id}}">
+                <input type="submit" value="Delete">
+            </form>
+        {{/has_permission}}
+    {{/ifNotEqual}}
+    </td>
+
+    
+    <td>
+    {{#each this.PaperTags}}
+        {{this.tag}},
+    {{/each}}
+    </td>
+    <tr>
+    <td>
+    <form action="/papers/tag" method="post">
+    <input type="hidden" name="paper" value="{{this.id}}">
+    <input type="text" name="tag">
+    <input type="submit" value="Tag">
+    </form>
+    </td>
+    <td>
+    Co-presenters:
+    {{#if ../showAuthors}}
+        {{this.PaperCoPresenters}}
+    {{/if}}
+    {{#ifEqual this.User.id ../user.id}}
+        <form action="/papers/copresenter/add" method="post">
+        <input type="hidden" name="paper" value="{{this.id}}">
+        <input type="text" name="email">
+        <input type="submit" value="Add copresenter">
+        </form>
+    {{/ifEqual}}
+    </td>
+    </tr>
+    </tbody>
+{{/each}}
+    </table>
+{{else}}
+<p>It doesn't appear there are any submitted papers.</p>
+
+<a href="/">Return</a>
+{{/if}}
+</div>
+</div>
+</div>
+

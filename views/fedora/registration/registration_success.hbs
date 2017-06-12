@@ -1,12 +1,15 @@
 <div class="container">
 <div class="row">
 <div class="col-xs-12 bottom-margin">
-<strong>Thanks for registering for {{event_name}}!</strong><br/>
+
+<h3>{{event_name}} Registration</h3>
+<h4>Thanks for registering for {{event_name}}!</h4>
 
 {{#if needpay}}
 {{>registration/payment}}
 {{else}}
-See you in {{event_location}}!<br />
+<p>See you in {{event_location}}!</p>
+
 <a href="/">Return</a>
 {{/if}}
 </div>

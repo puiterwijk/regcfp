@@ -1,6 +1,17 @@
-Your registration was updated, thank you!<br />
+<div class="container">
+<div class="row">
+<div class="col-xs-12 col-md-8 col-md-offset-2 bottom-margin">
+
+<h3>{{event_name}} Registration</h3>
+<p>Your registration was updated.</p>
+
 {{#if needpay}}
   {{>registration/payment}}
 {{else}}
+  <p>See you in {{event_location}}!</p>
   <a href="/">Return</a>
 {{/if}}
+
+</div>
+</div>
+</div>

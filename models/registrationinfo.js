@@ -3,7 +3,7 @@
 module.exports = function(sequelize, DataTypes) {
   var RegistrationInfo = sequelize.define("RegistrationInfo", {
     field: DataTypes.STRING,
-    value: DataTypes.STRING
+    value: DataTypes.TEXT
   }, {
     classMethods: {
       associate: function(models) {

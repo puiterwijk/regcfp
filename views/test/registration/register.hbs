@@ -5,7 +5,7 @@
 <div class="validation">Something went wrong: {{submission_error}}.</div>
 {{/if}}
 
-<form action="/registration/register" method="post">
+<form action="/registration/register" method="post" id="regform">
 <table class="submission-form">
 <tr class="split_0"><td>Your name</td><td><input type="text" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td></tr>
 <input type="hidden" name="is_public" value="true">
@@ -65,4 +65,5 @@ checked
 
 <script type="text/javascript">
   hideAllSplits({{config.registration.max_split}});
+  $('form').change(update_estimates);
 </script>

@@ -1,64 +1,74 @@
+<script type="text/javascript">
+  var hideshows = {0: [], 1: [], 2: [], 3: []};;
+</script>
+
 <div class="container">
 <div class="row">
-<div class="col-xs-12 bottom-margin">
 {{#if submission_error}}
+<div class="col-xs-12 col-md-8 col-md-offset-2 bottom-margin">
 <div class="validation">Something went wrong: {{submission_error}}.</div>
+</div>
 {{/if}}
+
+<div class="col-xs-12 col-md-8 col-md-offset-2 bottom-margin">
+<h3>Register to attend {{event_name}}</h3>
+
+<span class="split_0">
+<p>We're excited to see you at {{event_name}}! In order to ensure a productive event that helps us achieve our goals as a community, we've made some changes to this year's event. Please take note of the following before beginning your registration:</p>
+<ul>
+  <li><strong>Flock now has a nominal registration fee.</strong> The fee is meant to decrease the number of no shows. When registered attendees do not show up, we lose money on commitments such as food and swag. These fees will be used to offset food and other costs; their usage will be visible in the <a href="http://budget.fedoraproject.org">Fedora Budget</a>.</li>
+  <li><strong>We are offering partial in addition to full financial assistance.</strong> As in the past, financial assistance involves submitting a trip report and/or serving as an event volunteer.</li>
+  <li><strong>If you are requesting financial assistance, there is an additional form you will need to fill out.</strong> You will need to research your travel costs in order to put together your request using current airfares, etc. Your registration fee can be included in the request. Please ensure you have enough time to complete this before <mark>June 15, 2017</mark>.</li>
+</ul>
+</span>
 
 <form action="/registration/register" method="post">
-<table class="submission-form">
-<tr class="split_0"><td>Your name</td><td><input type="text" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/></td></tr>
-<input type="hidden" name="is_public" value="true">
-<input type="hidden" name="currency" value="USD">
+   <fieldset>
+      <legend class="split_0">Basic Details</legend>
+      <p class="split_0">
+         <label class="field" for="name">Your name</label>
+         <input type="text" name="name" value="{{user.name}}" {{#if user }}disabled{{/if}}/>
+         <br />
+         <small>Provide your name as you'd like it to appear on your badge.</small>
+      </p>
+      <input type="hidden" name="is_public" value="true">
+      <input type="hidden" name="currency" value="USD">
+      <p class="split_0">
+         <label class="field">Email address</label> 
+         <span>{{ req.session.currentEmail }}</span>
+         <br />
+         <small>Flock-related emails will be sent to this address. Error in your name? Fix it in <a href="http://accounts.fedoraproject.org">FAS</a>.</small>
+      </p>
+   </fieldset>
+   <fieldset>
+   
+   {{#each registration_fields}}
+      {{#ifEqual this.type "split" }}
 
-<tr class="split_0"><td>Emails will be sent to:</td>
-<td>{{ req.session.currentEmail }}</td></tr>
+      {{>field_entry id=@key field=this}}
 
-{{#each registration_fields}}
-{{#ifEqual this.type "split" }}
-
-{{>field_entry id=@key field=this}}
-
-{{else}}
-<tr class="split_{{this.split}}">
-<td id="tr_reg-{{@key}}">
-
-{{>field_entry id=@key field=this}}
-
-{{#if this.message}}
-<br/>
-<p class="note">{{this.message}}</p>
-{{/if}}
-</td>
-</tr>
-
-{{#if this.shownif}}
+      {{else}}
+      <div class="split_{{this.split}}" id="tr_reg-{{@key}}">
+         {{>field_entry id=@key field=this}}
+      </div>
+</fieldset>
+{{#if this.shownifkey}}
   <script type="text/javascript">
-    $("#reg-{{this.shownif}}").change(function() {
-      if($("#reg-{{this.shownif}}").is(":checked")) {
+    function hideshow_{{@key}}() {
+      var istrue = $("#reg-{{this.shownifkey}}[value='{{this.shownifval}}']").is(":checked");
+      var isshown = $("#tr_reg-{{this.shownifkey}}").is(":visible");
+      if(istrue && isshown) {
         $("#tr_reg-{{@key}}").show();
+        $("#tr_reg-{{@key}}").data('usable', 'true');
       } else {
         $("#tr_reg-{{@key}}").hide();
+        $("#tr_reg-{{@key}}").data('usable', 'false');
       }
-    });
-    if(!$("#reg-{{this.shownif}}").is(":checked")) {
-      $("#tr_reg-{{@key}}").hide();
-    }
-  </script>
-{{/if}}
-
-{{#if this.shownifnot}}
-  <script type="text/javascript">
-    $("#reg-{{this.shownifnot}}").change(function() {
-      if($("#reg-{{this.shownifnot}}").is(":checked")) {
-        $("#tr_reg-{{@key}}").hide();
-      } else {
-        $("#tr_reg-{{@key}}").show();
-      }
-    });
-    if($("#reg-{{this.shownifnot}}").is(":checked")) {
-      $("#tr_reg-{{@key}}").hide();
-    }
+      $("#tr_reg-{{@key}}").trigger("hideshow");
+    };
+    $("input[id='reg-{{this.shownifkey}}']").change(hideshow_{{@key}});
+    $("#tr_reg-{{this.shownifkey}}").on("hideshow", hideshow_{{@key}});
+    hideshows[{{this.split}}].push(hideshow_{{@key}});
   </script>
 {{/if}}
 
@@ -66,11 +76,13 @@
 {{/each}}
 
 
-<tr class="split_{{config.registration.max_split}}"><td>&nbsp;</td><td><input type="checkbox" value="false" name="is_public"
+
+<div class="split_0">
+<input type="checkbox" value="false" name="is_public"
 {{#unless registration.is_public}}
 checked
 {{/unless}}
-> Hide my name in the public list of attendees</td></tr>
+> Hide my name in the public list of attendees</div>
 
 
 <tr><td>&nbsp;</td>
@@ -88,6 +100,9 @@ checked
 </div>
 
 <script type="text/javascript">
-  hideAllSplits({{config.registration.max_split}});
-  update_regfee();
+  $(document).ready(function() {
+    update_regfee();
+    update_estimates();
+    hideAllSplits({{config.registration.max_split}});
+  });
 </script>

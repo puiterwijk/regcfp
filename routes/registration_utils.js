@@ -10,6 +10,8 @@ var Registration = models.Registration;
 var RegistrationPayment = models.RegistrationPayment;
 var RegistrationInfo = models.RegistrationInfo;
 
+const util = require('util')
+
 var config = require('../configuration');
 
 var countries = require('country-data').countries;
@@ -127,6 +129,8 @@ regutils.query_inventory = function(reg, fields) {
 regutils.check_field_values = function(reg, field_values) {
   for (var fieldname in field_values) {
     var field = field_values[fieldname];
+    console.log("Verifying field " + fieldname);
+    console.log("Fieldinfo: " + util.inspect(field, {showHidden: false, depth: null}));
     if (field['type'] == 'string') {
       if (field['required'] && field['value'].trim() == '')
         return "Required field '" + field['display_name'] + "' was not set";

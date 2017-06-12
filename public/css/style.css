@@ -3,6 +3,7 @@ body {
   padding: 0;
   margin: 0;
   color: #555;
+  margin-top: 0px !important;
 }
 
 .site-branding {
@@ -43,13 +44,9 @@ body {
 
 .button {
   display: inline-block;
-  background: #294172;
-  border-radius: 8px;
-  padding: 10px 15px;
 }
 
 .button a, .button a:hover {
-  color: #fff;
   text-decoration: none;
 }
 
@@ -129,3 +126,326 @@ body {
   background: #4a86cf url("https://static.gnome.org/guadec-2017/website-hero.svg") center bottom no-repeat !important;
   height: 800px;
 }
+
+
+h3 { margin-bottom: 1em !important; }
+ul li { margin-bottom: 1em; }
+p + ul { margin: 2em auto !important; }
+
+form {
+  margin-bottom: 5em;
+}
+
+form label.field { 
+  width: 30%;
+  text-align: right;
+  padding-right: 1.5em;
+}
+
+form label.option {
+  font-weight: normal;
+}
+
+form input[type=text], form select, form textarea {
+  width: 50%;
+}
+
+form input[type=checkbox] {
+  margin-left: 30%;
+  margin-top: 1em;
+}
+
+form input[type=text],
+form textarea {
+  margin-left: 1px !important;
+  margin-top: 1px !important;
+}
+form .radio .col label.field {
+  font-weight: bold;
+}
+
+form .radio .col { text-align: right; padding-right: 2em;}
+form .radio .col + .col { text-align: left;}
+
+
+form textarea {
+  min-height: 100px;
+} 
+
+form small {
+  margin-left: 30%;
+  padding-left: .5em;
+  color: #999;
+}
+
+form .submit-talk {  
+  background-color: #3c6eb4; 
+  float: right;
+  margin-right: 19%;
+}
+
+.button,
+form button, 
+.submit-talk {
+  padding: .3em 1em;
+  margin-top: 2em;
+  font-weight: bold;
+  border-radius: 5px;
+  box-shadow: 0px 0px 2px #888;
+  border: 1px solid #c1d7f5;
+}
+
+#index .button {
+  margin-top: 1em;
+}
+
+form button#split_next {
+  float: right;
+  margin-right: 19%;
+  background-color: #3c6eb4;
+  color: white;
+}
+
+form button#split_previous {
+  border: 1px solid white;
+}
+
+form .submit-talk:hover,
+form button#split_next:hover {
+  background-color: #c1d7f5;
+  color: #3c6eb4;
+  border: 1px solid white;
+}
+
+.main-head-index .button {
+  margin-top: 2em !important;
+}
+
+form #payment-form {
+  margin-bottom: 1em;
+}
+
+form #payment-form label {
+  display: block;
+  margin-bottom: 0;
+  margin-top: 1em;
+}
+
+form #payment-form small {
+  margin-left: 1em;
+}
+
+legend {
+  margin-top: 1em;
+}
+
+.bottom-margin {
+  margin-bottom: 5em !important;
+}
+
+.main-head-index .bottom-margin {
+  margin-bottom: 2em !important;
+}
+
+.button {
+  border-radius: 5px;
+  padding: 5px 15px;
+  background-color: #f4f4f4;
+}
+
+
+#index h4, #index h5 {
+  text-align: center;
+  color: #777;
+}
+
+#index .button {
+  text-align: center;
+  display: block;
+  width: 250px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#index #admin { background-color: #eee; }
+
+#index #admin,
+#index #papers,
+#index #registration {
+  padding-top: 1em;
+  padding-bottom: 2em;
+}
+
+
+.flock-navbar {
+  border-width: 0 0 1px;
+  top: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  z-index: 1030;
+  min-height: 50px;
+  margin-bottom: 20px;
+}
+
+.navbar-header .navbar-brand img {
+  height: 30px;
+}
+
+.main-head-index {
+  background: rgba(0, 0, 0, 0) linear-gradient(to bottom, #3c6eb4 0%, #e2faf5 95%, #e2faf5 100%) repeat scroll 0 0;
+  padding-bottom: 0;
+  color: white;
+}
+.main-head-index-inner {
+  background-image: url("https://flocktofedora.org/static/images/capecod-landscape.png");
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  padding-bottom: 6em !important;
+}
+
+.main-head-index h1 {
+  padding-left: 1em;
+  margin-top: 0px;
+  height: 60px;
+}
+
+h1 {
+  height: 150px !important;
+}
+
+.main-head-index .row div + div {
+  text-align: right;
+  padding-right: 2em;
+}
+
+.main-head-index .row div + div a {
+  color: white !important;
+  text-decoration: underline !important;
+}
+
+.main-head-index .button {
+  margin-top: 0px !important;
+}
+
+.main-head-index a#loginBtn,
+.main-head-index a#logoutBtn  {
+  color: #3c6eb4 !important;
+  text-decoration: none !important;
+}
+
+.calendar {
+  margin-top: 3em;
+  margin-bottom: 2em;
+}
+
+.calendar td.flock {
+  text-align: center;
+}
+
+
+.bus-notes {
+  font-size: 82%;
+}
+
+.bus-notes th {
+  font-weight: normal !important;
+  text-transform: none !important;
+  text-align: left !important;
+  color: #777 !important;
+  background-color: white !important;
+  border: none !important;
+}
+
+.bus-notes th + th {
+  text-align: right;
+}
+
+.bus-notes p {
+  margin-bottom: 0px !important;
+}
+ 
+
+table.papers {
+  width: 100%;
+}
+
+
+table.papers th {
+  color: white;
+  background-color: #d5d5d5;
+  padding: 5px;
+  text-transform: uppercase;
+}
+
+table.papers td {
+  padding: 12px 7px !important;
+  border-bottom: 1px solid #d5d5d5;
+
+}
+
+table.papers .length {
+  font-style: italic;
+}
+
+table .small {
+  color: #777;
+}
+
+table.papers .author {
+  margin-bottom: 1px !important;
+  font-weight: bold;
+}
+
+table.papers .presenters {
+
+}
+
+table.papers input {
+  height: 34px !important;
+}
+
+
+table.papers * {
+  vertical-align: top;
+}
+
+table.papers h4 {
+  margin-top: 0px !important;
+  margin-bottom: 10px @important;
+}
+
+table.papers td {
+  padding: 2px 5px;
+}
+
+table.papers td.presenters,
+table.papers td.tags {
+  min-width: 25% !important;
+}
+
+
+
+table.estimates th {
+  font-weight: normal;
+  text-align: right;
+  padding-right: 12px;
+}
+
+table.estimates td {
+  text-align: right;
+}
+
+table.estimates {
+  margin-bottom: 1em;
+  border-bottom: 1px solid #ddd;
+}
+
+.estimates-total {
+  margin-bottom: 2em;
+  padding-left: 2em;
+}
+
+.estimates-total * {
+  background: yellow;
+} 
