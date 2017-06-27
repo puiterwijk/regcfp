@@ -26,7 +26,7 @@ paypal.configure(config['registration']['paypal']['api_credentials']);
 //
 // This function is used both for the public list (which shows the names only)
 // and admin views (which show all info not marked aggregate-only).
-const show_list = function(req, res, next, show_private, show_payment) {
+const show_list = function(req, res, next, show_private, show_payment, csv) {
   var filter = {};
   var include = {};
   if(!show_private) {
@@ -44,9 +44,13 @@ const show_list = function(req, res, next, show_private, show_payment) {
     })
     .then(function(registrations) {
       var field_ids = [null];
-      var field_display_names = ['Name'];
+      var field_display_names = [];
       var fields = config['registration']['fields'];
 
+      if (show_private) {
+        field_display_names.push("UserID");
+      }
+      field_display_names.push("Name");
       if (show_private) {
         field_display_names.push('Mail')
       }
@@ -58,12 +62,19 @@ const show_list = function(req, res, next, show_private, show_payment) {
           continue;
         if(show_private || (!fields[field]['private'] && !fields[field]['internal'])) {
           field_ids.push(field);
-          field_display_names.push(fields[field]['short_display_name']);
+          if(csv) {
+            field_display_names.push(field);
+          } else {
+            field_display_names.push(fields[field]['short_display_name']);
+          }
         }
       }
 
       if(show_payment) {
         field_display_names.push('Paid');
+        field_display_names.push('Regfee');
+        field_display_names.push('PaypalTxId');
+        //field_display_names.push('Unpaid');
       }
 
       var display_regs = registrations.map(function(registration) {
@@ -72,10 +83,14 @@ const show_list = function(req, res, next, show_private, show_payment) {
                   show_private, show_payment)
           };
       })
-
-      res.render('registration/list', {
+      var tname = "registration/list";
+      if(csv) { tname = "registration/csv"; }
+      var layout = "main";
+      if(csv) { layout = false; }
+      res.render(tname, {
           fields: field_display_names,
-          registrations: display_regs }
+          registrations: display_regs,
+          layout: layout }
       );
     });
 };
@@ -86,14 +101,21 @@ router.get('/', function(req, res, next) { res.redirect('/') });
 
 router.all('/list', utils.require_permission('registration/view_public'));
 router.get('/list', function(req, res, next) {
-  return show_list(req, res, next, false);
+  return show_list(req, res, next, false, false);
 });
 
 router.all('/admin/list', utils.require_user);
 router.all('/admin/list', utils.require_permission('registration/view_all'));
 router.get('/admin/list', function(req, res, next) {
   var show_payment = utils.get_permission_checker('registration/view_payment')(req.session.currentUser);
-  return show_list(req, res, next, true, show_payment);
+  return show_list(req, res, next, true, show_payment, false);
+});
+
+router.all('/admin/list/csv', utils.require_user);
+router.all('/admin/list/csv', utils.require_permission('registration/view_all'));
+router.get('/admin/list/csv', function(req, res, next) {
+  var show_payment = utils.get_permission_checker('registration/view_payment')(req.session.currentUser);
+  return show_list(req, res, next, true, show_payment, true);
 });
 
 router.all('/admin/cancel', utils.require_user);

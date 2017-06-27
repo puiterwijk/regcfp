@@ -113,17 +113,17 @@ function update_estimates() {
   var nights = doeslodging ? parseInt($("#reg-lodging_nights")[0].value) : 0;  // Could be NaN for "other"
   var regfee = parseFloat($("#reg-regfee")[0].value.replace(",", "."));
 
-  if(!doesair || airfare == NaN) {
+  if(!doesair || isNaN(airfare)) {
     airfare = 0.0;
     airbook = 0.0;
   }
   var busfare = busservice ? 47.0 : 0.0;
-  if(othertransit == NaN)
+  if(isNaN(othertransit))
     othertransit = 0.0;
-  if(nights == NaN)
+  if(isNaN(nights))
     var lodgingcost = "Custom";
   else
-    var lodgingcost = nights * (139.99 + 15.40);
+    var lodgingcost = (nights * (139.0 + 16.27))/2.0;
 
   var total = airfare + airbook + busfare + othertransit + lodgingcost + regfee;
 

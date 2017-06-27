@@ -28,6 +28,9 @@ regutils.show_registration = function(registration, field_ids, show_private,
                                       show_payment) {
   const fields = config['registration']['fields'];
   var cur_reg = [];
+  if (show_private) {
+    cur_reg.push(registration["User"].id);
+  }
   cur_reg.push(registration['User'].name);
   var field_values = regutils.get_reg_fields(null, registration, !show_private);
 
@@ -47,10 +50,10 @@ regutils.show_registration = function(registration, field_ids, show_private,
   }
 
   if(show_payment) {
-    var str = registration.paid;
-    if (registration.has_outstanding_onsite)
-      str = str + " (" + registration.outstanding_onsite + ")";
-    cur_reg.push(str);
+    cur_reg.push(registration.paid);
+    cur_reg.push(registration.regfee);
+    cur_reg.push("Item #regfee:" + registration["User"].email);
+    //cur_reg.push(registration.outstanding_onsite);
   }
 
   return cur_reg;

@@ -10,8 +10,9 @@ function get_amount_string(amounts) {
     if(amount != "") {
       amount += ", ";
     }
-    amount += config['registration']['currencies'][cur]['symbol'];
-    amount += Math.ceil(amounts[cur]);
+    //amount += config['registration']['currencies'][cur]['symbol'];
+    //amount += Math.ceil(amounts[cur]);
+    amount += parseFloat(amounts[cur]).toFixed(2);
   }
   return amount;
 }

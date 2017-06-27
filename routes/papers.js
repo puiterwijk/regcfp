@@ -156,7 +156,7 @@ router.all('/edit', function(req, res, next) {
     });
 });
 
-function get_paper_copresenters(res, papers, cb) {
+function get_paper_copresenters(res, papers, email, cb) {
   User.findAll()
   .catch(function(err) {
     console.log('Error getting users: ' + err);
@@ -169,16 +169,26 @@ function get_paper_copresenters(res, papers, cb) {
         for(var user in users) {
           user = users[user];
           if(papers[paper].PaperCoPresenters[copresenter].UserId == user.id) {
-            copresenters.push(user.name);
+            if(email) {
+              copresenters.push(user.email);
+            } else {
+              copresenters.push(user.name);
+            }
           }
         }
       }
 
       if(copresenters.length == 0)
       {
-        papers[paper].PaperCoPresenters = 'none';
+        if(!email) {
+          papers[paper].PaperCoPresenters = 'none';
+        }
       } else {
-        papers[paper].PaperCoPresenters = copresenters.join(', ');
+        if(email) {
+          papers[paper].PaperCoPresenters = copresenters.join(',');
+        } else {
+          papers[paper].PaperCoPresenters = copresenters.join(', ');
+        }
       }
     }
     cb(papers);
@@ -189,7 +199,7 @@ router.all('/list/own', utils.require_user);
 router.all('/list/own', utils.require_permission('papers/list/own'));
 router.get('/list/own', function(req, res, next) {
   req.user.getPapers({include: [PaperTag, PaperCoPresenter, User]}).then(function(papers) {
-    get_paper_copresenters(res, papers, function(papers_with_copresenters) {
+    get_paper_copresenters(res, papers, false, function(papers_with_copresenters) {
       res.render('papers/list', { description: 'Your',
                                   showAuthors: true,
                                   allowEdit: 'papers/edit/own',
@@ -209,7 +219,7 @@ router.get('/list', function(req, res, next) {
       }
     })
     .then(function(papers) {
-      get_paper_copresenters(res, papers, function(papers_with_copresenters) {
+      get_paper_copresenters(res, papers, false, function(papers_with_copresenters) {
         res.render('papers/list', { description: 'Accepted',
                                     showAuthors: true,
                                     allowEdit: '',
@@ -224,13 +234,30 @@ router.all('/admin/list', utils.require_permission('papers/list/all'));
 router.get('/admin/list', function(req, res, next) {
   Paper.findAll({include: [User, PaperVote, PaperTag, PaperCoPresenter]})
     .then(function(papers) {
-      get_paper_copresenters(res, papers, function(papers_with_copresenters) {
+      get_paper_copresenters(res, papers, false, function(papers_with_copresenters) {
         res.render('papers/list', { description: 'All',
                                     showAuthors: true,
                                     showVotes: true,
                                     allowEdit: 'papers/edit/all',
                                     allowDelete: 'papers/delete/all',
                                     papers: papers });
+      });
+    });
+});
+
+router.all('/admin/list/csv', utils.require_user);
+router.all('/admin/list/csv', utils.require_permission('papers/list/all'));
+router.get('/admin/list/csv', function(req, res, next) {
+  Paper.findAll({include: [User, PaperVote, PaperTag, PaperCoPresenter]})
+    .then(function(papers) {
+      get_paper_copresenters(res, papers, true, function(papers_with_copresenters) {
+        res.render('papers/csv', { description: 'All',
+                                    showAuthors: true,
+                                    showVotes: true,
+                                    allowEdit: 'papers/edit/all',
+                                    allowDelete: 'papers/delete/all',
+                                    papers: papers,
+                                    layout: false });
       });
     });
 });
