@@ -19,7 +19,8 @@ var utils = require('../utils');
 var transporter = nodemailer.createTransport(config['email']['transport']);
 
 Paper.findAll({
-    include: [User, PaperCoPresenter],
+    include: [User, {model: PaperCoPresenter,
+                     include: [User]}],
     accepted: {
         $ne: "none"
     }
@@ -32,11 +33,14 @@ Paper.findAll({
             template = 'papers/talk_accepted';
         } else if (paper.accepted == 'no') {
             template = 'papers/talk_rejected';
+        } else {
+            console.log('Not sending email for paper ' + paper.title + ', status: ' + paper.accepted);
+            return;
         }
-        var users = [{'id': paper.User.id}];
+        var users = [{'id': paper.User.id, 'name': paper.User.name, 'email': paper.User.email}];
         for(var copresenter in paper.PaperCoPresenters) {
             copresenter = paper.PaperCoPresenters[copresenter];
-            users.push({'id': copresenter.UserId});
+            users.push({'id': copresenter.UserId, 'name': copresenter.User.name, 'email': copresenter.User.email});
         }
 
         for(var user in users) {
