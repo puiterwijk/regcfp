@@ -1,4 +1,4 @@
 PaperID,Title,Track,Summary,PrimaryPresenter,Tags,Accepted,CoPresenters...
 {{#each papers}}
-{{this.id}},"{{this.title}}","{{this.track}}","{{this.summary}}","{{this.User.email}}","{{#each this.PaperTags}}{{this.tag}}{{#if @last}}{{else}},{{/if}}{{/each}}",{{this.accepted}},{{this.PaperCoPresenters}}
+{{this.id}},"{{{this.title}}}","{{{this.track}}}","{{{this.summary}}}","{{this.User.email}}","{{#each this.PaperTags}}{{this.tag}}{{#if @last}}{{else}},{{/if}}{{/each}}",{{this.accepted}},{{this.PaperCoPresenters}}
 {{/each}}

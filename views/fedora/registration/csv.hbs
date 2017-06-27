@@ -1,4 +1,4 @@
 {{#each fields}}{{this}}{{#if @last}}{{else}},{{/if}}{{/each}}
 {{#each registrations}}
-{{#each this.info}}"{{this}}"{{#if @last}}{{else}},{{/if}}{{/each}}
+{{#each this.info}}"{{{this}}}"{{#if @last}}{{else}},{{/if}}{{/each}}
 {{/each}}
