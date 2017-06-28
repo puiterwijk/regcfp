@@ -254,7 +254,7 @@ function sanitize(text) {
 router.all('/admin/list/export', utils.require_user);
 router.all('/admin/list/export', utils.require_permission('papers/list/all'));
 router.get('/admin/list/export', function(req, res, next) {
-  var show_votes = utils.get_permission_checker('papers/showvotes')(req.session.currentUser);
+  var showvotes = utils.get_permission_checker('papers/showvotes')(req.session.currentUser);
   Paper.findAll({include: [User, PaperVote, PaperTag, PaperCoPresenter]})
     .then(function(papers) {
       get_paper_copresenters(res, papers, true, function(papers_with_copresenters) {
