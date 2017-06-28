@@ -11,6 +11,8 @@ var Registration = models.Registration;
 var RegistrationPayment = models.RegistrationPayment;
 var RegistrationInfo = models.RegistrationInfo;
 
+var xlsx = require('xlsx');
+
 var config = require('../configuration');
 
 function get_min_main() {
@@ -83,15 +85,14 @@ const show_list = function(req, res, next, show_private, show_payment, csv) {
                   show_private, show_payment)
           };
       })
-      var tname = "registration/list";
-      if(csv) { tname = "registration/csv"; }
-      var layout = "main";
-      if(csv) { layout = false; }
-      res.render(tname, {
-          fields: field_display_names,
-          registrations: display_regs,
-          layout: layout }
-      );
+      var data = {
+        fields: field_display_names,
+        registrations: display_regs};
+      if(csv) {
+        return data;
+      } else {
+        res.render('registration/list', data);
+      }
     });
 };
 
@@ -111,11 +112,22 @@ router.get('/admin/list', function(req, res, next) {
   return show_list(req, res, next, true, show_payment, false);
 });
 
-router.all('/admin/list/csv', utils.require_user);
-router.all('/admin/list/csv', utils.require_permission('registration/view_all'));
-router.get('/admin/list/csv', function(req, res, next) {
+router.all('/admin/list/export', utils.require_user);
+router.all('/admin/list/export', utils.require_permission('registration/view_all'));
+router.get('/admin/list/export', function(req, res, next) {
   var show_payment = utils.get_permission_checker('registration/view_payment')(req.session.currentUser);
-  return show_list(req, res, next, true, show_payment, true);
+  regs = show_list(req, res, next, true, show_payment, true);
+  var data = [];
+  data.push(data.fields);
+  for(var i in data.registrations) {
+    var reg = data.registrations[i];
+    data.push(reg);
+  }
+  var sheet = xlsx.utils.aoa_to_sheet(data);
+  var wb = { SheetNames: ["Registrations"], Sheets: {"Registrations": sheet}};
+
+  res.attachments("registrations.xlsx");
+  res.send(xlsx.write(wb, {bookType: 'xlsx', bootSST: true, type: 'buffer'});
 });
 
 router.all('/admin/cancel', utils.require_user);

@@ -247,10 +247,14 @@ router.get('/admin/list', function(req, res, next) {
     });
 });
 
+function sanitize(text) {
+  return text.replace(/\r\n/g, "\n");
+}
+
 router.all('/admin/list/export', utils.require_user);
 router.all('/admin/list/export', utils.require_permission('papers/list/all'));
-router.all('/admin/list/export', utils.require_permission('papers/showvotes'));
 router.get('/admin/list/export', function(req, res, next) {
+  var show_votes = utils.get_permission_checker('papers/showvotes')(req.session.currentUser);
   Paper.findAll({include: [User, PaperVote, PaperTag, PaperCoPresenter]})
     .then(function(papers) {
       get_paper_copresenters(res, papers, true, function(papers_with_copresenters) {
@@ -295,10 +299,19 @@ router.get('/admin/list/export', function(req, res, next) {
           }
         });
 
-        var data = [["PaperID", "Title", "Track", "Summary", "PrimaryPresenter", "VoteAverage", "Accepted", "CoPresenters"]];
+        var data = [["PaperID", "Title", "Track", "Summary", "PrimaryPresenter"]];
+        if(showvotes) {
+          data[0].push("VoteAverage");
+        }
+        data[0].push("Accepted");
+        data[0].push("CoPresenters...");
         for(var i in paper_info) {
           var paper = paper_info[i];
-          var pdata = [paper.id, paper.title, paper.track, paper.summary, paper.User.email, paper.vote_average, paper.accepted];
+          var pdata = [paper.id, paper.title, paper.track, paper.summary, paper.User.email];
+          if(showvotes) {
+            pdata.push(paper.vote_average);
+          }
+          pdata.push(paper.accepted);
           for(var j in paper.CoPresenters) {
             pdata.push(paper.CoPresenters[j]);
           }
