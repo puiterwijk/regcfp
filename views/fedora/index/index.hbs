@@ -81,7 +81,7 @@
          <div class="buttons">
          {{#has_permission "papers/list/all"}}
            <div class="button"><a href="/papers/admin/list">View all talks</a></div>
-           <div class="button"><a href="/papers/admin/export">Export all talks</a></div>
+           <div class="button"><a href="/papers/admin/list/export">Export all talks</a></div>
          {{/has_permission}}
          {{#has_permission "papers/vote"}}
            <div class="button"><a href="/papers/admin/vote">Vote on talks</a></div>
@@ -97,7 +97,7 @@
              <div class="button"><a href="/registration/admin/list">List all registrations</a></div>
            </div>
            <div class="buttons">
-             <div class="button"><a href="/registration/admin/export">Export all registrations</a></div>
+             <div class="button"><a href="/registration/admin/list/export">Export all registrations</a></div>
            </div>
          {{/has_permission}}
          
