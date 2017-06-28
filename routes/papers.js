@@ -10,6 +10,8 @@ var PaperVote = models.PaperVote;
 var PaperTag = models.PaperTag;
 var PaperCoPresenter = models.PaperCoPresenter;
 
+var xlsx = require('xlsx');
+
 var config = require('../configuration');
 
 router.all('/', utils.require_feature('papers'));
@@ -245,19 +247,68 @@ router.get('/admin/list', function(req, res, next) {
     });
 });
 
-router.all('/admin/list/csv', utils.require_user);
-router.all('/admin/list/csv', utils.require_permission('papers/list/all'));
-router.get('/admin/list/csv', function(req, res, next) {
+router.all('/admin/list/export', utils.require_user);
+router.all('/admin/list/export', utils.require_permission('papers/list/all'));
+router.all('/admin/list/export', utils.require_permission('papers/showvotes'));
+router.get('/admin/list/export', function(req, res, next) {
   Paper.findAll({include: [User, PaperVote, PaperTag, PaperCoPresenter]})
     .then(function(papers) {
       get_paper_copresenters(res, papers, true, function(papers_with_copresenters) {
-        res.render('papers/csv', { description: 'All',
-                                    showAuthors: true,
-                                    showVotes: true,
-                                    allowEdit: 'papers/edit/all',
-                                    allowDelete: 'papers/delete/all',
-                                    papers: papers,
-                                    layout: false });
+        var paper_info = [];
+        for(var paper in papers) {
+          paper = papers[paper];
+          var ppr = {
+            id: paper.id,
+            title: sanitize(paper.title),
+            track: paper.track,
+            summary: sanitize(paper.summary),
+            User: paper.User,
+            accepted: paper.accepted,
+            CoPresenters: paper.PaperCoPresenters,
+            vote_count: 0,
+            vote_total: 0,
+            votes: []
+          };
+          for(var vote in paper.PaperVotes) {
+            vote = paper.PaperVotes[vote];
+            if(!vote.abstained) {
+              ppr.vote_count++;
+              ppr.vote_total += vote.vote;
+            }
+            ppr.votes.push({
+              user: vote.UserId,
+              vote: vote.vote,
+              comment: vote.comment,
+              abstained: vote.abstained
+            });
+          }
+          ppr.vote_average = (ppr.vote_total / ppr.vote_count);
+          paper_info.push(ppr);
+        }
+        paper_info = paper_info.sort(function(a, b) {
+          if(a.track == b.track) {
+            return b.vote_average - a.vote_average;
+          } else if(a.track < b.track) {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
+
+        var data = [["PaperID", "Title", "Track", "Summary", "PrimaryPresenter", "VoteAverage", "Accepted", "CoPresenters"]];
+        for(var i in paper_info) {
+          var paper = paper_info[i];
+          var pdata = [paper.id, paper.title, paper.track, paper.summary, paper.User.email, paper.vote_average, paper.accepted];
+          for(var j in paper.CoPresenters) {
+            pdata.push(paper.CoPresenters[j]);
+          }
+          data.push(pdata);
+        }
+        var sheet = xlsx.utils.aoa_to_sheet(data);
+        var wb = { SheetNames: ["Papers"], Sheets: {"Papers": sheet}};
+
+        res.attachment("papers.xlsx");
+        res.send(xlsx.write(wb, {bookType: 'xlsx', bookSST: true, type: 'buffer'}));
       });
     });
 });
