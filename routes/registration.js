@@ -60,6 +60,8 @@ const show_list = function(req, res, next, show_private, show_payment, csv, cb) 
       for(var field in fields) {
         if (fields[field]['type'] == 'documentation')
           continue;
+        if (fields[field]['type'] == 'legend')
+          continue;
         if (fields[field]['aggregate_only'])
           continue;
         if(show_private || (!fields[field]['private'] && !fields[field]['internal'])) {

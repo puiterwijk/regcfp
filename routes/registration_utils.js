@@ -40,7 +40,7 @@ regutils.show_registration = function(registration, field_ids, show_private,
 
   for(var field in field_ids) {
     field = field_ids[field];
-    if(field != null) {
+    if(field != null && field.type != "documentation" && field.type != "legend") {
       var value = field_values[field].value;
       if (show_payment && value && value != 'None' && fields[field].type == 'purchase') {
         value += " (payment: " + field_values[field].payment_state + ")";
