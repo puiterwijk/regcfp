@@ -42,7 +42,8 @@ const show_list = function(req, res, next, show_private, show_payment, csv, cb) 
   Registration
     .findAll({
       where: filter,
-      include: include
+      include: include,
+      order: [['id']]
     })
     .then(function(registrations) {
       var field_ids = [null];

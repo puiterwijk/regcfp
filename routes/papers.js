@@ -255,7 +255,7 @@ router.all('/admin/list/export', utils.require_user);
 router.all('/admin/list/export', utils.require_permission('papers/list/all'));
 router.get('/admin/list/export', function(req, res, next) {
   var showvotes = utils.get_permission_checker('papers/showvotes')(req.session.currentUser);
-  Paper.findAll({include: [User, PaperVote, PaperTag, PaperCoPresenter]})
+  Paper.findAll({include: [User, PaperVote, PaperTag, PaperCoPresenter], order: [['id']]})
     .then(function(papers) {
       get_paper_copresenters(res, papers, true, function(papers_with_copresenters) {
         var paper_info = [];
@@ -289,15 +289,6 @@ router.get('/admin/list/export', function(req, res, next) {
           ppr.vote_average = (ppr.vote_total / ppr.vote_count);
           paper_info.push(ppr);
         }
-        paper_info = paper_info.sort(function(a, b) {
-          if(a.track == b.track) {
-            return b.vote_average - a.vote_average;
-          } else if(a.track < b.track) {
-            return -1;
-          } else {
-            return 1;
-          }
-        });
 
         var data = [["PaperID", "Title", "Track", "Summary", "PrimaryPresenter"]];
         if(showvotes) {
