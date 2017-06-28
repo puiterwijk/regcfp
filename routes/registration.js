@@ -28,7 +28,7 @@ paypal.configure(config['registration']['paypal']['api_credentials']);
 //
 // This function is used both for the public list (which shows the names only)
 // and admin views (which show all info not marked aggregate-only).
-const show_list = function(req, res, next, show_private, show_payment, csv) {
+const show_list = function(req, res, next, show_private, show_payment, csv, cb) {
   var filter = {};
   var include = {};
   if(!show_private) {
@@ -88,10 +88,10 @@ const show_list = function(req, res, next, show_private, show_payment, csv) {
       var data = {
         fields: field_display_names,
         registrations: display_regs};
-      if(csv) {
-        return data;
-      } else {
+      if(cb == undefined) {
         res.render('registration/list', data);
+      } else {
+        cb(data);
       }
     });
 };
@@ -116,18 +116,19 @@ router.all('/admin/list/export', utils.require_user);
 router.all('/admin/list/export', utils.require_permission('registration/view_all'));
 router.get('/admin/list/export', function(req, res, next) {
   var show_payment = utils.get_permission_checker('registration/view_payment')(req.session.currentUser);
-  regs = show_list(req, res, next, true, show_payment, true);
-  var data = [];
-  data.push(data.fields);
-  for(var i in data.registrations) {
-    var reg = data.registrations[i];
-    data.push(reg);
-  }
-  var sheet = xlsx.utils.aoa_to_sheet(data);
-  var wb = { SheetNames: ["Registrations"], Sheets: {"Registrations": sheet}};
+  regs = show_list(req, res, next, true, show_payment, true, function(regs) {
+    var data = [];
+    data.push(regs.fields);
+    for(var i in regs.registrations) {
+      var reg = regs.registrations[i];
+      data.push(reg);
+    }
+    var sheet = xlsx.utils.aoa_to_sheet(data);
+    var wb = { SheetNames: ["Registrations"], Sheets: {"Registrations": sheet}};
 
-  res.attachments("registrations.xlsx");
-  res.send(xlsx.write(wb, {bookType: 'xlsx', bootSST: true, type: 'buffer'}));
+    res.attachments("registrations.xlsx");
+    res.send(xlsx.write(wb, {bookType: 'xlsx', bootSST: true, type: 'buffer'}));
+  });
 });
 
 router.all('/admin/cancel', utils.require_user);
