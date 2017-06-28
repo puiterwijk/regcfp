@@ -91,7 +91,7 @@ const show_list = function(req, res, next, show_private, show_payment, csv, cb) 
       if(cb == undefined) {
         res.render('registration/list', data);
       } else {
-        cb(data);
+        cb(res, data);
       }
     });
 };
@@ -116,17 +116,17 @@ router.all('/admin/list/export', utils.require_user);
 router.all('/admin/list/export', utils.require_permission('registration/view_all'));
 router.get('/admin/list/export', function(req, res, next) {
   var show_payment = utils.get_permission_checker('registration/view_payment')(req.session.currentUser);
-  regs = show_list(req, res, next, true, show_payment, true, function(regs) {
+  regs = show_list(req, res, next, true, show_payment, true, function(res, regs) {
     var data = [];
     data.push(regs.fields);
     for(var i in regs.registrations) {
       var reg = regs.registrations[i];
-      data.push(reg);
+      data.push(reg.info);
     }
     var sheet = xlsx.utils.aoa_to_sheet(data);
     var wb = { SheetNames: ["Registrations"], Sheets: {"Registrations": sheet}};
 
-    res.attachments("registrations.xlsx");
+    res.attachment("registrations.xlsx");
     res.send(xlsx.write(wb, {bookType: 'xlsx', bootSST: true, type: 'buffer'}));
   });
 });
