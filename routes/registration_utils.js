@@ -45,7 +45,7 @@ regutils.show_registration = function(registration, field_ids, show_private,
       if (show_payment && value && value != 'None' && fields[field].type == 'purchase') {
         value += " (payment: " + field_values[field].payment_state + ")";
       }
-      cur_reg.push(value.replace(/\r\n/g, "\n");
+      cur_reg.push(value.replace(/\r\n/g, "\n"));
     }
   }
 

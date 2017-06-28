@@ -127,7 +127,7 @@ router.get('/admin/list/export', function(req, res, next) {
   var wb = { SheetNames: ["Registrations"], Sheets: {"Registrations": sheet}};
 
   res.attachments("registrations.xlsx");
-  res.send(xlsx.write(wb, {bookType: 'xlsx', bootSST: true, type: 'buffer'});
+  res.send(xlsx.write(wb, {bookType: 'xlsx', bootSST: true, type: 'buffer'}));
 });
 
 router.all('/admin/cancel', utils.require_user);
