@@ -7,6 +7,7 @@ python:
   - "3.7-dev"
   - "nightly"
 install:
+  - pip install pytest-cov
   - python setup.py develop
 script:
   - pytest --cov=regcfp/
