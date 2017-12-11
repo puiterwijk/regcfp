@@ -20,7 +20,7 @@ setup(
     packages=['regcfp'],
     include_package_data=True,
     install_requires=[
-        'flask',
+        'flask>=0.10.1',
         'Flask-Sqlalchemy',
         'Flask-Migrate',
         'Flask-oidc',
