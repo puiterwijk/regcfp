@@ -10,7 +10,7 @@ from regcfp.app import db
 
 @pytest.fixture
 def app(tmpdir):
-    dbfile = os.path.join(tmpdir, 'database.sqlite')
+    dbfile = tmpdir.join('database.sqlite')
     application.testing = True
     application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s' % dbfile
     with application.app_context():
