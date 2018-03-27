@@ -388,7 +388,7 @@ describe('registration', function() {
     .end(done);
   });
 
-  it('should print badge', function(done) {
+  /*it('should print badge', function(done) {
     if (!inkscape_found) {
       this.skip();
     } else {
@@ -397,7 +397,7 @@ describe('registration', function() {
       .expect(/%PDF-1./)
       .end(done);
     };
-  });
+  });*/
 
   it('logout admin user', function(done) {
     agent.post('/auth/logout')
