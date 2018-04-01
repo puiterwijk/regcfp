@@ -85,7 +85,7 @@ app.use(function(req, res, next) {
   res.locals.config = config;
   res.locals.req = { body: req.body,
                      query: req.query };
-  res.locals.development = config.env == 'development';
+  res.locals.development = config.env == 'development' || config.env == 'test';
 
   res.locals.login_buttons = routes_auth.buttons;
   res.locals.extra_js = [];
