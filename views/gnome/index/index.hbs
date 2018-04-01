@@ -51,6 +51,12 @@
          </div>
     </div>
 
+    {{#if development }}
+    <div>
+      <button id="loginBtn" {{{ login_buttons.login }}}>Development log in</button>
+    </div>
+    {{/if }}
+
     <div class="guadec-login">
       <p class="index-welcome">
         If you have trouble registering, please get in touch at
@@ -62,6 +68,11 @@
     </div>
 
 {{else}}
+    {{#if development }}
+    <div>
+      <button id="logoutBtn" {{{ login_buttons.logout }}}>Development log out</button>
+    </div>
+    {{/if }}
 
     Hi, {{name}}! Welcome to the GUADEC registration system.<br />
 
