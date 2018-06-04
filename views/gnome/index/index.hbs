@@ -126,7 +126,9 @@
       <h2 style="padding-top: 20px;">Talk Submissions</h2>
       <p>
 	Proposal submissions for the main conference days (Friday 6th to
-	Sunday 8th July) are currently open. You can find more information
+	Sunday 8th July) are currently
+	{{#has_permission "papers/submit" }}open{{else}}closed{{/has_permission}}.
+	You can find more information
 	about what we are looking for and other types of available slots on
 	the <a href="https://2018.guadec.org/pages/submit-a-proposal.html">main website</a>.
       </p>
