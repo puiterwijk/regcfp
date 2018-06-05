@@ -47,7 +47,7 @@ You purchased the following:
 
     {{#if paid_purchase_choices}}
       {{#each paid_purchase_choices}}
-        <li>{{field_display_name}}: {{option_display_name}}: {{cost_display}}</li>
+        <li>{{#if field_display_name}}{{field_display_name}}: {{/if}}{{option_display_name}}: {{cost_display}}</li>
       {{/each}}
     {{/if}}
   </ul>
