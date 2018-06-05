@@ -122,6 +122,13 @@
     {{/has_permission}}
     {{/if}}
 
+    {{#has_permission "registration/view_public"}}
+      <p>
+      You can view the publically available <a href="/registration/list">list of attendees</a>. This may be helpful to share accommodation.
+      </p>
+    {{/has_permission}}
+
+
     {{#if config.papers.enabled}}
       <h2 style="padding-top: 20px;">Talk Submissions</h2>
       <p>
