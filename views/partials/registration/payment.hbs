@@ -5,7 +5,7 @@
   You have chosen the following purchases, which must be paid for now using PayPal:
   <ul>
     {{#each new_purchase_choices}}
-      <li>{{field_display_name}}: {{option_display_name}} ({{cost_display}})</li>
+      <li>{{#if field_display_name}}{{field_display_name}}: {{/if}}{{option_display_name}} ({{cost_display}})</li>
     {{/each}}
   </ul>
   </p>
