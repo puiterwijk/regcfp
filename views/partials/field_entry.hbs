@@ -146,9 +146,11 @@
               <td class="purchase-option-price">
                 {{cost_all_currencies}}
               </td>
+              {{#ifNotEqual left undefined}}
               <td class="purchase-option-left">
                 {{left}} left
               </td>
+              {{/ifNotEqual}}
             </tr>
           {{/each}}
         </table>
