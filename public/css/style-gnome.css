@@ -493,18 +493,24 @@ table tr td {
 }
 
 td.field-label {
+	box-sizing: border-box;
 	width: 20%;
 }
 
 td.field-widget {
-	width: 80%
+	box-sizing: border-box;
+	width: 80%;
 }
 
 td.field-widget > * {
-	width: 100%
+	width: 100%;
+	box-sizing: border-box;
+	/*display: table-cell;*/
 }
 
 td.note, p.note {
+	padding-top: 0px ! important;
+	margin-top: 0px;
 	color: gray;
 	font-size: small;
 }
