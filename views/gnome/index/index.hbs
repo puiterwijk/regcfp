@@ -92,10 +92,10 @@
           before the conference opens. They can be changed prior to this time.
         </p>
         <p>
-          Name: {{ name }}
+          Name: {{ name }}<br />
 
           {{#if registration_fields.ircnick.value }}
-            Chat nickname: {{ registration_fields.ircnick.value }}
+            Chat nickname: {{ registration_fields.ircnick.value }}<br />
           {{/if}}
 
           {{#unless registration.badge_printed}}
@@ -117,7 +117,7 @@
             <a class="button" href="/registration/pay">Make payment</a>
           {{/unless}}
           {{/has_permission}}
-        </div>
+        </p>
       {{/unless}}
     {{/has_permission}}
     {{/if}}
