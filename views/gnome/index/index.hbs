@@ -92,10 +92,10 @@
           before the conference opens. They can be changed prior to this time.
         </p>
         <p>
-          Name: {{ name }}
+          Name: {{ name }}<br />
 
           {{#if registration_fields.ircnick.value }}
-            Chat nickname: {{ registration_fields.ircnick.value }}
+            Chat nickname: {{ registration_fields.ircnick.value }}<br />
           {{/if}}
 
           {{#unless registration.badge_printed}}
@@ -117,16 +117,25 @@
             <a class="button" href="/registration/pay">Make payment</a>
           {{/unless}}
           {{/has_permission}}
-        </div>
+        </p>
       {{/unless}}
     {{/has_permission}}
     {{/if}}
+
+    {{#has_permission "registration/view_public"}}
+      <p>
+      You can view the publically available <a href="/registration/list">list of attendees</a>. This may be helpful to share accommodation.
+      </p>
+    {{/has_permission}}
+
 
     {{#if config.papers.enabled}}
       <h2 style="padding-top: 20px;">Talk Submissions</h2>
       <p>
 	Proposal submissions for the main conference days (Friday 6th to
-	Sunday 8th July) are currently open. You can find more information
+	Sunday 8th July) are currently
+	{{#has_permission "papers/submit" }}open{{else}}closed{{/has_permission}}.
+	You can find more information
 	about what we are looking for and other types of available slots on
 	the <a href="https://2018.guadec.org/pages/submit-a-proposal.html">main website</a>.
       </p>

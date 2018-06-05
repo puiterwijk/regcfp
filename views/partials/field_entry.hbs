@@ -109,8 +109,8 @@
       </td>
       <td class="field-widget">
         <table class="purchase-option-list" id="reg-{{id}}">
+          {{#ifEqual field.required false}}
           <tr><td>
-            {{#ifEqual field.required false}}
               <label>
                 <input type="radio" class="purchase-option" name="field_{{id}}" value="None" data-cost="0"
                   {{#ifEqual ../field.value None}}
@@ -122,10 +122,11 @@
                 />
                 None
               </label>
-            {{/ifEqual}}
           </td></tr>
+          {{/ifEqual}}
 
           {{#each field.options}}
+            <tr>
               <td class="purchase-option-name">
                 <label>
                   <input type="radio" class="purchase-option" name="field_{{../id}}" value="{{@key}}" data-cost="{{cost}}" data-left="{{left}}" data-payment-state="{{../field.payment_state}}"
@@ -145,9 +146,11 @@
               <td class="purchase-option-price">
                 {{cost_all_currencies}}
               </td>
+              {{#ifNotEqual left undefined}}
               <td class="purchase-option-left">
                 {{left}} left
               </td>
+              {{/ifNotEqual}}
             </tr>
           {{/each}}
         </table>
