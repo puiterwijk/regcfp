@@ -109,8 +109,8 @@
       </td>
       <td class="field-widget">
         <table class="purchase-option-list" id="reg-{{id}}">
+          {{#ifEqual field.required false}}
           <tr><td>
-            {{#ifEqual field.required false}}
               <label>
                 <input type="radio" class="purchase-option" name="field_{{id}}" value="None" data-cost="0"
                   {{#ifEqual ../field.value None}}
@@ -122,8 +122,8 @@
                 />
                 None
               </label>
-            {{/ifEqual}}
           </td></tr>
+          {{/ifEqual}}
 
           {{#each field.options}}
               <td class="purchase-option-name">
