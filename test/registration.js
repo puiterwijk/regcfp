@@ -277,6 +277,7 @@ describe('registration', function() {
     agent.get('/desk')
     .expect(200)
     .expect(/TestUser A/)
+    .expect(/testirc/)
     .expect(/Admin/)
     .end(done);
   });
