@@ -49,8 +49,17 @@ router.get('/', function(req, res, next) {
 
   Registration
     .findAll({
-      include: [User, RegistrationPayment]
+      include: [User, RegistrationPayment, RegistrationInfo]
     }).then(function(registrations) {
+      for (var reg in registrations) {
+        reg = registrations[reg];
+        var regfields = utils.get_reg_fields(null, reg, true);
+
+        reg.fields = {};
+        for (var field in regfields) {
+          reg.fields[field] = regfields[field].value;
+        }
+      }
       res.render('desk/main', { registrations: registrations, message: message, printed: printed });
     });
 });
