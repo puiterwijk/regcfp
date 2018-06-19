@@ -73,9 +73,6 @@ router.post('/add', function(req, res, next) {
     })
     .then(function(new_user) {
       var reg_info = {
-        irc: req.body.irc.trim(),
-        gender: req.body.gender.trim(),
-        country: req.body.country.trim(),
         is_public: req.body.is_public.indexOf('false') == -1,
         badge_printed: false,
         receipt_sent: false,
