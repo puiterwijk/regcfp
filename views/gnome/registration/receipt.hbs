@@ -37,7 +37,9 @@ body {
 <h1>Receipt</h1>
 <h3>Thank you, {{user.name}}, for registering for GUADEC 2018!</h3>
  
-<p>We received your payment of {{registration.paid_paypal}} to the GNOME Foundation.</p>
+<p>We received your payment of
+{{#if registration.paid_paypal}}{{registration.paid_paypal}} to the GNOME Foundation{{#if registration.paid_onsite}} and {{/if}}{{/if}}
+{{#if registration.paid_onsite}}{{registration.paid_onsite}} to the Club de Cacharreo{{/if}}.</p>
  
 You purchased the following:
   <p>
