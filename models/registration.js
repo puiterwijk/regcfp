@@ -98,6 +98,9 @@ module.exports = function(sequelize, DataTypes) {
       paid_paypal: function() {
         return get_amount_string(get_amounts(this, 'paypal'));
       },
+      paid_onsite: function() {
+        return get_amount_string(get_amounts(this, 'onsite'));
+      },
       outstanding_onsite: function() {
         var amounts = {};
         for(var payment in this.RegistrationPayments) {
