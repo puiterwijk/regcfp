@@ -123,6 +123,12 @@
         </p>
       {{/unless}}
     {{/has_permission}}
+    {{else}}
+        <h2 style="padding-top: 20px;">Registration is Closed</h2>
+      {{#has_permission "registration/request_receipt"}}{{#if registration}}
+        You were registered for GUADEC. <a class="button" href="/registration/receipt" target="_blank">Get receipt</a>
+      {{/if}}
+      {{/has_permission}}
     {{/if}}
 
     {{#has_permission "registration/view_public"}}
